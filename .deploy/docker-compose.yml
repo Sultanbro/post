@@ -67,7 +67,7 @@ services:
       DB_USERNAME: "root"
       DB_PASSWORD: ""
       DB_PORT: "3306"
-      DB_DATABASE: "application"
+      DB_DATABASE: "mycent"
 
       REDIS_HOST: "redis"
       CACHE_DRIVER: "file"
@@ -97,7 +97,7 @@ services:
       KIAS_PASSWORD: "mycickz321"
 
     volumes:
-      - /app/storage:/share/common/mycent/shared/storage:ro
+      - /share/common/mycent/shared/storage:/app/storage
 
     networks:
       - app_network
@@ -129,8 +129,8 @@ services:
     networks:
       - app_network
 
-    volumes:
-      - mycent_production_mysql_data:/var/lib/mysql
+    volumes: []
+      # - mycent_production_mysql_data:/var/lib/mysql
 
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=true
@@ -190,8 +190,8 @@ services:
     ports:
       - "6379:6379"
 
-    volumes:
-      - mycent_production_redis_data:/data
+    volumes: []
+      # - mycent_production_redis_data:/data
 
     networks:
       - app_network
@@ -205,5 +205,5 @@ services:
       - "8089:3000"
     networks:
       - app_network
-    volumes:
-      - mycent_production_grafana_data:/var/lib/grafana
+    volumes: []
+      # - mycent_production_grafana_data:/var/lib/grafana
