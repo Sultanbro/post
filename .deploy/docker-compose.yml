@@ -54,7 +54,7 @@ services:
     container_name: php-app
     hostname: php-app
     labels:
-      io.rancher.scheduler.affinity:host_label: name=mycent
+      io.rancher.scheduler.affinity:host_label: name=mycic
       io.rancher.container.pull_image: always
       io.rancher.container.hostname_override: container_name
 
