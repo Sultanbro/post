@@ -7,6 +7,14 @@ FROM composer AS composer
 FROM php:${PHP_VERSION}-fpm as mycent-php-vendor
 WORKDIR /release
 
+RUN apt-get update -y
+RUN apt-get install -y libxml2-dev \
+                        curl \
+                        iputils-ping \
+                        libzip-dev \
+                        default-mysql-client \
+                        unzip
+
 RUN docker-php-ext-install zip
 RUN docker-php-ext-enable zip
 
@@ -15,10 +23,6 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 COPY ./composer.json /release/composer.json
 COPY ./composer.lock /release/composer.lock
-
-RUN mkdir -p storage/framework/sessions
-RUN mkdir -p storage/framework/views
-RUN mkdir -p storage/framework/cache
 
 RUN composer install \
     --no-autoloader \
@@ -126,8 +130,8 @@ COPY ./resources/ /app/resources
 COPY ./artisan /app/
 
 RUN chmod 0777 storage -R
-RUN mkdir /app/storage/framework/sessions
-RUN mkdir /app/storage/framework/views
-RUN mkdir /app/storage/framework/cache
+RUN mkdir -p /app/storage/framework/sessions
+RUN mkdir -p /app/storage/framework/views
+RUN mkdir -p /app/storage/framework/cache
 
 RUN echo 'alias a="php artisan"' >> ~/.bashrc
