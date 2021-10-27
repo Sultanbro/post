@@ -1,10 +1,12 @@
 ARG PREFIX=reg.cic.kz/centras
 ARG NODE_VERSION=latest
 
-
+FROM composer AS composer
 
 FROM ${PREFIX}/php-fpm:8.0 as mycent-php-vendor
 WORKDIR /release
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 COPY ./composer.json /release/composer.json
 COPY ./composer.lock /release/composer.lock
@@ -60,6 +62,8 @@ RUN npm run dev
 FROM ${PREFIX}/php-fpm:8.0 as mycent-php-autoload
 
 WORKDIR /release
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 COPY ./composer.json /release/
 COPY ./composer.lock /release/
