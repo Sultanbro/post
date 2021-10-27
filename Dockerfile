@@ -7,6 +7,10 @@ FROM composer AS composer
 FROM php:${PHP_VERSION}-fpm as mycent-php-vendor
 WORKDIR /release
 
+RUN docker-php-ext-install zip
+RUN docker-php-ext-enable zip
+
+
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 COPY ./composer.json /release/composer.json
