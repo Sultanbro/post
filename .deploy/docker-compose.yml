@@ -21,7 +21,7 @@ volumes:
 
 services:
   nginx:
-    image: reg.cic.kz/centras-projects/mycic:nginx
+    image: reg.cic.kz/centras-projects/mycent:nginx
     container_name: nginx
     hostname: nginx
     volumes:
@@ -50,7 +50,7 @@ services:
   ##############################################################################
 
   php-app:
-    image: reg.cic.kz/centras-projects/mycic:fpm
+    image: reg.cic.kz/centras-projects/mycent:fpm
     container_name: php-app
     hostname: php-app
     labels:
