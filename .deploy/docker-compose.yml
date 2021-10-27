@@ -60,7 +60,7 @@ services:
       - "9000:9000/tcp"
 
     environment: &env
-      APP_DEBUG: "false"
+      APP_DEBUG: "true"
       APP_KEY: "base64:SaYfcUjht1j8/4uJ810xTHG46S/yLjQ/AkYPJJWhsNQ="
       APP_ENV: "production"
       APP_URL: "https://mycent.kz/"
