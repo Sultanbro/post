@@ -3,7 +3,7 @@ ARG NODE_VERSION=latest
 
 
 
-FROM ${PREFIX}/php-fpm:mycic as mycent-php-vendor
+FROM ${PREFIX}/php-fpm:8.0 as mycent-php-vendor
 WORKDIR /release
 
 COPY ./composer.json /release/composer.json
@@ -57,7 +57,7 @@ COPY ./webpack.mix.js /release/
 
 RUN npm run dev
 
-FROM ${PREFIX}/php-fpm:mycic as mycent-php-autoload
+FROM ${PREFIX}/php-fpm:8.0 as mycent-php-autoload
 
 WORKDIR /release
 
