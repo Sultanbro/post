@@ -116,6 +116,9 @@ COPY ./resources/ /app/resources
 # COPY ./.env /app/
 COPY ./artisan /app/
 
-# RUN chmod 0777 storage -R
+RUN chmod 0777 storage -R
+RUN mkdir /app/storage/framework/sessions
+RUN mkdir /app/storage/framework/views
+RUN mkdir /app/storage/framework/cache
 
 RUN echo 'alias a="php artisan"' >> ~/.bashrc
