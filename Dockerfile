@@ -1,9 +1,10 @@
 ARG PREFIX=reg.cic.kz/centras
 ARG NODE_VERSION=latest
+ARG PHP_VERSION=latest
 
 FROM composer AS composer
 
-FROM ${PREFIX}/php-fpm:8.0 as mycent-php-vendor
+FROM php:${PHP_VERSION}-fpm as mycent-php-vendor
 WORKDIR /release
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
@@ -59,7 +60,7 @@ COPY ./webpack.mix.js /release/
 
 RUN npm run dev
 
-FROM ${PREFIX}/php-fpm:8.0 as mycent-php-autoload
+FROM php:${PHP_VERSION}-fpm as mycent-php-autoload
 
 WORKDIR /release
 
