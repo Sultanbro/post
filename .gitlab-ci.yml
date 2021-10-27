@@ -24,7 +24,7 @@ build-docker:
       --build-arg BUILDKIT_INLINE_CACHE=1
       .
 
-    - docker push $CI_REGISTRY_IMAGE:master
+    - docker push $CI_REGISTRY_IMAGE:nginx
     - docker push $CI_REGISTRY_IMAGE:fpm
 
 deploy-app:
