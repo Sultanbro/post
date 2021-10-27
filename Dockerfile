@@ -1,6 +1,6 @@
 ARG PREFIX=reg.cic.kz/centras
 ARG NODE_VERSION=latest
-ARG PHP_VERSION=latest
+ARG PHP_VERSION=7.0
 
 FROM composer AS composer
 
