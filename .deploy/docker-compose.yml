@@ -56,6 +56,9 @@ services:
       io.rancher.container.pull_image: always
       io.rancher.container.hostname_override: container_name
 
+    ports:
+      - "9000:9000/tcp"
+
     environment: &env
       APP_DEBUG: "false"
       APP_KEY: "base64:SaYfcUjht1j8/4uJ810xTHG46S/yLjQ/AkYPJJWhsNQ="
