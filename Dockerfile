@@ -1,5 +1,5 @@
 ARG PREFIX=reg.cic.kz/centras
-ARG NODE_VERSION=10
+ARG NODE_VERSION=latest
 
 
 

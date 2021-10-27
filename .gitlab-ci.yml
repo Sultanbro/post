@@ -30,7 +30,7 @@ build-docker:
 deploy-app:
   stage: deploy
   only:
-    - colleagues
+    - master
 
   needs:
     - build-docker
