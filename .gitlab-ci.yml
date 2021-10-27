@@ -45,7 +45,7 @@ deploy-app:
     # - rancher stop mycic-prod
     # - rancher volume rm mycic_production_code
     - rancher up -d
-      --stack MyCIC-Prod
+      --stack Mycent-Prod
       --file .deploy/docker-compose.yml
       --rancher-file .deploy/rancher-compose.yml
 
@@ -54,7 +54,7 @@ deploy-app:
       --rancher-file .deploy/rancher-compose.yml
       --force-upgrade
       --pull
-      --stack MyCIC-Prod
+      --stack Mycent-Prod
       --confirm-upgrade php-app nginx
 
   after_script: # https://github.com/rancher/rancher/issues/7971#issuecomment-286856228
