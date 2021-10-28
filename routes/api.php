@@ -26,6 +26,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/register', [RegisterController::class, 'index']);
-Route::post('/login', [LoginController::class, 'index']);
+Route::post('/login', [LoginController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/logout', [LogoutController::class, 'index'])->middleware('auth:api');
 

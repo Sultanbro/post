@@ -17,7 +17,9 @@ class LoginController extends Controller
      */
     public function index(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('username', 'password');
+
+
 
         if (!Auth::attempt($credentials)) {
             return response()->json([
