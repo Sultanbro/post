@@ -2,8 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\Api\Auth\LoginController;
+use App\Models\UserToken;
 use Closure;
+use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\UnauthorizedException;
 
 class BearerAuthenticate
@@ -24,16 +29,21 @@ class BearerAuthenticate
         return $next($request);
     }
 
-    private function checkToken() : void
+    private function checkToken()
     {
 
-        // 1 send post request http://192.168.30.11:8022/auth/realms/MyCent/protocol/openid-connect/userinfo
-        // Header Authorization AccessToken
+        $login = new LoginController();
 
-        //if error refresh
+        $checkToken = $login->getInfo($this->token);
 
-        //  after refresh error throw exception
+        if (!$checkToken) {
+            $user_info = UserToken::where('access_token', $this->token)->first();
+            $result = $login->refreshToken($user_info->refresh_token);
+            if (!$result) {
+                return response()->json(['error' => 'Authorization'], 401);
+            }
+        }
 
-        // ok
     }
 }
+
