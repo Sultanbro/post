@@ -136,7 +136,7 @@ services:
     networks:
       - app_network
 
-    volumes: []
+    volumes:
       - mycent_production_mysql_data:/var/lib/mysql
 
     environment:
