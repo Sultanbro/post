@@ -16,9 +16,9 @@ class CreateUserTokensTable extends Migration
         Schema::create('user_tokens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->string('access_token');
-            $table->string('refresh_token');
-            $table->string('role_id');
+            $table->text('access_token');
+            $table->text('refresh_token');
+            $table->integer('role_id');
             $table->timestamps();
         });
     }

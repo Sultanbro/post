@@ -17,11 +17,11 @@ class CreateBranchesTable extends Migration
             $table->id();
             $table->string('full_name', 400);
             $table->foreignId('user_id')->index()->constrained();
-            $table->unsignedBigInteger('foreign_id')->index();
+            $table->unsignedBigInteger('foreign_id')->index()->nullable();
             $table->unsignedBigInteger('parent_id')->index();
             $table->foreign('parent_id')->references('id')->on('departments');
-            $table->unsignedBigInteger('available_id')->index();
-            $table->boolean('is_human');
+            $table->unsignedBigInteger('role_id')->index();
+            $table->boolean('is_human')->default(true);
             $table->unsignedBigInteger('updated_by')->index();
             $table->unsignedBigInteger('created_by')->index();
             $table->timestamps();

@@ -2,7 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Services\Authenticate\AuthenticateService;
+use App\Models\User;
 use App\Models\UserToken;
 use Closure;
 use http\Env\Response;
@@ -25,25 +26,38 @@ class BearerAuthenticate
     {
         if (($this->token = $request->header('Authorization', null)) === null)
             throw new UnauthorizedException();
-        $this->checkToken();
-        return $next($request);
+        $this->token = str_replace('Bearer ', '', $this->token);
+
+        if($this->checkToken()) {
+            return $next($request);
+        }
+        throw new UnauthorizedException();
     }
 
     private function checkToken()
     {
+        // Add interface and inject
+        $login = new AuthenticateService();
 
-        $login = new LoginController();
-
-        $checkToken = $login->getInfo($this->token);
+        $checkToken = $login->getUserInfo($this->token);
+        if (!$user_info = UserToken::where('access_token', $this->token)->first()) {
+            return response()->json(['error' => 'Some text'], 401);
+        }
 
         if (!$checkToken) {
-            $user_info = UserToken::where('access_token', $this->token)->first();
-            $result = $login->refreshToken($user_info->refresh_token);
-            if (!$result) {
-                return response()->json(['error' => 'Authorization'], 401);
+            $result = $login->refreshToken($user_info['refresh_token']);
+            if (isset($result['error'])) {
+                return false;
             }
         }
 
+        try {
+            Auth::login(\Illuminate\Foundation\Auth\User::where('id', $user_info->user_id)->first());
+            return true;
+        }catch (\Exception $exception) {
+            return false;
+        }
     }
+
 }
 

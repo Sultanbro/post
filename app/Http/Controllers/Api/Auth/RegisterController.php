@@ -13,7 +13,7 @@ class RegisterController extends Controller
     {
         $user = User::create(array_merge(
             $request->only('name', 'email'),
-            ['password' => bcrypt($request->password)],
+            ['password' => bcrypt($request->password)]
         ));
 
         return response()->json([

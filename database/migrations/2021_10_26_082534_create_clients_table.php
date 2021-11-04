@@ -15,18 +15,19 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name', 255);
-            $table->string('last_name', 255);
-            $table->string('parent_name', 255);
+            $table->string('first_name', 255)->nullable();
+            $table->string('last_name', 255)->nullable();
+            $table->string('parent_name', 255)->nullable();
             $table->string('short_name', 255);
+
             $table->string('full_name', 400);
-            $table->string('iin', 12)->index();
-            $table->integer('sex')->comment('0-жен, 1-муж');
-            $table->boolean('resident_bool');
+            $table->string('iin', 12)->index()->nullable();
+            $table->integer('sex')->comment('0-жен, 1-муж')->nullable();
+            $table->boolean('resident_bool')->nullable();
             $table->boolean('juridical_bool');
-            $table->json('address');
+            $table->json('address')->nullable();
             $table->unsignedBigInteger('type_id')->index();
-            $table->date('birthday')->index();
+            $table->date('birthday')->index()->nullable();
             $table->unsignedBigInteger('updated_by')->index();
             $table->unsignedBigInteger('created_by')->index();
             $table->timestamps();

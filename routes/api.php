@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Models\UserToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,11 +22,19 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth.bearer')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/register', [RegisterController::class, 'index']);
+//Route::middleware('auth.bearer')->get('/user', function (Request $request) {
+//    $userId = UserToken::where('access_token', $request->token)->first();
+//    dd(\Illuminate\Support\Facades\Auth::user());
+//    return $userId;
+//    $user = User::where('id', $userId['user_id'])->first();
+//    return $user;
+//});
+
+Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/login', [LoginController::class, 'index'])->withoutMiddleware('auth.bearer');
-Route::post('/logout', [LogoutController::class, 'index'])->middleware('auth:api');
+Route::post('/logout', [LogoutController::class, 'index'])->middleware('auth.bearer');
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserToken;
 use Illuminate\Http\Request;
 
 class LogoutController extends Controller
@@ -15,7 +16,7 @@ class LogoutController extends Controller
      */
     public function index(Request $request)
     {
-        $request->user()->token()->revoke();
+        $request->user()->token()->delete();
 
         return response()->json([
             'message' => 'Вы успешно вышли из системы',

@@ -18,15 +18,15 @@ class CreateUsersTable extends Migration
             $table->foreign('id')->references('id')->on('clients');
             $table->string('email', 55)->unique();
             $table->string('password', 128);
-            $table->unsignedBigInteger('foreign_id')->index();
+            $table->unsignedBigInteger('foreign_id')->index()->nullable();
             $table->unsignedBigInteger('department_id')->index();
             //$table->foreign('dept_id')->references('id')->on('departments');
             $table->unsignedBigInteger('company_id')->index();
             //$table->foreign('company_id')->references('id')->on('departments');
             $table->index(['foreign_id', 'company_id']);
-            $table->unsignedBigInteger('duty_id')->comment('dicties->id');
+            $table->unsignedBigInteger('duty_id')->comment('dictis->id');
             $table->boolean('active')->default(true);
-            $table->date('date_end')->index();
+            $table->date('date_end')->index()->nullable();
             $table->unsignedBigInteger('updated_by')->index();
             $table->unsignedBigInteger('created_by')->index();
             $table->timestamps();

@@ -19,7 +19,7 @@ class CreatePostsTable extends Migration
             $table->foreignId('user_id')->index()->constrained();
             $table->unsignedBigInteger('company_id')->index();
             $table->foreign('company_id')->references('id')->on('departments');
-            $table->unsignedBigInteger('group_id')->index();
+            $table->unsignedBigInteger('group_id')->index()->nullable();
             $table->timestamps();
         });
     }

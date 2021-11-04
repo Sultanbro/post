@@ -18,12 +18,12 @@ class CreateDictisTable extends Migration
             $table->unsignedBigInteger('parent_id')->index();
             $table->string('short_name', 255);
             $table->string('full_name', 255);
-            $table->string('constant', 40);
-            $table->string('constant1', 40);
+            $table->string('constant', 40)->nullable();
+            $table->string('constant1', 40)->nullable();
             $table->integer('has_child')->index();
             $table->boolean('active')->default(true);
-            $table->string('text_code')->index();
-            $table->integer('num_code')->index();
+            $table->string('text_code')->index()->nullable();
+            $table->integer('num_code')->index()->nullable();
             $table->unsignedBigInteger('updated_by')->index();
             $table->unsignedBigInteger('created_by')->index();
             $table->timestamps();
