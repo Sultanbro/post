@@ -226,6 +226,8 @@ services:
     volumes:
     - mycent_production_postgres_data:/var/lib/postgresql/data
     tty: true
+    networks:
+      - app_network
 
 ##############################################################################
 
@@ -240,3 +242,5 @@ services:
     stdin_open: true
     volumes:
     - mycent_production_postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
