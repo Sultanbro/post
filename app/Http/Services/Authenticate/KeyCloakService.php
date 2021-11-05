@@ -1,11 +1,13 @@
 <?php
+
 namespace App\Http\Services\Authenticate;
 
 use App\Models\UserToken;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Stmt\DeclareDeclare;
 
-class AuthenticateService {
+class KeyCloakService {
+
     protected $urlAuth = 'http://192.168.30.11:8022/auth/realms/MyCent/protocol/openid-connect/token';
     protected $urlInfo = 'http://192.168.30.11:8022/auth/realms/MyCent/protocol/openid-connect/userinfo';
     protected $headers = [
