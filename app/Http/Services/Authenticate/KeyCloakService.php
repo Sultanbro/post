@@ -3,6 +3,7 @@
 namespace App\Http\Services\Authenticate;
 
 use App\Models\UserToken;
+use App\Repository\UserTokenRepositoryInterface;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Stmt\DeclareDeclare;
 
@@ -14,7 +15,24 @@ class KeyCloakService {
         'content-type' => 'application/x-www-form-urlencoded',
         'Accept' => 'application/json',
     ];
+    /**
+     * @var UserTokenRepositoryInterface
+     */
+    private $userTokenRepository;
 
+    /**
+     * KeyCloakService constructor.
+     * @param UserTokenRepositoryInterface $userTokenRepository
+     */
+    public function __construct(UserTokenRepositoryInterface $userTokenRepository)
+    {
+        $this->userTokenRepository = $userTokenRepository;
+    }
+
+    /**
+     * @param $token
+     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     */
     public function getUserInfo($token)
     {
         $headers = [
@@ -31,7 +49,11 @@ class KeyCloakService {
         return $response;
     }
 
-
+    /**
+     * @param $email
+     * @param $password
+     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     */
     public function getToken($email, $password)
     {
 
@@ -47,6 +69,11 @@ class KeyCloakService {
         }
         return $response;
     }
+
+    /**
+     * @param $refresh_token
+     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     */
     public function refreshToken($refresh_token)
     {
         $params = [
@@ -59,7 +86,7 @@ class KeyCloakService {
         if (isset($response['error'])) {
             return $response;
         }
-        $UserToken = UserToken::where('refresh_token', $refresh_token)->update(['access_token' => $response['access_token'], 'refresh_token' => $response['refresh_token'], 'role_id' => 1]);
+        $UserToken = $this->userTokenRepository->findFromUserToken($refresh_token)->update(['access_token' => $response['access_token'], 'refresh_token' => $response['refresh_token'], 'role_id' => 1]);
         return $UserToken;
     }
 }

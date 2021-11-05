@@ -3,8 +3,10 @@
 namespace App\Http\Middleware;
 
 use App\Http\Services\Authenticate\AuthenticateService;
+use App\Http\Services\Authenticate\KeyCloakServiceInterface;
 use App\Models\User;
 use App\Models\UserToken;
+use App\Repository\UserTokenRepositoryInterface;
 use Closure;
 use http\Env\Response;
 use Illuminate\Http\Request;
@@ -36,11 +38,10 @@ class BearerAuthenticate
 
     private function checkToken()
     {
-        // Add interface and inject
-        $login = new AuthenticateService();
+        $login = app(KeyCloakServiceInterface::class);
 
         $checkToken = $login->getUserInfo($this->token);
-        if (!$user_info = UserToken::where('access_token', $this->token)->first()) {
+        if (!$user_info = app(UserTokenRepositoryInterface::class)->findFromUserAccessToken($this->token)) {
             return response()->json(['error' => 'Some text'], 401);
         }
 
