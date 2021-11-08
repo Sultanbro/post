@@ -27,7 +27,7 @@ class LoginController extends Controller
      */
     private $keyCloakService;
     /**
-     * @var UserRepositoryInterface
+     * @var UserTokenRepositoryInterface
      */
     private $userTokenRepository;
 

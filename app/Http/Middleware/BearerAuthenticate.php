@@ -31,7 +31,7 @@ class BearerAuthenticate
         $this->token = str_replace('Bearer ', '', $this->token);
 
         if($this->checkToken()) {
-            return $next($request);
+           return $next($request );
         }
         throw new UnauthorizedException();
     }
@@ -39,12 +39,11 @@ class BearerAuthenticate
     private function checkToken()
     {
         $login = app(KeyCloakServiceInterface::class);
-
         $checkToken = $login->getUserInfo($this->token);
-        if (!$user_info = app(UserTokenRepositoryInterface::class)->findFromUserAccessToken($this->token)) {
-            return response()->json(['error' => 'Some text'], 401);
+        $user_info = app(UserTokenRepositoryInterface::class)->findFromUserAccessToken($this->token);
+        if (is_null($user_info)) {
+            return false;
         }
-
         if (!$checkToken) {
             $result = $login->refreshToken($user_info['refresh_token']);
             if (isset($result['error'])) {
@@ -53,12 +52,11 @@ class BearerAuthenticate
         }
 
         try {
-            Auth::login(\Illuminate\Foundation\Auth\User::where('id', $user_info->user_id)->first());
-            return true;
+            Auth::loginUsingId($user_info->user_id);
         }catch (\Exception $exception) {
             return false;
         }
+        return true;
     }
-
 }
 

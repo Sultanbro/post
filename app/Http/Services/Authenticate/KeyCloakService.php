@@ -7,7 +7,8 @@ use App\Repository\UserTokenRepositoryInterface;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Stmt\DeclareDeclare;
 
-class KeyCloakService {
+class KeyCloakService implements KeyCloakServiceInterface
+{
 
     protected $urlAuth = 'http://192.168.30.11:8022/auth/realms/MyCent/protocol/openid-connect/token';
     protected $urlInfo = 'http://192.168.30.11:8022/auth/realms/MyCent/protocol/openid-connect/userinfo';
@@ -40,9 +41,7 @@ class KeyCloakService {
             'Accept' => 'application/json',
             'Authorization' => 'Bearer '. $token,
         ];
-        //  dd($token);
         $response=Http::asForm()->withHeaders($headers)->post($this->urlInfo);
-        // dd($response);
         if (isset($response['error'])){
             return false;
         }

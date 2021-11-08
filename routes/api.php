@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::middleware('auth.bearer')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('user', function (Request $request) {
+    return  Auth()->user();
 });
 
 //Route::middleware('auth.bearer')->get('/user', function (Request $request) {
