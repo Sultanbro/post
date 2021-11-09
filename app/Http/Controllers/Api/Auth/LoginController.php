@@ -63,7 +63,7 @@ class LoginController extends Controller
 
         if ($token) {
             if (!$user_token = $this->userTokenRepository->findFromUserId($user->id)) {
-                $this->userTokenRepository->create(['access_token' => $token['access_token'], 'refresh_token' => $token['refresh_token'], 'user_id' => $user->id, 'role_id' => 1]);
+                $this->userTokenRepository->create(['access_token' => $token['access_token'], 'refresh_token' => $token['refresh_token'], 'user_id' => $user->id, 'role_id' => 2]);
 
                 return response()->json([
                     'token_type' => 'Bearer',
