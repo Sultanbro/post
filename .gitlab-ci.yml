@@ -58,9 +58,10 @@ deploy-app:
       --confirm-upgrade php-app nginx
 
   after_script: # https://github.com/rancher/rancher/issues/7971#issuecomment-286856228
-    - script --return --quiet --command "rancher exec -it mycent-prod-php-app-1 composer install" /dev/null
-    - script --return --quiet --command "rancher exec -it mycent-prod-php-app-1 php artisan migrate --force" /dev/null
-    - script --return --quiet --command "rancher exec -it mycent-prod-php-app-1 cp /release/* /app/*" /dev/null
+    - echo 1
+    # - script --return --quiet --command "rancher exec -it mycent-prod-php-app-1 composer install" /dev/null
+    # - script --return --quiet --command "rancher exec -it mycent-prod-php-app-1 php artisan migrate --force" /dev/null
+    # - script --return --quiet --command "rancher exec -it mycent-prod-php-app-1 cp /release/* /app/*" /dev/null
     # - rancher exec -it mycic-prod-php-app-1 composer install
     # - rancher exec -it mycic-prod-php-app-1 a migrate --force
 
