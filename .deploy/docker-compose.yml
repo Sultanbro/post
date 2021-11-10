@@ -7,10 +7,6 @@ networks:
     driver: bridge
 
 volumes:
-  mycent_production_mysql_data:
-    driver: local
-    # external: true
-
   mycent_production_postgres_data:
     driver: local
     # external: true
@@ -29,7 +25,7 @@ services:
     container_name: nginx
     hostname: nginx
     volumes:
-      - /share/common/mycent/shared/storage:/app/storage
+      - /home/student/mycent/shared/storage:/app/storage
 
     working_dir: /app
 
@@ -45,6 +41,7 @@ services:
     labels:
       # io.rancher.container.pull_image: always
       io.rancher.scheduler.affinity:host_label: name=mycic
+      io.rancher.container.pull_image: always
       io.rancher.container.agent.role: environmentAdmin,agent
       io.rancher.container.agent_service.drain_provider: 'true'
       io.rancher.container.create_agent: 'true'
@@ -67,14 +64,14 @@ services:
       APP_DEBUG: "true"
       APP_KEY: "base64:SaYfcUjht1j8/4uJ810xTHG46S/yLjQ/AkYPJJWhsNQ="
       APP_ENV: "production"
-      APP_URL: "https://mycent.kz/"
+      APP_URL: "http://mycent.kz/"
 
-      DB_CONNECTION: "mysql"
-      DB_HOST: "db"
-      DB_USERNAME: "root"
-      DB_PASSWORD: ""
-      DB_PORT: "3306"
-      DB_DATABASE: "mycent"
+      DB_CONNECTION: "pgsql"
+      DB_HOST: "pg"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "DVLkjNwEDZ9xMRPjG33b"
+      DB_PORT: "5432"
+      DB_DATABASE: "mycent_prod"
 
       REDIS_HOST: "redis"
       CACHE_DRIVER: "file"
@@ -89,22 +86,14 @@ services:
       MAIL_FROM_ADDRESS: "laravel@mycompany.com"
       MAIL_FROM_NAME: "Laravel"
 
-      FRONTEND_DOMAIN: "doc30.kupipolis.kz"
+      FRONTEND_DOMAIN: "mycent.kz"
 
-      PUSHER_APP_ID: "874293"
-      PUSHER_APP_KEY: "7be3a303223fdcdf62d5"
-      PUSHER_APP_SECRET: "91d7feb674c6a3f29d46"
-      PUSHER_APP_CLUSTER: "ap2"
-
-      MIX_PUSHER_APP_KEY: "7be3a303223fdcdf62d5"
-      MIX_PUSHER_APP_CLUSTER: "ap2"
-
-      KIAS_URL: "http://192.168.1.26:8083/kiassvctest/kiassvc.asmx?wsdl"
-      KIAS_LOGIN: "MyCIC"
-      KIAS_PASSWORD: "mycickz321"
+      # KIAS_URL: "http://192.168.1.26:8083/kiassvctest/kiassvc.asmx?wsdl"
+      # KIAS_LOGIN: "MyCIC"
+      # KIAS_PASSWORD: "mycickz321"
 
     volumes:
-      - /share/common/mycent/shared/storage:/app/storage
+      - /home/student/mycent/shared/storage:/app/storage
 
     networks:
       - app_network
@@ -125,67 +114,6 @@ services:
       io.rancher.container.agent.role: environmentAdmin,agent
       io.rancher.container.agent_service.drain_provider: 'true'
       io.rancher.container.create_agent: 'true'
-
-##############################################################################
-
-  db:
-    image: reg.cic.kz/centras/mysql:5.7
-    container_name: Database
-    hostname: db
-
-    networks:
-      - app_network
-
-    volumes:
-      - mycent_production_mysql_data:/var/lib/mysql
-
-    environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
-      - MYSQL_DATABASE=application
-
-    labels:
-      io.rancher.scheduler.affinity:host_label: name=mycic
-      io.rancher.container.agent.role: environmentAdmin,agent
-      io.rancher.container.agent_service.drain_provider: 'true'
-      io.rancher.container.create_agent: 'true'
-      io.rancher.container.hostname_override: container_name
-
-##############################################################################
-#
-#  db-lb:
-#    image: rancher/lb-service-haproxy:v0.9.14
-#    ports:
-#      - "33306:3306"
-#    labels:
-#      io.rancher.scheduler.affinity:host_label: name=mycic
-#      io.rancher.container.agent.role: environmentAdmin,agent
-#      io.rancher.container.agent_service.drain_provider: 'true'
-#      io.rancher.container.create_agent: 'true'
-#
-##############################################################################
-
-  pma:
-    image: reg.cic.kz/centras/phpmyadmin:latest
-    restart: always
-    container_name: pma
-    privileged: true
-
-    ports:
-      - "8082:80"
-
-    links:
-      - db
-
-    environment:
-      - PMA_HOST=db
-      - PMA_USER=root
-      - PMA_PASSWORD=
-      - UPLOAD_LIMIT=1024M
-
-    tty: true
-
-    networks:
-      - app_network
 
 ##############################################################################
 

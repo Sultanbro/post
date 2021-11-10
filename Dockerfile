@@ -1,6 +1,6 @@
 ARG PREFIX=reg.cic.kz/centras
 ARG NODE_VERSION=14
-ARG PHP_VERSION=7.3
+ARG PHP_VERSION=8
 
 FROM composer AS composer
 
@@ -13,11 +13,11 @@ RUN apt-get install -y libxml2-dev \
                         iputils-ping \
                         libzip-dev \
                         default-mysql-client \
-                        unzip
+                        unzip \
+                        libpq-dev
 
-RUN docker-php-ext-install zip
-RUN docker-php-ext-enable zip
-
+RUN docker-php-ext-install zip pdo pdo_pgsql pgsql
+RUN docker-php-ext-enable zip pdo pdo_pgsql pgsql
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
@@ -43,20 +43,6 @@ RUN npm i
 
 FROM ${PREFIX}/node:${NODE_VERSION} as mycent-node-assets
 WORKDIR /release
-
-ENV PUSHER_APP_ID="874293"
-ENV PUSHER_APP_KEY="7be3a303223fdcdf62d5"
-ENV PUSHER_APP_SECRET="91d7feb674c6a3f29d46"
-ENV PUSHER_APP_CLUSTER="ap2"
-ENV MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
-ENV MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
-
-RUN echo "PUSHER_APP_ID=$PUSHER_APP_ID" >> /release/.env
-RUN echo "PUSHER_APP_KEY=$PUSHER_APP_KEY" >> /release/.env
-RUN echo "PUSHER_APP_SECRET=$PUSHER_APP_SECRET" >> /release/.env
-RUN echo "PUSHER_APP_CLUSTER=$PUSHER_APP_CLUSTER" >> /release/.env
-RUN echo "MIX_PUSHER_APP_KEY=$PUSHER_APP_KEY" >> /release/.env
-RUN echo "MIX_PUSHER_APP_CLUSTER=$PUSHER_APP_CLUSTER" >> /release/.env
 
 COPY ./public/ /release/public
 
@@ -91,6 +77,18 @@ RUN mkdir -p storage/framework/sessions
 RUN mkdir -p storage/framework/views
 RUN mkdir -p storage/framework/cache
 
+RUN apt-get update -y
+RUN apt-get install -y libxml2-dev \
+                        curl \
+                        iputils-ping \
+                        libzip-dev \
+                        default-mysql-client \
+                        unzip \
+                        libpq-dev
+
+RUN docker-php-ext-install zip pdo pdo_pgsql pgsql
+RUN docker-php-ext-enable zip pdo pdo_pgsql pgsql
+
 RUN composer install
 RUN composer dump-autoload
 
@@ -105,7 +103,6 @@ COPY ./package-lock.json /app/
 # COPY --from=node-vendor /release/node_modules /app/node_modules
 COPY --from=mycent-php-autoload /release/vendor /app/vendor
 COPY --from=mycent-node-assets /release/public /app/public
-COPY --from=mycent-node-assets /release/.env /app/.env
 
 # RUN composer install \
 #     --no-dev \
@@ -126,7 +123,6 @@ COPY ./resources/ /app/resources
 
 # COPY ./storage/ /app/storage
 
-# COPY ./.env /app/
 COPY ./artisan /app/
 
 RUN chmod 0777 storage -R
