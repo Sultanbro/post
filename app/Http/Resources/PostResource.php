@@ -22,6 +22,7 @@ class PostResource extends JsonResource
             'group_id' => $this->group_id,
             'created' => $this->created_at,
             'updated' => $this->updated_at,
+            'post_files' => data_get($this, 'postFiles')
         ];
     }
 }

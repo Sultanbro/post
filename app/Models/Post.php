@@ -25,4 +25,9 @@ class Post extends Model
     {
         return $this->hasOne(Client::class, 'id', 'user_id');
     }
+
+    public function postFiles()
+    {
+        return $this->hasMany(PostFile::class);
+    }
 }

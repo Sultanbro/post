@@ -27,6 +27,7 @@ class PostStoreRequest extends FormRequest
             'content' => 'required',
             'company_id' => 'required',
             'group_id' => 'required',
+            'postFiles' => 'required',
         ];
     }
 }

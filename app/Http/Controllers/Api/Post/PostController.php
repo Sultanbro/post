@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostStoreRequest;
 use App\Http\Requests\Post\PostUpdateRequest;
 use App\Http\Resources\PostResource;
+use App\Http\Services\Post\PostServiceInterface;
 use App\Models\Post;
 use App\Repository\PostRepositoryInterface;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Exception;
 
 class PostController extends Controller
 {
@@ -18,14 +22,20 @@ class PostController extends Controller
      * @var PostRepositoryInterface
      */
     private $postRepository;
+    /**
+     * @var PostServiceInterface
+     */
+    private $postService;
 
     /**
      * PostController constructor.
      * @param PostRepositoryInterface $postRepository
+     * @param PostServiceInterface $postService
      */
-    public function __construct(PostRepositoryInterface $postRepository)
+    public function __construct(PostRepositoryInterface $postRepository, PostServiceInterface $postService)
     {
         $this->postRepository = $postRepository;
+        $this->postService = $postService;
     }
 
     /**
@@ -45,12 +55,13 @@ class PostController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(PostStoreRequest $request)
     {
         $user_id = Auth::id();
-        return response()->json($this->postRepository->create(array_merge($request->all(), ['user_id' => $user_id, 'created_by' => $user_id, 'updated_by' => $user_id])));
+
+        return $this->postService->store($request->all(), $user_id);
     }
 
     /**

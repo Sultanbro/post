@@ -26,6 +26,7 @@ class CreateDictisTable extends Migration
             $table->integer('num_code')->index()->nullable();
             $table->unsignedBigInteger('updated_by')->index();
             $table->unsignedBigInteger('created_by')->index();
+            $table->integer('foreign_id')->index();
             $table->timestamps();
         });
     }
@@ -39,6 +40,7 @@ class CreateDictisTable extends Migration
     {
         Schema::table('dictis', function (Blueprint $table){
             $table->dropIndex(['parent_id']);
+            $table->dropIndex(['foreign_id']);
             $table->dropIndex(['has_child']);
             $table->dropIndex(['text_code']);
             $table->dropIndex(['num_code']);
