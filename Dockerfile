@@ -1,6 +1,6 @@
 ARG PREFIX=reg.cic.kz/centras
 ARG NODE_VERSION=14
-ARG PHP_VERSION=7.3
+ARG PHP_VERSION=8
 
 FROM composer AS composer
 
@@ -43,20 +43,6 @@ RUN npm i
 
 FROM ${PREFIX}/node:${NODE_VERSION} as mycent-node-assets
 WORKDIR /release
-
-ENV PUSHER_APP_ID="874293"
-ENV PUSHER_APP_KEY="7be3a303223fdcdf62d5"
-ENV PUSHER_APP_SECRET="91d7feb674c6a3f29d46"
-ENV PUSHER_APP_CLUSTER="ap2"
-ENV MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
-ENV MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
-
-RUN echo "PUSHER_APP_ID=$PUSHER_APP_ID" >> /release/.env
-RUN echo "PUSHER_APP_KEY=$PUSHER_APP_KEY" >> /release/.env
-RUN echo "PUSHER_APP_SECRET=$PUSHER_APP_SECRET" >> /release/.env
-RUN echo "PUSHER_APP_CLUSTER=$PUSHER_APP_CLUSTER" >> /release/.env
-RUN echo "MIX_PUSHER_APP_KEY=$PUSHER_APP_KEY" >> /release/.env
-RUN echo "MIX_PUSHER_APP_CLUSTER=$PUSHER_APP_CLUSTER" >> /release/.env
 
 COPY ./public/ /release/public
 
