@@ -15,9 +15,6 @@ services:
   grafana:
     scale: 1
     start_on_create: true
-  pma:
-    scale: 1
-    start_on_create: true
   lb:
     scale: 1
     start_on_create: true
@@ -53,6 +50,3 @@ services:
       interval: 2000
       strategy: recreate
       reinitializing_timeout: 60000
-  db:
-    scale: 1
-    start_on_create: true
