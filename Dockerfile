@@ -15,9 +15,8 @@ RUN apt-get install -y libxml2-dev \
                         default-mysql-client \
                         unzip
 
-RUN docker-php-ext-install zip
-RUN docker-php-ext-enable zip
-
+RUN docker-php-ext-install zip pdo pdo_pgsql
+RUN docker-php-ext-enable zip pdo pdo_pgsql
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
