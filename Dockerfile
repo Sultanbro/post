@@ -94,7 +94,6 @@ COPY ./package-lock.json /app/
 # COPY --from=node-vendor /release/node_modules /app/node_modules
 COPY --from=mycent-php-autoload /release/vendor /app/vendor
 COPY --from=mycent-node-assets /release/public /app/public
-COPY --from=mycent-node-assets /release/.env /app/.env
 
 # RUN composer install \
 #     --no-dev \
@@ -115,7 +114,6 @@ COPY ./resources/ /app/resources
 
 # COPY ./storage/ /app/storage
 
-# COPY ./.env /app/
 COPY ./artisan /app/
 
 RUN chmod 0777 storage -R
