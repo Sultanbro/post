@@ -13,10 +13,11 @@ RUN apt-get install -y libxml2-dev \
                         iputils-ping \
                         libzip-dev \
                         default-mysql-client \
-                        unzip
+                        unzip \
+                        libpq-dev
 
-RUN docker-php-ext-install zip pdo pdo_pgsql
-RUN docker-php-ext-enable zip pdo pdo_pgsql
+RUN docker-php-ext-install zip pdo pdo_pgsql pgsql
+RUN docker-php-ext-enable zip pdo pdo_pgsql pgsql
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
@@ -75,6 +76,9 @@ COPY --from=mycent-php-vendor /release/vendor /release/vendor
 RUN mkdir -p storage/framework/sessions
 RUN mkdir -p storage/framework/views
 RUN mkdir -p storage/framework/cache
+
+RUN docker-php-ext-install zip pdo pdo_pgsql pgsql
+RUN docker-php-ext-enable zip pdo pdo_pgsql pgsql
 
 RUN composer install
 RUN composer dump-autoload
