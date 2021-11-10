@@ -29,7 +29,7 @@ services:
     container_name: nginx
     hostname: nginx
     volumes:
-      - /share/common/mycent/shared/storage:/app/storage
+      - /home/student/mycent/shared/storage:/app/storage
 
     working_dir: /app
 
@@ -104,7 +104,7 @@ services:
       KIAS_PASSWORD: "mycickz321"
 
     volumes:
-      - /share/common/mycent/shared/storage:/app/storage
+      - /home/student/mycent/shared/storage:/app/storage
 
     networks:
       - app_network
