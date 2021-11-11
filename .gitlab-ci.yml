@@ -4,7 +4,6 @@ stages:
 
 build-docker:
   stage: build
-  when: manual
 
   only:
     - master
