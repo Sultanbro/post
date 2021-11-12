@@ -75,6 +75,18 @@ COPY --from=mycic-php-autoload /app/vendor/autoload.php /app/vendor/autoload.php
 COPY --from=mycic-node-assets /app/public /app/public
 COPY --from=mycic-node-assets /app/.env /app/.env
 
+RUN apt-get update -y
+RUN apt-get install -y libxml2-dev \
+                        curl \
+                        iputils-ping \
+                        libzip-dev \
+                        default-mysql-client \
+                        unzip \
+                        libpq-dev
+
+RUN docker-php-ext-install zip pdo pdo_pgsql pgsql
+RUN docker-php-ext-enable zip pdo pdo_pgsql pgsql
+
 # RUN composer install \
 #     --no-dev \
 #     --no-autoloader \
