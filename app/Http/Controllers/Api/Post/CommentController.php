@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers\Api\Post;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\CommentStoreRequest;
+use App\Http\Requests\Post\CommentUpdateRequest;
+use App\Http\Resources\CommentResource;
+use App\Models\Comment;
+use App\Repository\CommentRepositoryInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class CommentController extends Controller
+{
+    /**
+     * @var CommentRepositoryInterface
+     */
+    private $commentRepository;
+
+    /**
+     * CommentController constructor.
+     * @param CommentRepositoryInterface $commentRepository
+     */
+    public function __construct(CommentRepositoryInterface $commentRepository)
+    {
+        $this->commentRepository = $commentRepository;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function index()
+    {
+        return CommentResource::collection($this->commentRepository->all());
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(CommentStoreRequest $request)
+    {
+        return response()->json($this->commentRepository->create(array_merge([$request->all(), 'created_by' => Auth::id(), 'updated_by' => Auth::id(),])));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return CommentResource
+     */
+    public function show($id)
+    {
+        return new CommentResource($this->commentRepository->getByPostId($id));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(CommentUpdateRequest $request, $id)
+    {
+        if ($this->commentRepository->update($id,  $request->all())) {
+            return response()->json(['message' => 'ok'], 200);
+        }
+        return response()->json(['message' => 'not save'], 304);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        if ($this->commentRepository->deleteById($id)) {
+            return response()->json(['message' => 'ok'], 410);
+        }
+        return response()->json(['message' => 'Not Found'], 404);
+    }
+}

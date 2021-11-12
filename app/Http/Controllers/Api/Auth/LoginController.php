@@ -85,7 +85,7 @@ class LoginController extends Controller
         }
 
         return response()->json([
-            'error' => 'no auth',
+            'error' => 'no auth for keycloak',
         ], 403);
     }
 }
