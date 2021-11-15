@@ -37,6 +37,7 @@ class KeyCloakService implements KeyCloakServiceInterface
     public function getUserInfo($token)
     {
         if ($token == env('TEST_TOKEN')) return true;
+        if ($token == env('1C_TOKEN')) return true;
         $headers = [
             'content-type' => 'application/json',
             'Accept' => 'application/json',

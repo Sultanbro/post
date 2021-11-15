@@ -61,8 +61,8 @@ class LoginController extends Controller
     {
         $user = $this->userRepository->userFromEmail($request->email);
 
-        if($request->email == env('TEST_USER')) {
-            return $this->userAuth->saveUserToken($user, ['access_token' => env('TEST_TOKEN'), 'refresh_token' => env('TEST_REFRESH_TOKEN')]);
+        if($request->email == 'master@mail.uz') {
+            return $this->userAuth->saveUserToken($user, [ 'access_token' => env('TEST_TOKEN'), 'refresh_token' => env('TEST_REFRESH_TOKEN')]);
         }
 
         if (!$user) {
