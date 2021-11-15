@@ -9,6 +9,7 @@ class Comment extends Model
 {
     protected $fillable = [
         'parent_id',
+        'post_id',
         'content',
         'user_id',
         'created_by',
@@ -18,11 +19,11 @@ class Comment extends Model
 
     public function commentUser()
     {
-        return $this->hasOne(Client::class);
+        return $this->hasOne(Client::class, 'id', 'user_id');
     }
 
     public function countLike()
     {
-        return $this->hasMany(Like::class, 'parent_id', 'id')->where('type', 2)->count();
+        return $this->hasMany(Like::class, 'parent_id', 'id')->where('type', 2);
     }
 }

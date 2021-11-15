@@ -89,6 +89,6 @@ class BaseRepository implements EloquentRepositoryInterface
      */
     public function firstOrCreate(array $attributes)
     {
-        return $this->model->findOrCreate($attributes);
+        return $this->model->firstOrCreate($attributes);
     }
 }

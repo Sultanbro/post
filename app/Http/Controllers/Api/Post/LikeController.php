@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\Post;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LikeInfoRequest;
 use App\Http\Requests\LikeStoreRequest;
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\LikeResource;
 use App\Repository\LikeRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
 {
@@ -33,7 +35,7 @@ class LikeController extends Controller
      */
     public function store(LikeStoreRequest $request)
     {
-        return response()->json($this->likeReposytory->firstOrCreate($request->all()));
+        return response()->json($this->likeReposytory->firstOrCreate(array_merge($request->all(), ['user_id' => Auth::id()])));
     }
 
     /**

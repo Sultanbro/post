@@ -3,8 +3,7 @@
 
 namespace App\Http\Controllers\Api\WriteBase;
 
-
-use http\Env\Request;
+use Illuminate\Http\Request;
 
 class ClientBaseController
 {
@@ -14,6 +13,6 @@ class ClientBaseController
 
     public function acceptUserInfo(Request $request)
     {
-//        return
+        return 'good';
     }
 }

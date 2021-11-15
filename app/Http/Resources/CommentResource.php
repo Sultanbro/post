@@ -22,7 +22,7 @@ class CommentResource extends JsonResource
           'updated_by' => $this->updated_by,
           'updated' => $this->updated_at,
           'created' => $this->created_at,
-          'like_count' => data_get($this, 'countLike'),
+          'like_count' => count(data_get($this, 'countLike')),
         ];
     }
 }

@@ -45,18 +45,18 @@ class CommentController extends Controller
      */
     public function store(CommentStoreRequest $request)
     {
-        return response()->json($this->commentRepository->create(array_merge([$request->all(), 'created_by' => Auth::id(), 'updated_by' => Auth::id(),])));
+        return response()->json($this->commentRepository->create(array_merge($request->all(),['user_id' => Auth::id(), 'created_by' => Auth::id(), 'updated_by' => Auth::id(),])));
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return CommentResource
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function show($id)
     {
-        return new CommentResource($this->commentRepository->getByPostId($id));
+        return CommentResource::collection($this->commentRepository->getCommentsByPostId($id));
     }
 
     /**
