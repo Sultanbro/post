@@ -106,6 +106,8 @@ COPY ./storage/ /app/storage
 # COPY ./.env /app/
 COPY ./artisan /app/
 
+RUN composer dump-autoload
+
 RUN chmod 0777 storage -R
 
 RUN echo 'alias a="php artisan"' >> ~/.bashrc
