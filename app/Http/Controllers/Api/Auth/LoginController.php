@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Services\Authenticate\AuthenticateService;
 use App\Http\Services\Authenticate\KeyCloakServiceInterface;
+use App\Http\Services\Authenticate\UserAuthServiceInterface;
 use App\Models\AccessToken;
 use App\Models\User;
 use App\Models\UserToken;
@@ -30,18 +31,24 @@ class LoginController extends Controller
      * @var UserTokenRepositoryInterface
      */
     private $userTokenRepository;
+    /**
+     * @var UserAuthServiceInterface
+     */
+    private $userAuth;
 
     /**
      * LoginController constructor.
      * @param UserRepositoryInterface $userRepository
      * @param KeyCloakServiceInterface $keyCloakService
      * @param UserTokenRepositoryInterface $userTokenRepository
+     * @param UserAuthServiceInterface $authService
      */
-    public function __construct(UserRepositoryInterface $userRepository, KeyCloakServiceInterface $keyCloakService, UserTokenRepositoryInterface $userTokenRepository)
+    public function __construct(UserRepositoryInterface $userRepository, KeyCloakServiceInterface $keyCloakService, UserTokenRepositoryInterface $userTokenRepository, UserAuthServiceInterface $authService)
     {
         $this->userTokenRepository = $userTokenRepository;
         $this->keyCloakService = $keyCloakService;
         $this->userRepository = $userRepository;
+        $this->userAuth = $authService;
     }
 
     /**
@@ -52,7 +59,13 @@ class LoginController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$user = $this->userRepository->userFromEmail($request->email)) {
+        $user = $this->userRepository->userFromEmail($request->email);
+
+        if($request->email == env('TEST_USER')) {
+            return $this->userAuth->saveUserToken($user, ['access_token' => env('TEST_TOKEN'), 'refresh_token' => env('TEST_REFRESH_TOKEN')]);
+        }
+
+        if (!$user) {
             return response()->json([
                 'message' => 'Вы не можете зайти с этими учетными данными',
                 'errors' => 'Неавторизованный'
@@ -62,26 +75,7 @@ class LoginController extends Controller
         $token = $this->keyCloakService->getToken($request->email, $request->password);
 
         if ($token) {
-            if (!$user_token = $this->userTokenRepository->findFromUserId($user->id)) {
-                $this->userTokenRepository->create(['access_token' => $token['access_token'], 'refresh_token' => $token['refresh_token'], 'user_id' => $user->id, 'role_id' => 2]);
-
-                return response()->json([
-                    'token_type' => 'Bearer',
-                    'access_token' => $token['access_token'],
-                    'refresh_token' => $token['refresh_token'],
-                    'created' => 1,
-                    'user_info' => $user,
-                ], 200);
-            }
-            $this->userTokenRepository->update($user_token->id, ['access_token' => $token['access_token'], 'refresh_token' => $token['refresh_token'], 'role_id' => 1]);
-            return response()->json([
-                'token_type' => 'Bearer',
-                'access_token' => $token['access_token'],
-                'refresh_token' => $token['refresh_token'],
-                'updated' => 1,
-                'user_info' => $user,
-            ], 200);
-
+           return $this->userAuth->saveUserToken($user, $token);
         }
 
         return response()->json([

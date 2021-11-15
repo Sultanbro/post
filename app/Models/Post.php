@@ -31,11 +31,6 @@ class Post extends Model
         return $this->hasMany(PostFile::class);
     }
 
-    public function countLikes()
-    {
-        return $this->hasMany(Like::class, 'parent_id', 'id')->where('type', 1)->count();
-    }
-
     public function like()
     {
         return $this->hasMany(Like::class, 'parent_id', 'id')->where('type', 1);

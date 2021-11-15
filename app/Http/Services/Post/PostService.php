@@ -36,7 +36,7 @@ class PostService implements PostServiceInterface
      */
     public function store($req, $user_id)
     {
-        $model = $this->postRepository->create(array_merge($req['content'], $req['company_id'], $req['group_id'], ['user_id' => $user_id, 'created_by' => $user_id, 'updated_by' => $user_id]));
+        $model = $this->postRepository->create(array_merge(['content' => $req['content'], 'company_id' => $req['company_id'], 'group_id' => $req['group_id'], 'user_id' => $user_id, 'created_by' => $user_id, 'updated_by' => $user_id]));
 
         if ($model && $req['postFiles']) {
             $results = $this->saveFiles($req['postFiles'], $model->id);
@@ -58,12 +58,15 @@ class PostService implements PostServiceInterface
      */
     public function saveFiles(array $params, int $id)
     {
+        $link = [];
         try {
                 foreach ($params as $name => $files) {
                     foreach ($files as $file) {
                         $fileName = $file->getClientOriginalName();
                         $content = file_get_contents($file->getRealPath());
-                        $link[] = Storage::disk('local')->put("public/post_files/$id/$name/$fileName", $content);
+                        if (Storage::disk('local')->put("public/post_files/$id/$name/$fileName", $content)) {
+                            $link[] = "post_files/$id/$name/$fileName";
+                        }
                     }
                 }
             return $link;

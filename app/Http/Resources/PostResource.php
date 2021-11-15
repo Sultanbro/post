@@ -23,7 +23,7 @@ class PostResource extends JsonResource
             'created' => $this->created_at,
             'updated' => $this->updated_at,
             'post_files' => data_get($this, 'postFiles'),
-            'like_count' => data_get($this, 'countLikes'),
+            'like_count' => count(data_get($this, 'like')),
         ];
     }
 }

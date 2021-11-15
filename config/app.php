@@ -177,6 +177,7 @@ return [
         App\Providers\RepositoryServiceProvider::class,
         App\Providers\KeyCloakServiceProvider::class,
         App\Providers\PostServiceProvide::class,
+        App\Providers\UserAuthtServiceProvide::class,
     ],
 
     /*

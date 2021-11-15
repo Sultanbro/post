@@ -101,11 +101,14 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
+
         $post = $this->postRepository->find($id);
         if ($post->user_id == Auth::id() or Auth::user()->token->role_id == 1) {
-            if ($this->postRepository->deleteById($id)) {
-                return response()->json(['message' => 'ok'], 410);
-            }
+                if (Storage::disk('local')->deleteDirectory('public/post_files/' . $id)) {
+                    if ($this->postRepository->deleteById($id)) {
+                        return response()->json(['message' => 'ok'], 410);
+                    }
+                }
             return response()->json(['message' => 'Not Found'], 404);
         }
         return response()->json(['message' => 'Forbidden'], 403);

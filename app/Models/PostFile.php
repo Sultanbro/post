@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class PostFile extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'post_id',
+        'link',
+    ];
 }

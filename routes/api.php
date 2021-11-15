@@ -28,14 +28,6 @@ Route::get('user', function (Request $request) {
     return  Auth()->user();
 });
 
-//Route::middleware('auth.bearer')->get('/user', function (Request $request) {
-//    $userId = UserToken::where('access_token', $request->token)->first();
-//    dd(\Illuminate\Support\Facades\Auth::user());
-//    return $userId;
-//    $user = User::where('id', $userId['user_id'])->first();
-//    return $user;
-//});
-
 Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/login', [LoginController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/logout', [LogoutController::class, 'index'])->middleware('auth.bearer');
