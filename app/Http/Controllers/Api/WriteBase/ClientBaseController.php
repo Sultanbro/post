@@ -3,16 +3,41 @@
 
 namespace App\Http\Controllers\Api\WriteBase;
 
+use App\Http\Requests\WriteBase\AcceptClientRequest;
+use App\Http\Services\WriteBase\ClientBaseServiceInterface;
+use App\Repository\ClientRepositoryInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClientBaseController
 {
-    public function __construct()
+    /**
+     * @var ClientRepositoryInterface
+     */
+    private $clientRepository;
+    /**
+     * @var ClientBaseServiceInterface
+     */
+    private $clientBaseService;
+
+    /**
+     * ClientBaseController constructor.
+     * @param ClientRepositoryInterface $clientRepository
+     * @param ClientBaseServiceInterface $clientBaseService
+     */
+    public function __construct(ClientRepositoryInterface $clientRepository, ClientBaseServiceInterface $clientBaseService)
     {
+        $this->clientRepository = $clientRepository;
+        $this->clientBaseService = $clientBaseService;
     }
 
-    public function acceptUserInfo(Request $request)
+    public function acceptClientInfo(Request $request)
     {
-        return 'good';
+        try {
+            return $this->clientBaseService->saveClients($request->all());
+        }catch (\Exception $e) {
+            return response()->json($e);
+        }
     }
 }

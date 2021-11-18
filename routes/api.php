@@ -33,7 +33,7 @@ Route::get('user', function (Request $request) {
 Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/login', [LoginController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/logout', [LogoutController::class, 'index'])->middleware('auth.bearer');
-Route::post('/clients/info', [ClientBaseController::class, 'acceptUserInfo']);
+Route::post('/clients/info', [ClientBaseController::class, 'acceptClientInfo']);
 Route::resource('posts', PostController::class);
 Route::resource('comments', CommentController::class);
 Route::resource('likes', LikeController::class);

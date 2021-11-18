@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Api\Post;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LikeInfoRequest;
-use App\Http\Requests\LikeStoreRequest;
-use App\Http\Resources\CommentResource;
+use App\Http\Requests\Post\LikeStoreRequest;
+use App\Http\Requests\Post\LikeInfoRequest;
 use App\Http\Resources\LikeResource;
 use App\Repository\LikeRepositoryInterface;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller

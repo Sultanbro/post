@@ -15,6 +15,6 @@ interface UserRepositoryInterface extends EloquentRepositoryInterface
      * @param $id
      * @return mixed
      */
-    public function userFromId($id);
+    public function userById($id);
 
 }

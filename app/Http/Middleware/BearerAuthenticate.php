@@ -40,9 +40,7 @@ class BearerAuthenticate
     {
         $login = app(KeyCloakServiceInterface::class);
         $checkToken = $login->getUserInfo($this->token);
-        if ($checkToken === '1c') {
-            return true;
-        }
+
         $user_info = app(UserTokenRepositoryInterface::class)->findFromUserAccessToken($this->token);
         if (is_null($user_info)) {
             return false;

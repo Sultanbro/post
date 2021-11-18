@@ -32,12 +32,11 @@ class CreatePostsTable extends Migration
     public function down()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->dropPrimary('id');
             $table->dropForeign(['user_id']);
             $table->dropIndex(['user_id']);
             $table->dropIndex(['group_id']);
-            $table->dropIndex(['company_id']);
             $table->dropForeign(['company_id']);
+            $table->dropIndex(['company_id']);
         });
         Schema::dropIfExists('posts');
     }

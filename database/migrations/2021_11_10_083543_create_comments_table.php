@@ -33,7 +33,6 @@ class CreateCommentsTable extends Migration
     public function down()
     {
         Schema::table('comments', function (Blueprint $table) {
-            $table->dropPrimary('id');
             $table->dropForeign(['user_id']);
             $table->dropIndex(['user_id']);
             $table->dropIndex(['parent_id']);

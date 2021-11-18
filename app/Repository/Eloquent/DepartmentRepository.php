@@ -4,38 +4,40 @@
 namespace App\Repository\Eloquent;
 
 
+use App\Http\Resources\UserResource;
+use App\Models\Department;
+use App\Models\Post;
 use App\Models\User;
+use App\Repository\DepartmentRepositoryInterface;
+use App\Repository\PostRepositoryInterface;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use phpDocumentor\Reflection\Types\Mixed_;
 
-class UserRepository extends BaseRepository implements UserRepositoryInterface
+class DepartmentRepository extends BaseRepository implements DepartmentRepositoryInterface
 {
     /**
      * UserRepository constructor.
-     * @param User $model
+     * @param Department $model
      */
-    public function __construct(User $model)
+    public function __construct(Department $model)
     {
         parent::__construct($model);
         $this->model = $model;
     }
 
-    /**
-     * @param $email
-     * @return mixed
-     */
-    public function userFromEmail($email)
+
+    public function updateOrCreate(array $department)
     {
-        return $this->model->firstWhere('email', $email);
+        $this->model->updateOrCreate($department);
     }
 
     /**
      * @param $id
      * @return mixed
      */
-    public function userById($id)
+    public function firstWhereId($id)
     {
         return $this->model->firstWhere('id', $id);
     }

@@ -42,7 +42,6 @@ class CreateClientsTable extends Migration
     public function down()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->dropPrimary('id');
             $table->dropIndex('clients_iin_index');
             $table->dropIndex('clients_type_id_index');
             $table->dropIndex('clients_birthday_index');

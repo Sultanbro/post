@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->bigIncrements('id')->unique();
+            $table->unsignedBigInteger('id')->unique();
             $table->foreign('id')->references('id')->on('clients');
             $table->string('email', 55)->unique();
             $table->string('password', 128);
@@ -41,8 +41,8 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropUnique(['id']);
             $table->dropForeign(['id']);
+            $table->dropUnique(['id']);
             $table->dropUnique(['email']);
             $table->dropIndex('users_foreign_id_index');
             $table->dropIndex('users_department_id_index');

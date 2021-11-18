@@ -14,7 +14,7 @@ class CreateDepartmentsTable extends Migration
     public function up()
     {
         Schema::create('departments', function (Blueprint $table) {
-            $table->bigIncrements('id')->unique();
+            $table->unsignedBigInteger('id')->unique();
             $table->foreign('id')->references('id')->on('clients');
             $table->unsignedBigInteger('parent_id')->index();
             $table->string('short_name', 255);
@@ -35,8 +35,8 @@ class CreateDepartmentsTable extends Migration
     public function down()
     {
         Schema::table('departments', function (Blueprint $table){
-            $table->dropUnique(['id']);
             $table->dropForeign(['id']);
+            $table->dropUnique(['id']);
             $table->dropIndex(['parent_id']);
             $table->dropIndex(['created_by']);
             $table->dropIndex(['updated_by']);

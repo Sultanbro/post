@@ -178,6 +178,7 @@ return [
         App\Providers\KeyCloakServiceProvider::class,
         App\Providers\PostServiceProvide::class,
         App\Providers\UserAuthtServiceProvide::class,
+        App\Providers\ClientBaseServiceProvider::class,
     ],
 
     /*

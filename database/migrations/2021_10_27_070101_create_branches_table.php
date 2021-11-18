@@ -36,12 +36,11 @@ class CreateBranchesTable extends Migration
     public function down()
     {
         Schema::table('branches', function (Blueprint $table) {
-            $table->dropPrimary('id');
             $table->dropIndex('branches_foreign_id_index');
-            $table->dropIndex('branches_user_id_index');
             $table->dropForeign( 'branches_user_id_foreign') ;
-            $table->dropIndex('branches_parent_id_index');
+            $table->dropIndex('branches_user_id_index');
             $table->dropForeign('branches_parent_id_foreign');
+            $table->dropIndex('branches_parent_id_index');
             $table->dropIndex('branches_updated_by_index');
             $table->dropIndex('branches_created_by_index');
         });
