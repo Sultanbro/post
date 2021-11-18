@@ -36,14 +36,13 @@ class KeyCloakService implements KeyCloakServiceInterface
      */
     public function getUserInfo($token)
     {
-        if ($token == env('TEST_TOKEN')) return true;
-        if ($token == env('1C_TOKEN')) return '1c';
+        if ($token == 'test_access_token') return true;
         $headers = [
             'content-type' => 'application/json',
             'Accept' => 'application/json',
             'Authorization' => 'Bearer '. $token,
         ];
-        $response=Http::asForm()->withHeaders($headers)->post($this->urlInfo);
+        $response = Http::asForm()->withHeaders($headers)->post($this->urlInfo);
         if (isset($response['error'])){
             return false;
         }
