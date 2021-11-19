@@ -130,4 +130,6 @@ RUN mkdir -p /app/storage/framework/sessions
 RUN mkdir -p /app/storage/framework/views
 RUN mkdir -p /app/storage/framework/cache
 
+ln -s /app/storage/app/public /app/public/storage 
+
 RUN echo 'alias a="php artisan"' >> ~/.bashrc
