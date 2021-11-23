@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Post extends Model
 {
@@ -35,4 +36,15 @@ class Post extends Model
     {
         return $this->hasMany(Like::class, 'parent_id', 'id')->where('type', 1);
     }
+
+    public function liked()
+    {
+        return $this->hasOne(Like::class, 'parent_id', 'id')->where('type', 1)->where('user_id', Auth::id());
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'post_id', 'id');
+    }
+
 }
