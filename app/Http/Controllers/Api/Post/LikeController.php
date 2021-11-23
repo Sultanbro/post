@@ -34,6 +34,12 @@ class LikeController extends Controller
      */
     public function store(LikeStoreRequest $request)
     {
+        if ($model = $this->likeReposytory->firstByPostId(array_merge($request->all(), ['user_id' => Auth::id()]))) {
+            if ($this->likeReposytory->deleteById($model->id)) {
+                return response()->json(['message' => 'ok'], 410);
+            }
+            return response()->json(['message' => 'Not Found'], 404);
+        }
         if ($model = $this->likeReposytory->firstOrCreate(array_merge($request->all(), ['user_id' => Auth::id()]))) {
             return ['like_count' => $this->likeReposytory->liked_count($model->parent_id, $model->type)];
         }
@@ -60,9 +66,5 @@ class LikeController extends Controller
      */
     public function destroy($id)
     {
-        if ($this->likeReposytory->deleteById($id)) {
-            return response()->json(['message' => 'ok'], 410);
-        }
-        return response()->json(['message' => 'Not Found'], 404);
     }
 }
