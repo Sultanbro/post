@@ -38,7 +38,7 @@ class PostService implements PostServiceInterface
     {
         $model = $this->postRepository->create(array_merge(['content' => $req['content'], 'company_id' => $req['company_id'], 'group_id' => $req['group_id'], 'user_id' => $user_id, 'created_by' => $user_id, 'updated_by' => $user_id]));
 
-        if ($model && $req['postFiles']) {
+        if ($model && isset($req['postFiles'])) {
             $results = $this->saveFiles($req['postFiles'], $model->id);
             if (isset($results['success'])) {
                 $this->postRepository->deleteById($model->id);
