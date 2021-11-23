@@ -8,6 +8,7 @@ use App\Http\Requests\Post\LikeInfoRequest;
 use App\Http\Resources\LikeResource;
 use App\Repository\LikeRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
+use function Composer\Autoload\includeFile;
 
 class LikeController extends Controller
 {
@@ -33,7 +34,10 @@ class LikeController extends Controller
      */
     public function store(LikeStoreRequest $request)
     {
-        return response()->json($this->likeReposytory->firstOrCreate(array_merge($request->all(), ['user_id' => Auth::id()])));
+        if ($model = $this->likeReposytory->firstOrCreate(array_merge($request->all(), ['user_id' => Auth::id()]))) {
+            return ['like_count' => $this->likeReposytory->liked_count($model->parent_id, $model->type)];
+        }
+        return response()->json(['message' => 'not found'], 404);
     }
 
     /**
