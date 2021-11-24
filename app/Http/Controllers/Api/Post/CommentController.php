@@ -45,7 +45,7 @@ class CommentController extends Controller
      */
     public function store(CommentStoreRequest $request)
     {
-        return response()->json($this->commentRepository->create(array_merge($request->all(),['user_id' => Auth::id(), 'created_by' => Auth::id(), 'updated_by' => Auth::id(),])));
+        return new CommentResource($this->commentRepository->create(array_merge($request->all(),['user_id' => Auth::id(), 'created_by' => Auth::id(), 'updated_by' => Auth::id(),])));
     }
 
     /**
@@ -68,10 +68,13 @@ class CommentController extends Controller
      */
     public function update(CommentUpdateRequest $request, $id)
     {
-        if ($this->commentRepository->update($id,  $request->all())) {
-            return response()->json(['message' => 'ok'], 200);
+        if (Auth::id() === $this->commentRepository->find($id)->user_id) {
+            if ($this->commentRepository->update($id,  $request->all())) {
+                return new CommentResource($this->commentRepository->find($id));
+            }
+            return response()->json(['message' => 'not save'], 304);
         }
-        return response()->json(['message' => 'not save'], 304);
+        return response()->json(['message' => 'Forbidden '], 403);
     }
 
     /**
@@ -82,9 +85,13 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        if ($this->commentRepository->deleteById($id)) {
-            return response()->json(['message' => 'ok'], 410);
+        if (Auth::id() === $this->commentRepository->find($id)->user_id) {
+            if ($this->commentRepository->deleteById($id)) {
+                return response()->json(['message' => 'ok'], 200);
+            }
+            return response()->json(['message' => 'Not Found'], 404);
         }
-        return response()->json(['message' => 'Not Found'], 404);
+        return response()->json(['message' => 'Forbidden '], 403);
     }
+
 }
