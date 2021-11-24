@@ -46,7 +46,7 @@ class PostController extends Controller
     public function index()
     {
         if (Auth::user()->token->role_id == 1) {
-            return PostResource::collection($this->postRepository->all());
+            return PostResource::collection($this->postRepository->getPostsWithData());
         }
         return PostResource::collection($this->postRepository->getPostsByCompanyId([Auth::user()->company_id, 2]));
     }

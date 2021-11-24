@@ -5,10 +5,14 @@ namespace App\Providers;
 use App\Repository\ClientRepositoryInterface;
 use App\Repository\CommentRepositoryInterface;
 use App\Repository\DepartmentRepositoryInterface;
+use App\Repository\DictiForeignRepositoryInterface;
+use App\Repository\DictiRepositoryInterface;
 use App\Repository\Eloquent\BaseRepository;
 use App\Repository\Eloquent\ClientRepository;
 use App\Repository\Eloquent\CommentRepository;
 use App\Repository\Eloquent\DepartmentRepository;
+use App\Repository\Eloquent\DictiForeignRepository;
+use App\Repository\Eloquent\DictiRepository;
 use App\Repository\Eloquent\LikeRepository;
 use App\Repository\Eloquent\PostFileRepository;
 use App\Repository\Eloquent\PostRepository;
@@ -40,6 +44,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(LikeRepositoryInterface::class, LikeRepository::class);
         $this->app->bind(ClientRepositoryInterface::class, ClientRepository::class);
         $this->app->bind(DepartmentRepositoryInterface::class, DepartmentRepository::class);
+        $this->app->bind(DictiRepositoryInterface::class, DictiRepository::class);
+        $this->app->bind(DictiForeignRepositoryInterface::class, DictiForeignRepository::class);
     }
 
     /**

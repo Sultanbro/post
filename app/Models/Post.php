@@ -39,7 +39,7 @@ class Post extends Model
 
     public function liked()
     {
-        return $this->hasOne(Like::class, 'parent_id', 'id')->where('type', 1)->where('user_id', Auth::id());
+        return $this->hasOne(Like::class, 'parent_id', 'id')->where('type', 1)->whereUserId(Auth::id());
     }
 
     public function comments()

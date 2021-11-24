@@ -10,4 +10,9 @@ interface PostRepositoryInterface extends EloquentRepositoryInterface
      * @return Collection
      */
     public function getPostsByCompanyId($company_id);
+
+    /**
+     * @return mixed
+     */
+    public function getPostsWithData();
 }
