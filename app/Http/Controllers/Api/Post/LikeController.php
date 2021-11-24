@@ -36,7 +36,7 @@ class LikeController extends Controller
     {
         if ($model = $this->likeReposytory->firstByPostId(array_merge($request->all(), ['user_id' => Auth::id()]))) {
             if ($this->likeReposytory->deleteById($model->id)) {
-                return response()->json(['message' => 'ok'], 410);
+                return response()->json(['message' => 'ok'], 200);
             }
             return response()->json(['message' => 'Not Found'], 404);
         }

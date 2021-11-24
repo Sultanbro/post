@@ -108,7 +108,7 @@ class PostController extends Controller
                 Storage::disk('local')->deleteDirectory('public/post_files/' . $id);
             }
             if ($this->postRepository->deleteById($id)) {
-                return response()->json(['message' => 'ok'], 410);
+                return response()->json(['message' => 'ok'], 200);
             }
             return response()->json(['message' => 'Not Found'], 404);
         }
