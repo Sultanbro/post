@@ -63,6 +63,8 @@ class LoginController extends Controller
 
         if($request->email == 'master@mail.uz') {
             return $this->userAuth->saveUserToken($user, [ 'access_token' => 'test_access_token', 'refresh_token' => 'test_refresh_token']);
+        }elseif ($request->email == 'test@mail.ru') {
+            return $this->userAuth->saveUserToken($user, [ 'access_token' => 'test_access_token2', 'refresh_token' => 'test_access_token2']);
         }
 
         if (!$user) {
