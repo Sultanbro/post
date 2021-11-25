@@ -6,6 +6,7 @@ namespace App\Repository\Eloquent;
 
 use App\Models\Comment;
 use App\Repository\CommentRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class CommentRepository extends BaseRepository implements CommentRepositoryInterface
 {
@@ -19,8 +20,13 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
         $this->model = $model;
     }
 
+    /**
+     * @param $postId
+     * @return mixed
+     */
     public function getCommentsByPostId($postId)
     {
         return $this->model->where('post_id', $postId)->get();
     }
+
 }

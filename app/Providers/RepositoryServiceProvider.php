@@ -45,7 +45,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ClientRepositoryInterface::class, ClientRepository::class);
         $this->app->bind(DepartmentRepositoryInterface::class, DepartmentRepository::class);
         $this->app->bind(DictiRepositoryInterface::class, DictiRepository::class);
-        $this->app->bind(DictiForeignRepositoryInterface::class, DictiForeignRepository::class);
     }
 
     /**

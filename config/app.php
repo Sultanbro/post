@@ -179,6 +179,7 @@ return [
         App\Providers\PostServiceProvide::class,
         App\Providers\UserAuthtServiceProvide::class,
         App\Providers\ClientBaseServiceProvider::class,
+        App\Providers\DictiSaveServiceProvide::class,
     ],
 
     /*

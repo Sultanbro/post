@@ -27,10 +27,6 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
     public function firstWhereForeignId($foreign_id, $company_id)
     {
         return $this->model->whereForeign_idAndCompany_id($foreign_id, $company_id)->first();
-//        return $this->model->where(['foreign_id', '=', $foreign_id],['company_id', '=', $company_id])->first();
-//        return $this->model->where('foreign_id', $foreign_id)->where('company_id', $company_id)->get();
-//        return $this->model->where('foreign_id', $foreign_id)->where('company_id', $company_id)->get();
-//        return $this->model->where('foreign_id', $foreign_id)->first();
     }
 
 
