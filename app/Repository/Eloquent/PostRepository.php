@@ -50,6 +50,6 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
                 },
                     'countLike', 'commentUser'])->limit(3)->withCount('liked');
             },
-        'like', 'postFiles', 'postsUser'])->withCount('liked')->paginate(6);
+        'like', 'postFiles', 'postsUser'])->latest()->withCount('liked')->paginate(6);
     }
 }
