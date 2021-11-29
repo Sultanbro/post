@@ -17,6 +17,7 @@ class PostResource extends JsonResource
         return [
             'id' => $this->id,
             'content' => $this->content,
+            'show_comment' => false,
             'user_info' => new UserFullNameIdRecourse(data_get($this, 'postsUser')),
             'company_id' => $this->company_id,
             'group_id' => $this->group_id,
