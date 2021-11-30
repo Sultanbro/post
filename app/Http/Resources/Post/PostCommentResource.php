@@ -25,7 +25,7 @@ class PostCommentResource extends JsonResource
             'updated_by' => $this->updated_by,
             'updated' => $this->updated_at,
             'created' => $this->created_at,
-            'is_liked' => $this->isLiked,
+            'is_liked' => is_null($this->isLiked) ? 0 : 1,
 //            'like_count' => $this->countLike->count,
         ];
     }
