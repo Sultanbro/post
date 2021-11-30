@@ -49,7 +49,7 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
                     'comment' => function(HasMany $comment){
                     $comment->with('comment', 'countLike', 'commentUser')->limit(0)->withCount('liked');
                 },
-                    'countLike', 'commentUser'])->withCount('liked');
+                    'countLike', 'commentUser'])->latest()->withCount('liked');
             },
         'like', 'postFiles', 'postsUser'])->latest()->withCount('liked')->withCount('allComments')->paginate(6);
     }
