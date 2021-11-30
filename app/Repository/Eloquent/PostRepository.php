@@ -43,13 +43,14 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
     public function getPostsWithData()
     {
         return $this->model->with([
-            'comments' => function(HasMany $hasMany){
+            'commentsLimit'
+            => function(HasMany $hasMany){
                 $hasMany->with([
                     'comment' => function(HasMany $comment){
                     $comment->with('comment', 'countLike', 'commentUser')->limit(0)->withCount('liked');
                 },
-                    'countLike', 'commentUser'])->limit(3)->withCount('liked');
+                    'countLike', 'commentUser'])->withCount('liked');
             },
-        'like', 'postFiles', 'postsUser'])->latest()->withCount('liked')->withCount('comments')->paginate(6);
+        'like', 'postFiles', 'postsUser'])->latest()->withCount('liked')->withCount('allComments')->paginate(6);
     }
 }

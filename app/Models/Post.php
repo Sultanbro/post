@@ -42,9 +42,19 @@ class Post extends Model
         return $this->hasOne(Like::class, 'parent_id', 'id')->where('type', 1)->whereUserId(Auth::id());
     }
 
-    public function comments()
+    public function postComments()
+    {
+        return $this->hasMany(Comment::class, 'post_id', 'id')->whereNull('parent_id');
+    }
+
+    public function allComments()
     {
         return $this->hasMany(Comment::class, 'post_id', 'id');
+    }
+
+    public function commentsLimit()
+    {
+        return $this->hasMany(Comment::class, 'post_id', 'id')->whereNull('parent_id')->take(3);
     }
 
 }
