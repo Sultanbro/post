@@ -28,6 +28,11 @@ class Comment extends Model
         return $this->hasMany(Like::class, 'parent_id', 'id')->where('type', 2);
     }
 
+    public function isLiked()
+    {
+        return $this->hasOne(Like::class, 'parent_id', 'id')->whereUser_idAndType(Auth::id(), 2);
+    }
+
     public function comment()
     {
         return $this->hasMany(Comment::class, 'parent_id', 'id');
