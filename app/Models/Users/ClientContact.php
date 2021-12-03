@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Reference;
+namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class City extends Model
+class ClientContact extends Model
 {
     use HasFactory;
     protected $guarded = [''];

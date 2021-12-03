@@ -86,8 +86,10 @@ class CommentController extends Controller
     public function destroy($id)
     {
         if (Auth::id() === $this->commentRepository->find($id)->user_id) {
-            if ($this->commentRepository->deleteById($id)) {
-                return response()->json(['message' => 'ok'], 200);
+            if ($this->commentRepository->deleteByParentId($id)) {
+                if ($this->commentRepository->deleteById($id)) {
+                    return response()->json(['message' => 'ok'], 200);
+                }
             }
             return response()->json(['message' => 'Not Found'], 404);
         }

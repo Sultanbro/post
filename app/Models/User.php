@@ -17,4 +17,9 @@ class User extends Model implements Authenticatable
     {
         return $this->hasOne(UserToken::class);
     }
+
+    public function clientInfo()
+    {
+        return $this->hasOne(Client::class, 'id', 'id');
+    }
 }

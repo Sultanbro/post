@@ -36,6 +36,6 @@ class RegionRepository extends BaseRepository implements RegionRepositoryInterfa
      */
     public function firstByForeignIdCompanyId($foreign_id, $company_id)
     {
-        return $this->model->firstWhereForeign_idAndCompany($foreign_id, $company_id);
+        return $this->model->whereForeign_idAndCompany_id($foreign_id, $company_id)->first();
     }
 }
