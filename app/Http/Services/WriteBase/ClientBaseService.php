@@ -10,6 +10,7 @@ use App\Repository\ClientRepositoryInterface;
 use App\Repository\DepartmentRepositoryInterface;
 use App\Repository\DictiRepositoryInterface;
 use App\Repository\EmployeeRepositoryInterface;
+use App\Repository\EOrderRepositoryInterface;
 use App\Repository\RegionRepositoryInterface;
 use App\Repository\UserRepositoryInterface;
 use http\Message;
@@ -50,6 +51,10 @@ class ClientBaseService implements ClientBaseServiceInterface
      * @var RegionRepositoryInterface
      */
     private $regionRepository;
+    /**
+     * @var EOrderRepositoryInterface
+     */
+    private $eOrderRepository;
 
     /**
      * @param ClientRepositoryInterface $clientRepository
@@ -60,9 +65,11 @@ class ClientBaseService implements ClientBaseServiceInterface
      * @param EmployeeRepositoryInterface $employeeRepository
      * @param CityRepositoryInterface $cityRepository
      * @param RegionRepositoryInterface $regionRepository
+     * @param EOrderRepositoryInterface $eOrderRepository
      */
-    public function __construct(ClientRepositoryInterface $clientRepository, DepartmentRepositoryInterface $departmentRepository, UserRepositoryInterface $userRepository, DictiRepositoryInterface $dictiRepository, ClientContactRepositoryInterface $clientContactRepository, EmployeeRepositoryInterface $employeeRepository, CityRepositoryInterface $cityRepository, RegionRepositoryInterface $regionRepository)
+    public function __construct(ClientRepositoryInterface $clientRepository, DepartmentRepositoryInterface $departmentRepository, UserRepositoryInterface $userRepository, DictiRepositoryInterface $dictiRepository, ClientContactRepositoryInterface $clientContactRepository, EmployeeRepositoryInterface $employeeRepository, CityRepositoryInterface $cityRepository, RegionRepositoryInterface $regionRepository, EOrderRepositoryInterface $eOrderRepository)
     {
+        $this->eOrderRepository = $eOrderRepository;
         $this->regionRepository =$regionRepository;
         $this->cityRepository = $cityRepository;
         $this->employeeRepository = $employeeRepository;
@@ -99,6 +106,7 @@ class ClientBaseService implements ClientBaseServiceInterface
                             }
                         }
                     } else {
+                        $client['address'] = json_encode($client['address']);
                         if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
 
                             if ($clientModel->type_id == 1) {
@@ -157,6 +165,11 @@ class ClientBaseService implements ClientBaseServiceInterface
         $this->saveContact($client_info, $clientModel_id, $user_make);
     }
 
+    /**
+     * @param $client_info
+     * @param $clientModel_id
+     * @param $user_make
+     */
     public function saveContact($client_info, $clientModel_id, $user_make)
     {
         $dictiModel = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['contact']['type_id'], $client_info['company_id']);
@@ -165,6 +178,37 @@ class ClientBaseService implements ClientBaseServiceInterface
         $client_info['contact']['client_id'] = $clientModel_id;
         $client_info['contact']['id'] = $clientModel_id;
         $this->clientContactRepository->create(array_merge($client_info['contact'], $user_make));
+    }
+
+    public function acceptEOrder($e_orders)
+    {
+        foreach ($e_orders as $e_order) {
+            if ($e_orders['type_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['type_id'], $e_order['company_id'])) {
+                if ($e_order['department_id'] = $this->clientRepository->firstWhereForeignId($e_order['department_id'], $e_order['company_id'])) {
+                    try {
+                        $e_order['client_id'] = is_null($e_order['client_id']) ? null : $this->clientRepository->firstWhereForeignId($e_order['client_id'], $e_order['company_id'])->id;
+                        $e_order['release_id'] = is_null($e_orders['release_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['release_id'], $e_order['company_id'])->id;
+                        $e_order['client_type'] = is_null($e_orders['client_type']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['client_type'], $e_order['company_id'])->id;
+                        $e_order['agr_type_id'] = is_null($e_orders['agr_type_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['agr_type_id'], $e_order['company_id'])->id;
+                        $e_order['vacation_type_id'] = is_null($e_orders['vacation_type_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['vacation_type_id'], $e_order['company_id'])->id;
+                        $e_order['mission_type_id'] = is_null($e_orders['mission_type_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['mission_type_id'], $e_order['company_id'])->id;
+                        $e_order['country_id'] = is_null($e_orders['country_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['country_id'], $e_order['company_id'])->id;
+                        $e_order['city_id'] = is_null($e_orders['city_id']) ? null : $this->cityRepository->firstForeignCompanyId($e_orders['city_id'], $e_order['company_id'])->id;
+                        $e_order['firm_id'] = is_null($e_orders['firm_id']) ? null : $this->clientRepository->firstWhereForeignId($e_orders['firm_id'], $e_order['company_id'])->id;
+                        $e_order['thanks_id'] = is_null($e_orders['thanks_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['thanks_id'], $e_order['company_id'])->id;
+                        $e_order['career_reason_id'] = is_null($e_orders['career_reason_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['career_reason_id'], $e_order['company_id'])->id;
+                        $e_order['doc_id'] = is_null($e_orders['doc_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['doc_id'], $e_order['company_id'])->id;
+                        $this->eOrderRepository->create(array_merge($e_order, ['created_by' => Auth::id(), 'updated_by'=> Auth::id()]));
+                    }catch (\Exception $e) {
+                        $result[$e_order['isn']] = $e;
+                    }
+                }else {
+                    $result[$e_order['isn']] = ['message' => 'no department_id'];
+                }
+            }else {
+                $result[$e_order['isn']] = ['message' => 'no type_id'];
+            }
+        }
     }
 
 }

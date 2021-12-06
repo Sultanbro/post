@@ -32,7 +32,24 @@ class ClientBaseController
         $this->clientBaseService = $clientBaseService;
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse|mixed
+     */
     public function acceptClientInfo(Request $request)
+    {
+        try {
+            return $this->clientBaseService->saveClients($request->all());
+        }catch (\Exception $e) {
+            return response()->json($e);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse|mixed
+     */
+    public function acceptEOrder(Request $request)
     {
         try {
             return $this->clientBaseService->saveClients($request->all());

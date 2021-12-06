@@ -18,6 +18,7 @@ use App\Repository\Eloquent\DepartmentRepository;
 use App\Repository\Eloquent\DictiForeignRepository;
 use App\Repository\Eloquent\DictiRepository;
 use App\Repository\Eloquent\EmployeeRepository;
+use App\Repository\Eloquent\EOrderRepository;
 use App\Repository\Eloquent\LikeRepository;
 use App\Repository\Eloquent\PostFileRepository;
 use App\Repository\Eloquent\PostRepository;
@@ -26,6 +27,7 @@ use App\Repository\Eloquent\UserRepository;
 use App\Repository\Eloquent\UserTokenRepository;
 use App\Repository\EloquentRepositoryInterface;
 use App\Repository\EmployeeRepositoryInterface;
+use App\Repository\EOrderRepositoryInterface;
 use App\Repository\LikeRepositoryInterface;
 use App\Repository\PostFileRepositoryInterface;
 use App\Repository\PostRepositoryInterface;
@@ -57,6 +59,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(RegionRepositoryInterface::class, RegionRepository::class);
         $this->app->bind(ClientContactRepositoryInterface::class, ClientContactRepository::class);
         $this->app->bind(EmployeeRepositoryInterface::class, EmployeeRepository::class);
+        $this->app->bind(EOrderRepositoryInterface::class, EOrderRepository::class);
     }
 
     /**

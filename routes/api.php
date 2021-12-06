@@ -40,6 +40,7 @@ Route::post('/logout', [LogoutController::class, 'index'])->middleware('auth.bea
 
 //Rest api route
 Route::post('/clients/info', [ClientBaseController::class, 'acceptClientInfo']);
+Route::post('/eorder/info', [ClientBaseController::class, 'acceptEOrder']);
 Route::post('/dictis/info', [DictisController::class, 'acceptDictisInfo']);
 Route::post('/cities/info', [CityController::class, 'saveCities']);
 Route::post('/regions/info', [RegionController::class, 'saveRegions']);
