@@ -15,4 +15,10 @@ interface PostRepositoryInterface extends EloquentRepositoryInterface
      * @return mixed
      */
     public function getPostsWithData();
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getByPostId($id);
 }

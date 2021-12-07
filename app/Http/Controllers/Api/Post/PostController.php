@@ -65,12 +65,12 @@ class PostController extends Controller
     }
 
     /**
-     * @param Post $post
+     * @param $id
      * @return mixed
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        return new PostResource($post);
+        return PostResource::collection($this->postRepository->getByPostId($id));
     }
 
     /**

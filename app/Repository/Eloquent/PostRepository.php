@@ -55,4 +55,13 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
             },
         'like', 'postFiles', 'postsUser'])->latest()->withCount('liked')->withCount('allComments')->paginate(6);
     }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getByPostId($id)
+    {
+        return $this->model->where('id', $id)->get();
+    }
 }
