@@ -17,4 +17,9 @@ class EOrderRepository extends BaseRepository implements EOrderRepositoryInterfa
         parent::__construct($model);
         $this->model = $model;
     }
+
+    public function firstForeignIdCompanyId($foreign_id, $company_id)
+    {
+        return $this->model->whereForeign_idAndCompany_id($foreign_id, $company_id)->first();
+    }
 }

@@ -183,32 +183,40 @@ class ClientBaseService implements ClientBaseServiceInterface
     public function acceptEOrder($e_orders)
     {
         foreach ($e_orders as $e_order) {
-            if ($e_orders['type_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['type_id'], $e_order['company_id'])) {
-                if ($e_order['department_id'] = $this->clientRepository->firstWhereForeignId($e_order['department_id'], $e_order['company_id'])) {
-                    try {
-                        $e_order['client_id'] = is_null($e_order['client_id']) ? null : $this->clientRepository->firstWhereForeignId($e_order['client_id'], $e_order['company_id'])->id;
-                        $e_order['release_id'] = is_null($e_orders['release_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['release_id'], $e_order['company_id'])->id;
-                        $e_order['client_type'] = is_null($e_orders['client_type']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['client_type'], $e_order['company_id'])->id;
-                        $e_order['agr_type_id'] = is_null($e_orders['agr_type_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['agr_type_id'], $e_order['company_id'])->id;
-                        $e_order['vacation_type_id'] = is_null($e_orders['vacation_type_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['vacation_type_id'], $e_order['company_id'])->id;
-                        $e_order['mission_type_id'] = is_null($e_orders['mission_type_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['mission_type_id'], $e_order['company_id'])->id;
-                        $e_order['country_id'] = is_null($e_orders['country_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['country_id'], $e_order['company_id'])->id;
-                        $e_order['city_id'] = is_null($e_orders['city_id']) ? null : $this->cityRepository->firstForeignCompanyId($e_orders['city_id'], $e_order['company_id'])->id;
-                        $e_order['firm_id'] = is_null($e_orders['firm_id']) ? null : $this->clientRepository->firstWhereForeignId($e_orders['firm_id'], $e_order['company_id'])->id;
-                        $e_order['thanks_id'] = is_null($e_orders['thanks_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['thanks_id'], $e_order['company_id'])->id;
-                        $e_order['career_reason_id'] = is_null($e_orders['career_reason_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['career_reason_id'], $e_order['company_id'])->id;
-                        $e_order['doc_id'] = is_null($e_orders['doc_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_orders['doc_id'], $e_order['company_id'])->id;
-                        $this->eOrderRepository->create(array_merge($e_order, ['created_by' => Auth::id(), 'updated_by'=> Auth::id()]));
-                    }catch (\Exception $e) {
-                        $result[$e_order['isn']] = $e;
+            if (!$this->eOrderRepository->firstForeignIdCompanyId($e_order['foreign_id'], $e_order['company_id'])) {
+                if ($type = $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['type_id'], $e_order['company_id'])) {
+                    $e_order['type_id'] = $type->id;
+                    if ($dept = $this->clientRepository->firstWhereForeignId($e_order['department_id'], $e_order['company_id'])) {
+                        $e_order['department_id'] = $dept->id;
+                        try {
+                            $e_order['client_id'] = is_null($e_order['client_id']) ? null : $this->clientRepository->firstWhereForeignId($e_order['client_id'], $e_order['company_id'])->id;
+                            $e_order['release_id'] = is_null($e_order['release_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['release_id'], $e_order['company_id'])->id;
+                            $e_order['client_type'] = is_null($e_order['client_type']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['client_type'], $e_order['company_id'])->id;
+                            $e_order['agr_type_id'] = is_null($e_order['agr_type_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['agr_type_id'], $e_order['company_id'])->id;
+                            $e_order['vacation_type_id'] = is_null($e_order['vacation_type_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['vacation_type_id'], $e_order['company_id'])->id;
+                            $e_order['mission_type_id'] = is_null($e_order['mission_type_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['mission_type_id'], $e_order['company_id'])->id;
+                            $e_order['country_id'] = is_null($e_order['country_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['country_id'], $e_order['company_id'])->id;
+                            $e_order['city_id'] = is_null($e_order['city_id']) ? null : $this->cityRepository->firstForeignCompanyId($e_order['city_id'], $e_order['company_id'])->id;
+                            $e_order['firm_id'] = is_null($e_order['firm_id']) ? null : $this->clientRepository->firstWhereForeignId($e_order['firm_id'], $e_order['company_id'])->id;
+                            $e_order['thanks_id'] = is_null($e_order['thanks_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['thanks_id'], $e_order['company_id'])->id;
+                            $e_order['career_reason_id'] = is_null($e_order['career_reason_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['career_reason_id'], $e_order['company_id'])->id;
+                            $e_order['doc_id'] = is_null($e_order['doc_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['doc_id'], $e_order['company_id'])->id;
+                            $this->eOrderRepository->create(array_merge($e_order, ['created_by' => Auth::id(), 'updated_by' => Auth::id()]));
+                        } catch (\Exception $e) {
+                            $result[$e_order['foreign_id']] = $e;
+                        }
+                    } else {
+                        $result[$e_order['foreign_id']] = ['message' => 'no department_id'];
                     }
-                }else {
-                    $result[$e_order['isn']] = ['message' => 'no department_id'];
+                } else {
+                    $result[$e_order['foreign_id']] = ['message' => 'no type_id'];
                 }
-            }else {
-                $result[$e_order['isn']] = ['message' => 'no type_id'];
+            }else{
+                $result[$e_order['foreign_id']] = ['message' => 'this foreign_id in base'];
             }
         }
+        $result = isset($result) ? $result : ['message' => 'ok'];
+        return response()->json($result);
     }
 
 }

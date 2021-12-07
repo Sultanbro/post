@@ -52,7 +52,7 @@ class ClientBaseController
     public function acceptEOrder(Request $request)
     {
         try {
-            return $this->clientBaseService->saveClients($request->all());
+            return $this->clientBaseService->acceptEOrder($request->all());
         }catch (\Exception $e) {
             return response()->json($e);
         }

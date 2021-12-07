@@ -15,10 +15,12 @@ class CreateEordersTable extends Migration
     {
         Schema::create('eorders', function (Blueprint $table) {
             $table->id();
+            $table->integer('foreign_id')->index()->comment('isn kias связка');
+            $table->integer('company_id')->index()->comment('id компани');
             $table->foreignId('type_id')->index()->comment('Вид приказа')->nullable()->constrained('dictis')->nullOnDelete();
-            $table->foreignId('type_id')->index()->comment('Подразделение-куратор')->nullable()->constrained('clients')->nullOnDelete();
+            $table->foreignId('department_id')->index()->comment('Подразделение-куратор')->nullable()->constrained('clients')->nullOnDelete();
             $table->string('doc_num')->comment('Номер приказа');
-            $table->string('doc_date')->comment('Дата приказа');
+            $table->date('doc_date')->comment('Дата приказа');
             $table->boolean('active')->default(1)->comment('признак - проведен (y) или нет (n) приказ');
             $table->foreignId('client_id')->index()->comment('Сотрудник')->nullable()->constrained()->nullOnDelete();
             $table->string('full_name')->comment('ФИО')->nullable();
@@ -50,7 +52,7 @@ class CreateEordersTable extends Migration
             $table->string('mission_purpose')->nullable()->comment('цель коммандировки');
             $table->foreignId('country_id')->index()->comment('(fk_dicti) страна коммандировки')->nullable()->constrained('dictis')->nullOnDelete();
             $table->foreignId('city_id')->index()->comment('(fk_city) город командировки')->nullable()->constrained('cities')->nullOnDelete();
-            $table->foreignId('firm_id')->index()->comment('(fk_subject) фирма коммандировки')->nullable()->constrained('clients')->nullOnDelete();
+            $table->foreignId('firm_id')->index()->comment('(fk_clients ) фирма коммандировки')->nullable()->constrained('clients')->nullOnDelete();
             $table->text('doc_text')->nullable()->comment('текст приказа');
             $table->string('remark')->nullable()->comment('примечание');
             $table->foreignId('thanks_id')->index()->comment('(fk_dicti) вид поощрения')->nullable()->constrained('dictis')->nullOnDelete();
@@ -63,7 +65,7 @@ class CreateEordersTable extends Migration
             $table->string('first_name')->nullable()->comment('имя');
             $table->string('last_name')->nullable()->comment('фамилия');
             $table->string('parent_name')->nullable()->comment('отчество');
-            $table->foreignId('doc_id')->index()->comment('(fk_docs) приказ в таблице с документами')->nullable()->constrained('dictis')->nullOnDelete();
+            $table->integer('doc_id')->index()->comment('(fk_docs) приказ в таблице с документами')->nullable();
             $table->integer('created_by')->index();
             $table->integer('updated_by')->comment('автор изменения')->index();
             $table->timestamps();
@@ -91,7 +93,6 @@ class CreateEordersTable extends Migration
             $table->dropForeign(['firm_id']);
             $table->dropForeign(['thanks_id']);
             $table->dropForeign(['career_reason_id']);
-            $table->dropForeign(['doc_id']);
             $table->dropIndex(['type_id']);
             $table->dropIndex(['department_id']);
             $table->dropIndex(['client_id']);
@@ -108,6 +109,8 @@ class CreateEordersTable extends Migration
             $table->dropIndex(['doc_id']);
             $table->dropIndex(['created_by']);
             $table->dropIndex(['updated_by']);
+            $table->dropIndex(['foreign_id']);
+            $table->dropIndex(['company_id']);
         });
         Schema::dropIfExists('eorders');
     }
