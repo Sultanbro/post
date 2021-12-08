@@ -3,7 +3,7 @@
 namespace App\Http\Services\Authenticate;
 
 use App\Models\UserToken;
-use App\Repository\UserTokenRepositoryInterface;
+use App\Repository\User\UserTokenRepositoryInterface;
 use Illuminate\Support\Facades\Http;
 use PhpParser\Node\Stmt\DeclareDeclare;
 

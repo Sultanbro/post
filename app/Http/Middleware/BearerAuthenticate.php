@@ -6,7 +6,7 @@ use App\Http\Services\Authenticate\AuthenticateService;
 use App\Http\Services\Authenticate\KeyCloakServiceInterface;
 use App\Models\User;
 use App\Models\UserToken;
-use App\Repository\UserTokenRepositoryInterface;
+use App\Repository\User\UserTokenRepositoryInterface;
 use Closure;
 use http\Env\Response;
 use Illuminate\Http\Request;

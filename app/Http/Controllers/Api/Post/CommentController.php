@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Api\Post;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\CommentStoreRequest;
 use App\Http\Requests\Post\CommentUpdateRequest;
-use App\Http\Resources\CommentResource;
-use App\Models\Comment;
-use App\Repository\CommentRepositoryInterface;
+use App\Http\Resources\Post\CommentResource;
+use App\Repository\Post\Comment\CommentRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api\WriteBase;
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\WriteBase\CitiesSaveService;
-use App\Http\Services\WriteBase\CitiesSaveServiceInterface;
-use App\Repository\CityRepositoryInterface;
+use App\Http\Services\WriteBase\City\CitiesSaveServiceInterface;
 use Illuminate\Http\Request;
 
 class CityController extends Controller

@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Http\Services\WriteBase\ClientBaseService;
-use App\Http\Services\WriteBase\ClientBaseServiceInterface;
+use App\Http\Services\WriteBase\Client\ClientBaseService;
+use App\Http\Services\WriteBase\Client\ClientBaseServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class ClientBaseServiceProvider extends ServiceProvider

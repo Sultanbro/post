@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Http\Services\Authenticate\KeyCloakService;
 use App\Http\Services\Authenticate\KeyCloakServiceInterface;
-use App\Http\Services\WriteBase\CitiesSaveService;
-use App\Http\Services\WriteBase\CitiesSaveServiceInterface;
+use App\Http\Services\WriteBase\City\CitiesSaveService;
+use App\Http\Services\WriteBase\City\CitiesSaveServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class CitiesSaveServiceProvider extends ServiceProvider

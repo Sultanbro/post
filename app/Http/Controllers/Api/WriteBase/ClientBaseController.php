@@ -3,9 +3,8 @@
 
 namespace App\Http\Controllers\Api\WriteBase;
 
-use App\Http\Requests\WriteBase\AcceptClientRequest;
-use App\Http\Services\WriteBase\ClientBaseServiceInterface;
-use App\Repository\ClientRepositoryInterface;
+use App\Http\Services\WriteBase\Client\ClientBaseServiceInterface;
+use App\Repository\Client\ClientRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

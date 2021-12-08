@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Repository\UserRepositoryInterface;
+use App\Repository\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 
 class UserController extends Controller

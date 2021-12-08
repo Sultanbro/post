@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Post;
 
-use App\Http\Resources\CommentResource;
 use App\Http\Resources\UserFullNameIdRecourse;
 use Illuminate\Http\Resources\Json\JsonResource;
 

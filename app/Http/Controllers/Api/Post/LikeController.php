@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\Post;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\LikeStoreRequest;
 use App\Http\Requests\Post\LikeInfoRequest;
-use App\Http\Resources\LikeResource;
-use App\Repository\LikeRepositoryInterface;
+use App\Http\Resources\Post\LikeResource;
+use App\Repository\Post\Like\LikeRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use function Composer\Autoload\includeFile;
 
@@ -36,7 +36,7 @@ class LikeController extends Controller
     {
         if ($model = $this->likeReposytory->firstByPostId(array_merge($request->all(), ['user_id' => Auth::id()]))) {
             if ($this->likeReposytory->deleteById($model->id)) {
-                return response()->json(['message' => 'ok'], 200);
+                return ['like_count' => $this->likeReposytory->liked_count($model->parent_id, $model->type)];
             }
             return response()->json(['message' => 'Not Found'], 404);
         }

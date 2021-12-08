@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Client\Client;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

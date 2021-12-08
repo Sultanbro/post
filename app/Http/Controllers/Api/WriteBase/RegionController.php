@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\WriteBase;
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\WriteBase\RegionSaveServiceInterface;
+use App\Http\Services\WriteBase\Region\RegionSaveServiceInterface;
 use Illuminate\Http\Request;
 
 class RegionController extends Controller
