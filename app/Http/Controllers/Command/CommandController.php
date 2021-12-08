@@ -11,8 +11,8 @@ class CommandController extends Controller
 {
     public function command(Request $request)
     {
-        return Auth::id();
-        if (Auth::id() == 2) {
+//        return Auth::id();
+        if (Auth::id() == 3) {
             if ($request->command == 'migrate') {
                 return Artisan::call('migrate');
             }
