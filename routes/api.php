@@ -52,6 +52,6 @@ Route::resource('comments', CommentController::class);
 Route::resource('likes', LikeController::class);
 
 //Command route
-Route::post('/command/', [CommandController::class, 'command']);
+Route::get('/command/', [CommandController::class, 'command']);
 
 

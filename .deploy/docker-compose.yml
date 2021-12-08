@@ -92,6 +92,8 @@ services:
       # KIAS_LOGIN: "MyCIC"
       # KIAS_PASSWORD: "mycickz321"
 
+      DEVELOPMENT_KEY: "123456789"
+
     volumes:
       - /home/student/mycent/shared/storage:/app/storage
 
