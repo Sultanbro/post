@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\WriteBase\CityController;
 use App\Http\Controllers\Api\WriteBase\ClientBaseController;
 use App\Http\Controllers\Api\WriteBase\DictisController;
 use App\Http\Controllers\Api\WriteBase\RegionController;
+use App\Http\Controllers\Command\CommandController;
 use App\Models\UserToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -49,5 +50,8 @@ Route::post('/regions/info', [RegionController::class, 'saveRegions']);
 Route::resource('posts', PostController::class);
 Route::resource('comments', CommentController::class);
 Route::resource('likes', LikeController::class);
+
+//Command route
+Route::post('/command/', [CommandController::class, 'command']);
 
 
