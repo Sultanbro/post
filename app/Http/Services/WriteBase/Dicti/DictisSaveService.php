@@ -26,14 +26,23 @@ class DictisSaveService implements DictisSaveServiceInterface
     public function saveDictis($dictis)
     {
         $user_make = ['created_by' => Auth::id(), 'updated_by'=> Auth::id()];
+        $data = [];
         foreach ($dictis as $dicti) {
             if (!$this->dictiRepository->compareInNameAndParentId($dicti['full_name'], $dicti['foreign_id']) ) {
-                if ($model = $this->dictiRepository->firstWhereForeignIdCompanyId($dicti['parent_foreign_id'], $dicti['company_id']) | $dicti['parent_foreign_id'] == 0) {
-                    $user_make['parent_id'] = $dicti['parent_foreign_id'] == 0 ? 0 : $model->id;
+                if ($model = $this->dictiRepository->firstWhereForeignIdCompanyId($dicti['parent_foreign_id'], $dicti['company_id'])) {
+                    $user_make['parent_id'] = $model->id;
                     $this->dictiRepository->create(array_merge($dicti, $user_make));
+                    $data[$dicti['foreign_id']] = ['message' => 'ok'];
+                } elseif ($dicti['parent_foreign_id'] == 0){
+                    $user_make['parent_id'] = $dicti['parent_foreign_id'];
+                    $this->dictiRepository->create(array_merge($dicti, $user_make));
+                    $data[$dicti['foreign_id']] = ['message' => 'ok'];
+                }else{
+                    $data[$dicti['foreign_id']] = ['message' => 'no parent id'];
                 }
+            }else {
+                $data[$dicti['foreign_id']] = ['message' => 'dicti is in base'];
             }
-            $data[] = $dicti;
         }
         return $data;
     }

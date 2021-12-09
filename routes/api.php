@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
 use App\Http\Controllers\Api\Post\PostController;
+use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\WriteBase\CityController;
 use App\Http\Controllers\Api\WriteBase\ClientBaseController;
 use App\Http\Controllers\Api\WriteBase\DictisController;
@@ -30,9 +31,9 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get('user', function (Request $request) {
-    return  Auth()->user();
-});
+//Route::get('user', function (Request $request) {
+//    return  Auth()->user();
+//});
 
 //Auth route
 Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
@@ -53,5 +54,8 @@ Route::resource('likes', LikeController::class);
 
 //Command route
 Route::get('/command/', [CommandController::class, 'command'])->withoutMiddleware('auth.bearer');
+
+//User route
+Route::resource('user',UserController::class);
 
 

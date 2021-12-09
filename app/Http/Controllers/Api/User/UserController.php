@@ -52,7 +52,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return new UserResource($this->userRepository->find($id));
     }
 
     /**

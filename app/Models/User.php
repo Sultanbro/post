@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Client\Client;
+use App\Models\Client\Department;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,5 +23,10 @@ class User extends Model implements Authenticatable
     public function clientInfo()
     {
         return $this->hasOne(Client::class, 'id', 'id');
+    }
+
+    public function userDepartment()
+    {
+        return $this->hasOne(Department::class,'id', 'department_id');
     }
 }
