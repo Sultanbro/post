@@ -23,4 +23,17 @@ interface CommentRepositoryInterface extends EloquentRepositoryInterface
      * @return mixed
      */
     public function getAllPostsComment();
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getById($id);
+
+    /**
+     * @param $postId
+     * @return mixed
+     */
+    public function getAllCommentsByPostId($postId);
+
 }

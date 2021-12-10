@@ -48,4 +48,22 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
     {
         return $this->model->whereNull('parent_id')->get();
     }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getById($id)
+    {
+        return $this->model->firstWhere('id', $id);
+    }
+
+    /**
+     * @param $postId
+     * @return mixed
+     */
+    public function getAllCommentsByPostId($postId)
+    {
+        return $this->model->where('post_id', $postId)->get();
+    }
 }

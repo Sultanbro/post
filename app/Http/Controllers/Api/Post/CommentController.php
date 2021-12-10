@@ -7,6 +7,7 @@ use App\Http\Requests\Post\CommentStoreRequest;
 use App\Http\Requests\Post\CommentUpdateRequest;
 use App\Http\Resources\Post\CommentResource;
 use App\Repository\Post\Comment\CommentRepositoryInterface;
+use App\Repository\Post\PostRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,13 +17,19 @@ class CommentController extends Controller
      * @var CommentRepositoryInterface
      */
     private $commentRepository;
+    /**
+     * @var PostRepositoryInterface
+     */
+    private $postRepository;
 
     /**
      * CommentController constructor.
      * @param CommentRepositoryInterface $commentRepository
+     * @param PostRepositoryInterface $postRepository
      */
-    public function __construct(CommentRepositoryInterface $commentRepository)
+    public function __construct(CommentRepositoryInterface $commentRepository, PostRepositoryInterface $postRepository)
     {
+        $this->postRepository = $postRepository;
         $this->commentRepository = $commentRepository;
     }
 
@@ -84,13 +91,16 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        if (Auth::id() === $this->commentRepository->find($id)->user_id) {
-            if ($this->commentRepository->deleteByParentId($id)) {
-                if ($this->commentRepository->deleteById($id)) {
-                    return response()->json(['message' => 'ok'], 200);
+        if ($model = $this->commentRepository->getById($id)) {
+            if (Auth::id() === $model->user_id) {
+                if ($this->commentRepository->deleteByParentId($id)) {
+                    if ($this->commentRepository->deleteById($id)) {
+                        $post = $this->postRepository->find($model->post_id);
+                        return response()->json(['post_id' => $model->post_id, 'comment_count' => $this->commentRepository->getAllCommentsByPostId($model->post_id)->count()], 200);
+                    }
                 }
+                return response()->json(['message' => 'Not Found'], 404);
             }
-            return response()->json(['message' => 'Not Found'], 404);
         }
         return response()->json(['message' => 'Forbidden '], 403);
     }
