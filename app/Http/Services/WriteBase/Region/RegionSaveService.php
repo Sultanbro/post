@@ -43,10 +43,18 @@ class RegionSaveService implements RegionSaveServiceInterface
      */
     public function saveRegions($regions)
     {
+        $result = [];
         foreach ($regions as $region) {
-           $region['parent_id'] = $region['parent_foreign_id'] == 0 ? $region['parent_foreign_id'] : $this->regionRepository->firstByForeignId($region['parent_foreign_id'])->id;
-           $region['codes'] = json_encode($region['codes']);
-           $this->regionRepository->create(array_merge($region, ['created_by' => Auth::id(), 'updated_by' => Auth::id()]));
+            if ($this->regionRepository->firstByForeignIdCompanyId($region['foreign_id'], $region['company_id'])){
+                $result[$region['foreign_id']] = ['message' => 'is foreign in base'];
+            }elseif ($model = $this->regionRepository->firstByForeignId($region['parent_foreign_id']) | $region['parent_foreign_id'] == 0) {
+                $region['parent_id'] = $region['parent_foreign_id'] == 0 ? $region['parent_foreign_id'] : $model->id;
+                $region['codes'] = json_encode($region['codes']);
+                $this->regionRepository->create(array_merge($region, ['created_by' => Auth::id(), 'updated_by' => Auth::id()]));
+            }else{
+                $result[$result['foreign_id']] = ['message' => 'parent_id is not fond'];
+            }
         }
+        return $result;
     }
 }
