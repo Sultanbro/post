@@ -46,6 +46,7 @@ class CitiesSaveService implements CitiesSaveServiceInterface
                 $city['codes'] = json_encode($city['codes']);
                 $city['region_id'] = $region->id;
                 $city['country_id'] = $country->id;
+                $city['parent_id'] = is_null($city['parent_id']) ? null : $this->cityRepository->firstForeignCompanyId($city['parent_id'], $city['company_id']);
                 if ($this->cityRepository->create(array_merge($city, ['created_by' => Auth::id(), 'updated_by' => Auth::id()]))) {
                     continue;
                 }
