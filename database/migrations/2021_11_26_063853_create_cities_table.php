@@ -21,7 +21,7 @@ class CreateCitiesTable extends Migration
             $table->boolean('active')->default(true)->comment('Признак активности');
             $table->json('codes')->nullable()->comment('Почтовый индекс и остальные коды');
             $table->string('name')->nullable()->comment('Полное наименование');
-            $table->string('score')->nullable()->comment('Сокрашение типа населенного пункта');
+            $table->string('socr')->nullable()->comment('Сокрашение типа населенного пункта');
             $table->integer('population')->index()->nullable()->comment('Численность населения в тыс.чел.');
             $table->integer('company_id')->index();
             $table->integer('created_by')->index();

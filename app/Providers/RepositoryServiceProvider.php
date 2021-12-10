@@ -9,8 +9,6 @@ use App\Repository\Client\ClientRepository;
 use App\Repository\Client\ClientRepositoryInterface;
 use App\Repository\Client\Department\DepartmentRepository;
 use App\Repository\Client\Department\DepartmentRepositoryInterface;
-use App\Repository\Client\Employee\EmployeeRepository;
-use App\Repository\Client\Employee\EmployeeRepositoryInterface;
 use App\Repository\Client\EOrder\EOrderRepository;
 use App\Repository\Client\EOrder\EOrderRepositoryInterface;
 use App\Repository\Eloquent\BaseRepository;
@@ -27,8 +25,16 @@ use App\Repository\Reference\City\CityRepository;
 use App\Repository\Reference\City\CityRepositoryInterface;
 use App\Repository\Reference\Dicti\DictiRepository;
 use App\Repository\Reference\Dicti\DictiRepositoryInterface;
+use App\Repository\Reference\Duty\DutyRepository;
+use App\Repository\Reference\Duty\DutyRepositoryInterface;
 use App\Repository\Reference\Region\RegionRepository;
 use App\Repository\Reference\Region\RegionRepositoryInterface;
+use App\Repository\User\Career\CareerUserRepository;
+use App\Repository\User\Career\CareerUserRepositoryInterface;
+use App\Repository\User\Employee\EmployeeRepository;
+use App\Repository\User\Employee\EmployeeRepositoryInterface;
+use App\Repository\User\Staff\StaffUserRepository;
+use App\Repository\User\Staff\StaffUserRepositoryInterface;
 use App\Repository\User\UserRepository;
 use App\Repository\User\UserRepositoryInterface;
 use App\Repository\User\UserTokenRepository;
@@ -59,6 +65,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ClientContactRepositoryInterface::class, ClientContactRepository::class);
         $this->app->bind(EmployeeRepositoryInterface::class, EmployeeRepository::class);
         $this->app->bind(EOrderRepositoryInterface::class, EOrderRepository::class);
+        $this->app->bind(DutyRepositoryInterface::class, DutyRepository::class);
+        $this->app->bind(CareerUserRepositoryInterface::class, CareerUserRepository::class);
+        $this->app->bind(StaffUserRepositoryInterface::class, StaffUserRepository::class);
     }
 
     /**

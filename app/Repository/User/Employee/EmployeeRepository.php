@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\Repository\Client\Employee;
+namespace App\Repository\User\Employee;
 
 
-use App\Models\Client\Employee;
+use App\Models\Client\UserStory\Employee;
 use App\Repository\Eloquent\BaseRepository;
 
 class EmployeeRepository extends BaseRepository implements EmployeeRepositoryInterface

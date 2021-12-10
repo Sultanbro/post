@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'department' => new DepartmentResource(data_get($this, 'userDepartment')),
 //            'company' => new CompanyResource(data_get($this, 'userCompany')),
             'client_info' => new ClientResource(data_get($this, 'clientInfo')),
-            ''
+            'order_info' => $this->eOrder,
         ];
     }
 }

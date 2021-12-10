@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Models\Client\UserStory;
+namespace App\Models\Reference;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Employee extends Model
+class Duty extends Model
 {
     use HasFactory;
-    protected $guarded = [''];
 }

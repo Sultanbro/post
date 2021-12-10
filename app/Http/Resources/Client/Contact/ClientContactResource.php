@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Department;
+namespace App\Http\Resources\Client\Contact;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DepartmentResource extends JsonResource
+class ClientContactResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +16,11 @@ class DepartmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'short_name' => $this->short_name,
-            'full_name' => $this->full_name,
-//            'active' => $this->active,
-//            'is_company' => $this->is_company,
-//            'created_by' => $this->created_by,
-//            'updated_by' => $this->updated_by,
+            'type' => $this->type,
+            'phone' => $this->last_name,
+            'contact' => $this->parent_name,
+            'remark' => $this->short_name,
+            'birthday' => $this->birthday,
         ];
     }
 }

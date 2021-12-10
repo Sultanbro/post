@@ -1,5 +1,5 @@
 <?php
-namespace App\Repository\Client\Employee;
+namespace App\Repository\User\Employee;
 
 use Ramsey\Collection\Collection;
 use App\Repository\Eloquent\EloquentRepositoryInterface;

@@ -41,11 +41,14 @@ Route::post('/login', [LoginController::class, 'index'])->withoutMiddleware('aut
 Route::post('/logout', [LogoutController::class, 'index'])->middleware('auth.bearer');
 
 //Rest api route
-Route::post('/clients/info', [ClientBaseController::class, 'acceptClientInfo']);
-Route::post('/eorder/info', [ClientBaseController::class, 'acceptEOrder']);
-Route::post('/dictis/info', [DictisController::class, 'acceptDictisInfo']);
-Route::post('/cities/info', [CityController::class, 'saveCities']);
-Route::post('/regions/info', [RegionController::class, 'saveRegions']);
+Route::post('/clients/info/accept', [ClientBaseController::class, 'acceptClientInfo']);
+Route::post('/eorder/info/accept', [ClientBaseController::class, 'acceptEOrder']);
+Route::post('/dictis/info/accept', [DictisController::class, 'acceptDictisInfo']);
+Route::post('/cities/info/accept', [CityController::class, 'saveCities']);
+Route::post('/regions/info/accept', [RegionController::class, 'saveRegions']);
+Route::post('/duties/info/accept', [RegionController::class, 'saveRegions']);
+Route::post('/staff/info/accept', [RegionController::class, 'saveRegions']);
+Route::post('/career/info/accept', [RegionController::class, 'saveRegions']);
 
 //Post route
 Route::resource('posts', PostController::class);
@@ -56,6 +59,6 @@ Route::resource('likes', LikeController::class);
 Route::get('/command/', [CommandController::class, 'command'])->withoutMiddleware('auth.bearer');
 
 //User route
-Route::resource('users',UserController::class);
+Route::resource('user/info',UserController::class);
 
 

@@ -95,7 +95,6 @@ class CommentController extends Controller
             if (Auth::id() === $model->user_id) {
                 if ($this->commentRepository->deleteByParentId($id)) {
                     if ($this->commentRepository->deleteById($id)) {
-                        $post = $this->postRepository->find($model->post_id);
                         return response()->json(['post_id' => $model->post_id, 'comment_count' => $this->commentRepository->getAllCommentsByPostId($model->post_id)->count()], 200);
                     }
                 }
