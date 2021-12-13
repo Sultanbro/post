@@ -45,12 +45,19 @@ class UserController extends Controller
                                      'periodvac' => [0 => '11.09.2021-15.09.2021', 1 => '01.12.2021-05.12.2021'],
                                      'duration' => '10', 'rest' => '18']],
                 'career' => [0 => ['datebeg' => '01.05.2021', 'dateend' => '01.08.2021',
-                                    'department' => 'Управление web-программирования', 'Web - программист'],
+                                    'department' => 'Управление web-программирования', 'duty' => 'Web - программист'],
                             1 => ['datebeg' => '01.08.2021', 'dateend' => '0',
-                                    'department' => 'Управление web-программирования', 'Ведущий Web-программист']]];
+                                    'department' => 'Управление web-программирования', 'duty' => 'Ведущий Web-программист']]];
         }
         if (Auth::id() == 29) {
-            return ['mail' => 'test@mail.ru', 'position' => 'Web-программист', 'education' => 'МУИТ', 'city' => 'Караганда', 'b_day' => '22.10.1988'];
+            return ['mail' => 'test@mail.ru',
+                'position' => 'Web-программист',
+                'education' => 'МУИТ',
+                'city' => 'Караганда',
+                'b_day' => '22.10.1988',
+                'sick' => [0 => ['day' => '5', 'dates' => '08.10.2021-12.10.2021']],
+                'career' => [0 => ['datebeg' => '11.09.2021', 'dateend' => '0',
+                        'department' => 'Управление web-программирования', 'duty' => 'Web-программист']]];
         }
     }
 
