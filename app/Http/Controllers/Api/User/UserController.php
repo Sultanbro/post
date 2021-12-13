@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Repository\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -30,7 +31,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection($this->userRepository->all());
+        return new UserResource($this->userRepository->find(Auth::id()));
+//        if ()
     }
 
     /**

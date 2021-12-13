@@ -48,8 +48,8 @@ class PostService implements PostServiceInterface
             foreach ($results as $result) {
                 $this->postFileRepo->create(['post_id' => $model->id, 'link' => $result]);
             }
-            return new PostResource($model);
         }
+        return new PostResource($model);
     }
 
     /**
