@@ -2,6 +2,7 @@
 
 namespace App\Http\Services\Post;
 
+use App\Http\Resources\Post\PostResource;
 use App\Repository\Post\PostFile\PostFileRepositoryInterface;
 use App\Repository\Post\PostRepositoryInterface;
 use Illuminate\Support\Facades\Storage;
@@ -47,7 +48,7 @@ class PostService implements PostServiceInterface
             foreach ($results as $result) {
                 $this->postFileRepo->create(['post_id' => $model->id, 'link' => $result]);
             }
-            return response()->json($model, 200);
+            return new PostResource($model);
         }
     }
 

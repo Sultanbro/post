@@ -7,11 +7,13 @@ use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
 use App\Http\Controllers\Api\Post\PostController;
 use App\Http\Controllers\Api\User\UserController;
+use App\Http\Controllers\Api\WriteBase\CareerUserController;
 use App\Http\Controllers\Api\WriteBase\CityController;
 use App\Http\Controllers\Api\WriteBase\ClientBaseController;
 use App\Http\Controllers\Api\WriteBase\DictisController;
 use App\Http\Controllers\Api\WriteBase\DutyController;
 use App\Http\Controllers\Api\WriteBase\RegionController;
+use App\Http\Controllers\Api\WriteBase\StaffController;
 use App\Http\Controllers\Command\CommandController;
 use App\Models\UserToken;
 use Illuminate\Http\Request;
@@ -47,9 +49,9 @@ Route::post('/eorder/info/accept', [ClientBaseController::class, 'acceptEOrder']
 Route::post('/dictis/info/accept', [DictisController::class, 'acceptDictisInfo']);
 Route::post('/cities/info/accept', [CityController::class, 'saveCities']);
 Route::post('/regions/info/accept', [RegionController::class, 'saveRegions']);
-Route::post('/duties/info/accept', [DutyController::class, 'saveRegions']);
-Route::post('/staff/info/accept', [StaffController::class, 'saveRegions']);
-Route::post('/career/info/accept', [RegionController::class, 'saveRegions']);
+Route::post('/duties/info/accept', [DutyController::class, 'saveDuties']);
+Route::post('/staff/info/accept', [StaffController::class, 'saveStaff']);
+Route::post('/career/info/accept', [CareerUserController::class, 'saveCareer']);
 
 //Post route
 Route::resource('posts', PostController::class);
