@@ -30,11 +30,22 @@ class DutySaveService implements DutySaveServiceInterface
         $this->dictiRepository = $dictiRepository;
     }
 
+    /**
+     * @param $duties
+     * @return mixed|\Symfony\Component\HttpFoundation\ParameterBag|null
+     */
     public function saveDuty($duties)
     {
+        $make_user = ['crated_by' => Auth::id(), 'updated_by' => Auth::id()];
+        $result = [];
         foreach ($duties as $duty) {
-//            if ($this->dutyRepository->)
+            if (!$this->dutyRepository->getByForeignIdCompanyId($duty['foreign_id'], $duty['company_id'])) {
+                $this->dutyRepository->create(array_merge($duty, $make_user));
+            }else{
+                $result[$duty['foreign_id']] = ['message' => 'is in base'];
+            }
         }
+        return request()->json($result);
     }
 
 

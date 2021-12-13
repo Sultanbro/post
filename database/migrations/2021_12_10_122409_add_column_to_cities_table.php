@@ -27,6 +27,7 @@ class AddColumnToCitiesTable extends Migration
     {
         Schema::table('cities', function (Blueprint $table) {
             $table->dropIndex(['parent_id']);
+            $table->dropColumn(['parent_id']);
         });
     }
 }

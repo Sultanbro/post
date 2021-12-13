@@ -22,9 +22,9 @@ class DutyRepository extends BaseRepository implements DutyRepositoryInterface
         $this->model = $model;
     }
 
-    public function getByForeignIdCompanyId()
+    public function getByForeignIdCompanyId($foreign_id, $company_id)
     {
-//        return $this->model->whereForeign_idAnd
+        return $this->model->whereForeign_idAndCompany_id($foreign_id, $company_id)->first();
     }
 
 }

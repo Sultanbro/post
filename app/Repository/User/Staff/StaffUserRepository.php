@@ -22,4 +22,13 @@ class StaffUserRepository extends BaseRepository implements StaffUserRepositoryI
         $this->model = $model;
     }
 
+    /**
+     * @param $foreign_id
+     * @param $company_id
+     * @return mixed|void
+     */
+    public function getByForeignIdCompanyId($foreign_id, $company_id)
+    {
+        return $this->model->whereForeign_idAndCompany_id($foreign_id, $company_id)->first();
+    }
 }

@@ -25,6 +25,8 @@ class CreateStaffUsersTable extends Migration
             $table->date('date_end')->nullable()->comment('Дата закрития штатной еденицы');
             $table->boolean('active')->nullable()->comment('Признак активности');
             $table->string('id1c')->nullable()->comment('Уникальный код в 1с');
+            $table->integer('created_by')->index();
+            $table->integer('updated_by')->comment('автор изменения')->index();
             $table->timestamps();
         });
     }
@@ -43,6 +45,8 @@ class CreateStaffUsersTable extends Migration
             $table->dropIndex(['foreign_id']);
             $table->dropIndex(['eorder_beg_id']);
             $table->dropIndex(['eorder_end_id']);
+            $table->dropIndex(['created_by']);
+            $table->dropIndex(['updated_by']);
         });
         Schema::dropIfExists('staff_users');
     }

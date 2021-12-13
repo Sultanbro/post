@@ -35,6 +35,8 @@ class CreateCareerUsersTable extends Migration
             $table->integer('extra_pay1')->nullable()->comment('Второя надбавка');
             $table->integer('extra_pay2')->nullable()->comment('Третья надбавка');
             $table->integer('agreement_user_id')->nullable()->comment('Трудовой договор');
+            $table->integer('created_by')->index();
+            $table->integer('updated_by')->comment('автор изменения')->index();
             $table->timestamps();
         });
     }
@@ -61,6 +63,8 @@ class CreateCareerUsersTable extends Migration
             $table->dropIndex(['eorder_end_id']);
             $table->dropIndex(['release_id']);
             $table->dropIndex(['empl_type_id']);
+            $table->dropIndex(['created_by']);
+            $table->dropIndex(['updated_by']);
         });
         Schema::dropIfExists('career_users');
     }
