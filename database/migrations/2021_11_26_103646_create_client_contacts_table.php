@@ -34,12 +34,12 @@ class CreateClientContactsTable extends Migration
      */
     public function down()
     {
-        Schema::table('employees', function (Blueprint $table){
+        Schema::table('client_contacts', function (Blueprint $table){
             $table->dropForeign(['client_id']);
             $table->dropForeign(['type_id']);
             $table->dropForeign(['contact_id']);
             $table->dropIndex(['client_id']);
-            $table->dropIndex(['foreign_id']);
+//            $table->dropIndex(['foreign_id']);
             $table->dropIndex(['type_id']);
             $table->dropIndex(['contact_id']);
             $table->dropIndex(['updated_by']);
