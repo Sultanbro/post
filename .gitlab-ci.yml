@@ -43,7 +43,7 @@ deploy-app:
       --force-upgrade
       --pull
       --stack Mycent-Test
-      --confirm-upgrade server nginx
+      --confirm-upgrade server
 
   after_script: [] # https://github.com/rancher/rancher/issues/7971#issuecomment-286856228
     # - curl http://mycent.kz/api/command?command=migrate&key=123456789
