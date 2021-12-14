@@ -24,7 +24,7 @@ class CommandController extends Controller
                 return $output->fetch();
 
             case 'rollback':
-                Artisan::call('migrate:rollback', ['--step' => $request->match, '--step' => true], $output);
+                Artisan::call('migrate:rollback', ['--step' => $request->match, '--force' => true], $output);
                 return $output->fetch();
         }
     }
