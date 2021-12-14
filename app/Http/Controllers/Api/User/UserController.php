@@ -33,12 +33,12 @@ class UserController extends Controller
     {
 //        return new UserResource($this->userRepository->find(Auth::id()));
         if (Auth::id() == 3) {
-            return ['mail' => 'master@mail.uz',
+            return ['mail' => 'Мастер Майцентович',
                 'position' => 'Ведущий Web-программист',
                 'education' => 'Казахский Национальный технический университет им. К.Сатпаева',
                 'city' => 'Нукус',
                 'b_day' => '30 марта',
-                'sick' => [0 => ['day' => '3', 'dates' => '14.10.2021-16.10.2021'],
+                'sick' => [0 => ['day' => '3', 'period' => '14.10.2021-16.10.2021'],
                             1 => ['day' => '7', 'period' => '15.11.2021-22.11.2021']],
                 'vacation' => [0 => ['type' => 'Ежегодный основной оплачиваемый отпуск',
                                      'period' => '01.05.2021-31.04.2022',
@@ -50,14 +50,17 @@ class UserController extends Controller
                                     'department' => 'Управление web-программирования', 'duty' => 'Ведущий Web-программист']]];
         }
         if (Auth::id() == 29) {
-            return ['mail' => 'test@mail.ru',
+            return ['mail' => 'Тестов Тест Тестович',
                 'position' => 'Web-программист',
                 'education' => 'МУИТ',
                 'city' => 'Караганда',
                 'b_day' => '22 октября',
-                'sick' => [0 => ['day' => '5', 'dates' => '08.10.2021-12.10.2021']],
+                'sick' => [0 => ['day' => '5', 'period' => '08.10.2021-12.10.2021'],
+                            1 => ['day' => '7', 'period' => '15.11.2021-22.11.2021']],
                 'career' => [0 => ['datebeg' => '11.09.2021', 'dateend' => '0',
-                        'department' => 'Управление web-программирования', 'duty' => 'Web-программист']]];
+                        'department' => 'Управление web-программирования', 'duty' => 'Web-программист'],
+                            1 => ['datebeg' => '01.10.2021', 'dateend' => '0',
+                'department' => 'Управление web-программирования', 'duty' => 'Главный Web-программист']]];
         }
     }
 
