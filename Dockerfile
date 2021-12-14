@@ -15,3 +15,5 @@ WORKDIR /app
 
 COPY --from=vendor /app/vendor /app/vendor
 COPY . .
+
+COPY .deploy/conf/nginx/default.conf /etc/nginx/conf.d/default.conf
