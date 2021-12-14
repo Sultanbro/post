@@ -1,5 +1,7 @@
 FROM nginx:latest
 
-RUN apt-get update && apt-get install -y \
-    php7.0-fpm \
-    php7.0-mysql
+RUN add-apt-repository ppa:ondrej/php && \
+    apt-get update && \
+    apt install  ca-certificates apt-transport-https software-properties-common && \
+    apt-get install -y \
+    php8.0
