@@ -20,10 +20,10 @@ volumes:
     # external: true
 
 services:
-  php-app:
+  server:
     image: reg.cic.kz/centras-projects/mycent:latest
-    container_name: php-app
-    hostname: php-app
+    container_name: server
+    hostname: server
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
       io.rancher.container.pull_image: always
