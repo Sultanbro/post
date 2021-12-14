@@ -28,15 +28,10 @@ deploy-app:
   needs:
     - build-docker
 
-  # tags:
-  #   - mycic
-
   variables:
    RANCHER_ENVIRONMENT: default
 
   script:
-    # - rancher stop mycic-prod
-    # - rancher volume rm mycic_production_code
     - rancher up -d
       --stack Mycent-Test
       --file .deploy/docker-compose.yml
@@ -57,24 +52,3 @@ deploy-app:
     # - script --return --quiet --command "rancher exec -it mycent-prod-php-app-1 cp /release/* /app/*" /dev/null
     # - rancher exec -it mycic-prod-php-app-1 composer install
     # - rancher exec -it mycic-prod-php-app-1 a migrate --force
-
-# sonarqube-check:
-#   when: manual
-#   stage: sonarqube
-#   image:
-#     name: sonarsource/sonar-scanner-cli:latest
-#     entrypoint: [""]
-#   tags:
-#     - docker
-#   variables:
-#     # SONAR_TOKEN: "4e91a6da8f68c5941ccaa91118b18d3820b921b0"
-#     # SONAR_HOST_URL: "http://192.168.30.30:8888"
-#     GIT_DEPTH: 0
-#   script:
-#     - sonar-scanner -Dsonar.qualitygate.wait=true -Dsonar.projectKey=$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG -Dsonar.sources=. -Dsonar.exclusions=vendor/**,public/**,node_modules/**,storage/**,resources/js/**,_ide_helper.php,_ide_helper_models.php
-#   allow_failure: true
-#   only:
-#     - merge_requests
-#     - colleagues
-
-###
