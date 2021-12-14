@@ -6,7 +6,7 @@ build-docker:
   stage: build
 
   only:
-    - dockerize
+    - master
   # https://www.cloudsigma.com/deploying-laravel-nginx-and-mysql-with-docker-compose/
   # https://www.digitalocean.com/community/tutorials/how-to-set-up-laravel-nginx-and-mysql-with-docker-compose-ru
   script:
@@ -23,13 +23,10 @@ deploy-app:
   stage: deploy
   when: manual
   only:
-    - dockerize
+    - master
 
   needs:
     - build-docker
-
-  variables:
-   RANCHER_ENVIRONMENT: default
 
   script:
     - rancher up -d
@@ -45,8 +42,8 @@ deploy-app:
       --stack Mycent-Test
       --confirm-upgrade server
 
-  after_script: [] # https://github.com/rancher/rancher/issues/7971#issuecomment-286856228
-    # - curl http://mycent.kz/api/command?command=migrate&key=123456789
+  after_script: # https://github.com/rancher/rancher/issues/7971#issuecomment-286856228
+    - curl http://mycent.kz/api/command?command=migrate&key=123456789
     # - script --return --quiet --command "rancher exec -it mycent-prod-php-app-1 composer install" /dev/null
     # - script --return --quiet --command "rancher exec -it mycent-prod-php-app-1 php artisan migrate --force" /dev/null
     # - script --return --quiet --command "rancher exec -it mycent-prod-php-app-1 cp /release/* /app/*" /dev/null
