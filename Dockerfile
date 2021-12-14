@@ -1,4 +1,4 @@
-FROM webdevops/php-nginx:8.0-alpine as vendor
+FROM webdevops/php-nginx:8.0 as vendor
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ RUN composer install \
     --no-interaction \
     --no-scripts
 
-FROM webdevops/php-nginx:8.0-alpine
+FROM webdevops/php-nginx:8.0
 
 WORKDIR /app
 
