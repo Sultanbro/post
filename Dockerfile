@@ -1,8 +1,7 @@
-FROM nginx:latest
+FROM webdevops/php-nginx as vendor
 
-RUN apt-get update && \
-    apt install  ca-certificates apt-transport-https software-properties-common -y && \
-    add-apt-repository ppa:ondrej/php && \
-    apt-get update && \
-    apt-get install -y \
-    php8.0
+WORKDIR /app
+
+COPY composer.* ./
+
+RUN composer install
