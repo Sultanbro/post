@@ -24,7 +24,7 @@ services:
       - priority: 1
         protocol: http
         service: nginx
-        source_port: 5555
+        source_port: 5556
         target_port: 80
     health_check:
       healthy_threshold: 2
