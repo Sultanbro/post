@@ -3,17 +3,17 @@ services:
   grafana:
     scale: 1
     start_on_create: true
-  lb:
-    scale: 1
-    start_on_create: true
-    lb_config:
-      certs: []
-      port_rules:
-      - priority: 1
-        protocol: http
-        service: server
-        source_port: 5556
-        target_port: 80
+  # lb:
+  #   scale: 1
+  #   start_on_create: true
+  #   lb_config:
+  #     certs: []
+  #     port_rules:
+  #     - priority: 1
+  #       protocol: http
+  #       service: server
+  #       source_port: 5556
+  #       target_port: 80
     health_check:
       healthy_threshold: 2
       response_timeout: 2000
