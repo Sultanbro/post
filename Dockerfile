@@ -17,3 +17,5 @@ COPY --from=vendor /app/vendor /app/vendor
 COPY . .
 
 COPY .deploy/conf/nginx/default.conf /opt/docker/etc/nginx/vhost.conf
+
+RUN composer dump-autoload
