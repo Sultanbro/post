@@ -21,6 +21,7 @@ build-docker:
 
 deploy-app:
   stage: deploy
+  when: manual
   only:
     - dockerize
 
