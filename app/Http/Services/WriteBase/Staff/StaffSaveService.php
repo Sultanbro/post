@@ -42,23 +42,23 @@ class StaffSaveService implements StaffSaveServiceInterface
      */
     public function saveStaff($staffs)
     {
-        $make_user = ['crated_by' => Auth::id(), 'updated_by' => Auth::id()];
+        $make_user = ['created_by' => Auth::id(), 'updated_by' => Auth::id()];
         $result = [];
         foreach ($staffs as $staff) {
             if (!$this->staffRepository->getByForeignIdCompanyId($staff['foreign_id'], $staff['company_id'])) {
-                if ($department = $this->clientRepository->firstWhereForeignId($staff['foreign_id'], $staff['department_id'])) {
-                    $staff['department_id'] = $department;
-                    $staff['eorder_beg_id'] = is_null($staff['eorder_beg_id']) ? $staff['eorder_beg_id'] : $this->eOrderRepository->firstForeignIdCompanyId($staff['eorder_beg_id'], $staff['company_id']);
-                    $staff['eorder_end_id'] = is_null($staff['eorder_end_id']) ? $staff['eorder_end_id'] : $this->eOrderRepository->firstForeignIdCompanyId($staff['eorder_end_id'], $staff['company_id']);
+                if ($department = $this->clientRepository->firstWhereForeignId($staff['department_id'], $staff['company_id'])) {
+                    $staff['department_id'] = $department->id;
+                    $staff['eorder_beg_id'] = is_null($staff['eorder_beg_id']) ? $staff['eorder_beg_id'] : $this->eOrderRepository->firstForeignIdCompanyId($staff['eorder_beg_id'], $staff['company_id'])->id;
+                    $staff['eorder_end_id'] = is_null($staff['eorder_end_id']) ? $staff['eorder_end_id'] : $this->eOrderRepository->firstForeignIdCompanyId($staff['eorder_end_id'], $staff['company_id'])->id;
                     $this->staffRepository->create(array_merge($staff, $make_user));
                 }else{
-                    $result[$staff['foreign_id']] = ['message' => 'not found department id'];
+                    $result[$staff['foreign_id']] = 'not found department id';
                 }
             }else{
-                $result[$staff['foreign_id']] = ['message' => 'is in base'];
+                $result[$staff['foreign_id']] = 'is in base';
             }
         }
-        return request()->json($result);
+        return $result;
     }
 
 

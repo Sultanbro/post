@@ -30,8 +30,8 @@ class CareerServiceProvide extends ServiceProvider
     public function boot()
     {
         $this->app->bind(
-            CareerUserSaveService::class,
-            CareerUserSaveServiceInterface::class
+            CareerUserSaveServiceInterface::class,
+            CareerUserSaveService::class
         );
     }
 }

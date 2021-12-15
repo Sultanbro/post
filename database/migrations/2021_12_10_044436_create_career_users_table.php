@@ -34,7 +34,7 @@ class CreateCareerUsersTable extends Migration
             $table->foreign('empl_type_id')->references('id')->on('dictis');
             $table->integer('extra_pay1')->nullable()->comment('Второя надбавка');
             $table->integer('extra_pay2')->nullable()->comment('Третья надбавка');
-            $table->integer('agreement_user_id')->nullable()->comment('Трудовой договор');
+            $table->integer('agreement_id')->nullable()->comment('Трудовой договор');
             $table->integer('company_id')->comment('Компания');
             $table->integer('created_by')->index();
             $table->integer('updated_by')->comment('автор изменения')->index();

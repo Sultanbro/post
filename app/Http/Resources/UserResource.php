@@ -19,9 +19,9 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'email' => $this->email,
-            'department' => new DepartmentResource(data_get($this, 'userDepartment')),
+            'department' => new DepartmentResource($this->userDepartment),
 //            'company' => new CompanyResource(data_get($this, 'userCompany')),
-            'client_info' => new ClientResource(data_get($this, 'clientInfo')),
+            'user_info' => new ClientResource($this->clientInfo),
             'order_info' => $this->eOrder,
         ];
     }
