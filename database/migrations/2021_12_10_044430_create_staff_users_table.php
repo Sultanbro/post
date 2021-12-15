@@ -25,6 +25,7 @@ class CreateStaffUsersTable extends Migration
             $table->date('date_end')->nullable()->comment('Дата закрития штатной еденицы');
             $table->boolean('active')->nullable()->comment('Признак активности');
             $table->string('id1c')->nullable()->comment('Уникальный код в 1с');
+            $table->integer('company_id')->comment('Компания');
             $table->integer('created_by')->index();
             $table->integer('updated_by')->comment('автор изменения')->index();
             $table->timestamps();

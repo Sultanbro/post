@@ -36,16 +36,21 @@ class DutySaveService implements DutySaveServiceInterface
      */
     public function saveDuty($duties)
     {
-        $make_user = ['crated_by' => Auth::id(), 'updated_by' => Auth::id()];
+        $make_user = ['created_by' => Auth::id(), 'updated_by' => Auth::id()];
         $result = [];
         foreach ($duties as $duty) {
             if (!$this->dutyRepository->getByForeignIdCompanyId($duty['foreign_id'], $duty['company_id'])) {
-                $this->dutyRepository->create(array_merge($duty, $make_user));
+                if ($position = $this->dictiRepository->firstWhereForeignIdCompanyId($duty['position_id'], $duty['company_id'])){
+                    $duty['position_id'] = $position->id;
+                    $this->dutyRepository->create(array_merge($duty, $make_user));
+                }else{
+                    $result[$duty['foreign_id']] = 'position_id is not found';
+                }
             }else{
-                $result[$duty['foreign_id']] = ['message' => 'is in base'];
+                $result[$duty['foreign_id']] = 'is in base';
             }
         }
-        return request()->json($result);
+        return $result;
     }
 
 

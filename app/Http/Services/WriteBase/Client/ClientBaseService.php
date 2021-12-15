@@ -203,7 +203,7 @@ class ClientBaseService implements ClientBaseServiceInterface
                             $e_order['doc_id'] = is_null($e_order['doc_id']) ? null : $this->dictiRepository->firstWhereForeignIdCompanyId($e_order['doc_id'], $e_order['company_id'])->id;
                             $this->eOrderRepository->create(array_merge($e_order, ['created_by' => Auth::id(), 'updated_by' => Auth::id()]));
                         } catch (\Exception $e) {
-                            $result[$e_order['foreign_id']] = $e;
+                            $result[$e_order['foreign_id']] = $e . '';
                         }
                     } else {
                         $result[$e_order['foreign_id']] = ['message' => 'no department_id'];

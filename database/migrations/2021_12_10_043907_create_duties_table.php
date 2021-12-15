@@ -23,7 +23,7 @@ class CreateDutiesTable extends Migration
             $table->integer('company_id')->comment('Компания');
             $table->integer('created_by')->index();
             $table->integer('updated_by')->index();
-            $table->date('id1c')->comment('Уникальный код в 1с');
+            $table->string('id1c')->comment('Уникальный код в 1с')->nullable();
             $table->timestamps();
         });
     }

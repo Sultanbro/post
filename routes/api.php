@@ -49,7 +49,7 @@ Route::post('/eorder/info/accept', [ClientBaseController::class, 'acceptEOrder']
 Route::post('/dictis/info/accept', [DictisController::class, 'acceptDictisInfo']);
 Route::post('/cities/info/accept', [CityController::class, 'saveCities']);
 Route::post('/regions/info/accept', [RegionController::class, 'saveRegions']);
-Route::post('/duties/info/accept', [DutyController::class, 'saveDuties']);
+Route::post('/duty/info/accept', [DutyController::class, 'saveDuties']);
 Route::post('/staff/info/accept', [StaffController::class, 'saveStaff']);
 Route::post('/career/info/accept', [CareerUserController::class, 'saveCareer']);
 

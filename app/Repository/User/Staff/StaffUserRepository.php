@@ -4,7 +4,7 @@
 namespace App\Repository\User\Staff;
 
 
-use App\Models\StaffUser;
+use App\Models\Client\UserStory\StaffUser;
 use App\Repository\Eloquent\BaseRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

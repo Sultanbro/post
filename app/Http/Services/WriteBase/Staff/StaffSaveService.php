@@ -4,7 +4,6 @@
 namespace App\Http\Services\WriteBase\Staff;
 
 use App\Repository\Client\ClientRepositoryInterface;
-use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\Client\EOrder\EOrderRepositoryInterface;
 use App\Repository\User\Staff\StaffUserRepositoryInterface;
 use Illuminate\Support\Facades\Auth;

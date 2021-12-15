@@ -39,24 +39,28 @@ class CitiesSaveService implements CitiesSaveServiceInterface
 
     public function saveCities($cities)
     {
-
+        $result = [];
         foreach ($cities as $city) {
-           if ($region = $this->regionRepository->firstByForeignId($city['region_id'])) {
-            if ($country = $this->dictiRepository->firstWhereForeignIdCompanyId($city['country_id'], $city['company_id'])) {
-                $city['codes'] = json_encode($city['codes']);
-                $city['region_id'] = $region->id;
-                $city['country_id'] = $country->id;
-                $city['parent_id'] = is_null($city['parent_id']) ? null : $this->cityRepository->firstForeignCompanyId($city['parent_id'], $city['company_id']);
-                if ($this->cityRepository->create(array_merge($city, ['created_by' => Auth::id(), 'updated_by' => Auth::id()]))) {
-                    continue;
+            if (!$this->cityRepository->firstForeignCompanyId($city['foreign_id'], $city['company_id'])) {
+                if ($region = $this->regionRepository->firstByForeignId($city['region_id'])) {
+                    if ($country = $this->dictiRepository->firstWhereForeignIdCompanyId($city['country_id'], $city['company_id'])) {
+                        $city['codes'] = json_encode($city['codes']);
+                        $city['region_id'] = $region->id;
+                        $city['country_id'] = $country->id;
+                        $city['parent_id'] = is_null($city['parent_id']) ? null : $this->cityRepository->firstForeignCompanyId($city['parent_id'], $city['company_id'])->id;
+                        if ($this->cityRepository->create(array_merge($city, ['created_by' => Auth::id(), 'updated_by' => Auth::id()]))) {
+                            continue;
+                        }else {
+                            $result['foreign_id'] = 'no dicti';
+                        }
+                    }else {
+                        $result['foreign_id'] = 'no country_id';
+                    }
                 }
-                $city['message'] = 'no dicti';
-                $result[] = $city;
+            }else{
+                $result['foreign_id'] = 'is in base';
             }
-               $city['message'] = 'no country_id';
-               $result[] = $city;
-           }
         }
-        return response()->json($result = isset($result[0]) ? $result : ['message' => 'ok']);
+        return response()->json($result );
     }
 }

@@ -7,8 +7,8 @@ namespace App\Http\Services\WriteBase\Staff;
 interface StaffSaveServiceInterface
 {
     /**
-     * @param $duties
+     * @param $staffs
      * @return mixed
      */
-    public function saveStaff($duties);
+    public function saveStaff($staffs);
 }
