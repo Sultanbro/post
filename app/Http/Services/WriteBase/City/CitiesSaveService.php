@@ -51,14 +51,14 @@ class CitiesSaveService implements CitiesSaveServiceInterface
                         if ($this->cityRepository->create(array_merge($city, ['created_by' => Auth::id(), 'updated_by' => Auth::id()]))) {
                             continue;
                         }else {
-                            $result['foreign_id'] = 'no dicti';
+                            $result[$city['foreign_id']] = 'no dicti';
                         }
                     }else {
-                        $result['foreign_id'] = 'no country_id';
+                        $result[$city['foreign_id']] = 'no country_id';
                     }
                 }
             }else{
-                $result['foreign_id'] = 'is in base';
+                $result[$city['foreign_id']] = 'is in base';
             }
         }
         return response()->json($result );
