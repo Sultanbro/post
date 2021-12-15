@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Http\Services\Post\PostService;
-use App\Http\Services\Post\PostServiceInterface;
-use App\Http\Services\WriteBase\DictisSaveService;
-use App\Http\Services\WriteBase\DictisSaveServiceInterface;
+use App\Http\Services\WriteBase\Dicti\DictisSaveService;
+use App\Http\Services\WriteBase\Dicti\DictisSaveServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class DictiSaveServiceProvide extends ServiceProvider

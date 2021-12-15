@@ -134,7 +134,7 @@ return [
     |
     */
 
-    'providers' => [
+    'providers' => array(
 
         /*
          * Laravel Framework Service Providers...
@@ -180,7 +180,12 @@ return [
         App\Providers\UserAuthtServiceProvide::class,
         App\Providers\ClientBaseServiceProvider::class,
         App\Providers\DictiSaveServiceProvide::class,
-    ],
+        App\Providers\CitiesSaveServiceProvider::class,
+        App\Providers\RegionSaveServiceProvider::class,
+        App\Providers\DutyServiceProvide::class,
+        App\Providers\CareerServiceProvide::class,
+        App\Providers\StaffServiceProvide::class,
+    ),
 
     /*
     |--------------------------------------------------------------------------

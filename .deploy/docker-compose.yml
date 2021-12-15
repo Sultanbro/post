@@ -20,51 +20,23 @@ volumes:
     # external: true
 
 services:
-  nginx:
-    image: reg.cic.kz/centras-projects/mycent:nginx
-    container_name: nginx
-    hostname: nginx
-    volumes:
-      - /home/student/mycent/shared/storage:/app/storage
-
-    working_dir: /app
-
-    networks:
-      - app_network
-
-    links:
-      - php-app
-
-    depends_on:
-      - php-app
-
-    labels:
-      # io.rancher.container.pull_image: always
-      io.rancher.scheduler.affinity:host_label: name=mycic
-      io.rancher.container.pull_image: always
-      io.rancher.container.agent.role: environmentAdmin,agent
-      io.rancher.container.agent_service.drain_provider: 'true'
-      io.rancher.container.create_agent: 'true'
-
-  ##############################################################################
-
-  php-app:
-    image: reg.cic.kz/centras-projects/mycent:fpm
-    container_name: php-app
-    hostname: php-app
+  server:
+    image: reg.cic.kz/centras-projects/mycent:latest
+    container_name: server
+    hostname: server
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
       io.rancher.container.pull_image: always
       io.rancher.container.hostname_override: container_name
 
     ports:
-      - "9000:9000/tcp"
+      - "5556:80/tcp"
 
     environment: &env
       APP_DEBUG: "true"
       APP_KEY: "base64:SaYfcUjht1j8/4uJ810xTHG46S/yLjQ/AkYPJJWhsNQ="
       APP_ENV: "production"
-      APP_URL: "http://mycent.kz/"
+      APP_URL: "http://192.168.30.31:4444/"
 
       DB_CONNECTION: "pgsql"
       DB_HOST: "pg"
@@ -92,6 +64,8 @@ services:
       # KIAS_LOGIN: "MyCIC"
       # KIAS_PASSWORD: "mycickz321"
 
+      DEVELOPMENT_KEY: "123456789"
+
     volumes:
       - /home/student/mycent/shared/storage:/app/storage
 
@@ -100,22 +74,6 @@ services:
 
     depends_on:
       - db
-
-##############################################################################
-
-  lb:
-    image: rancher/lb-service-haproxy:v0.9.14
-    hostname: lb
-    ports:
-      - "6655:5555/tcp"
-
-    labels:
-      io.rancher.scheduler.affinity:host_label: name=mycic
-      io.rancher.container.agent.role: environmentAdmin,agent
-      io.rancher.container.agent_service.drain_provider: 'true'
-      io.rancher.container.create_agent: 'true'
-
-##############################################################################
 
   redis:
     image: redis:alpine

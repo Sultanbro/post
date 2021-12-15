@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Client\ClientResource;
+use App\Http\Resources\Department\DepartmentResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -16,6 +18,11 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'email' => $this->email,
+            'department' => new DepartmentResource(data_get($this, 'userDepartment')),
+//            'company' => new CompanyResource(data_get($this, 'userCompany')),
+            'client_info' => new ClientResource(data_get($this, 'clientInfo')),
+            'order_info' => $this->eOrder,
         ];
     }
 }

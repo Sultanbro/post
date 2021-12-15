@@ -16,7 +16,7 @@ class AddColumnToDictisTable extends Migration
         Schema::table('dictis', function (Blueprint $table) {
             $table->integer('company_id')->index();
             $table->integer('has_child')->nullable()->change();
-            $table->integer('foreign_id')->nullable()->change();
+            $table->integer('foreign_id')->nullable();
         });
     }
 

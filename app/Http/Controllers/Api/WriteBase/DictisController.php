@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\WriteBase;
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\WriteBase\DictisSaveServiceInterface;
-use App\Repository\DictiRepositoryInterface;
+use App\Http\Services\WriteBase\Dicti\DictisSaveServiceInterface;
+use App\Repository\Reference\Dicti\DictiRepositoryInterface;
 use Illuminate\Http\Request;
 
 class DictisController extends Controller

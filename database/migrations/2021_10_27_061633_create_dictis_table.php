@@ -26,7 +26,6 @@ class CreateDictisTable extends Migration
             $table->integer('num_code')->index()->nullable();
             $table->unsignedBigInteger('updated_by')->index();
             $table->unsignedBigInteger('created_by')->index();
-            $table->integer('foreign_id')->index();
             $table->timestamps();
         });
     }

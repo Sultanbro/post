@@ -51,6 +51,14 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(DictiRepositoryInterface::class, DictiRepository::class);
         $this->app->bind(CentcoinRepositoryInterface::class, CentcoinRepository::class);
         $this->app->bind(CentcoinApplyRepositoryInterface::class, CentcoinApplyRepository::class);
+        $this->app->bind(CityRepositoryInterface::class, CityRepository::class);
+        $this->app->bind(RegionRepositoryInterface::class, RegionRepository::class);
+        $this->app->bind(ClientContactRepositoryInterface::class, ClientContactRepository::class);
+        $this->app->bind(EmployeeRepositoryInterface::class, EmployeeRepository::class);
+        $this->app->bind(EOrderRepositoryInterface::class, EOrderRepository::class);
+        $this->app->bind(DutyRepositoryInterface::class, DutyRepository::class);
+        $this->app->bind(CareerUserRepositoryInterface::class, CareerUserRepository::class);
+        $this->app->bind(StaffUserRepositoryInterface::class, StaffUserRepository::class);
     }
 
     /**
