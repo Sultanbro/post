@@ -10,7 +10,7 @@ services:
 ##############################################################################
 
   server:
-    image: reg.cic.kz/centras-projects/mycent:testing
+    image: reg.cic.kz/centras-projects/mycent:latest
     container_name: php-app
     hostname: php-app
 
