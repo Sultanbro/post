@@ -103,8 +103,7 @@ services:
 
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
-      io.rancher.container.pull_image: always
-      io.rancher.container.hostname_override: container_name
+
 ##############################################################################
 
   pg:
@@ -121,7 +120,7 @@ services:
     networks:
       - app_network
     labels:
-      io.rancher.scheduler.affinity:host_label: type=internal
+      io.rancher.scheduler.affinity:host_label: name=mycic
 
 ##############################################################################
 
