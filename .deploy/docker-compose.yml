@@ -80,8 +80,8 @@ services:
     container_name: redis
     hostname: redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
 
     volumes: []
       # - mycent_production_redis_data:/data
@@ -109,8 +109,8 @@ services:
   pg:
     image: postgres:12
     hostname: pg
-    ports:
-      - "17314:5432"
+    # ports:
+    #   - "17314:5432"
     environment:
       POSTGRES_PASSWORD: DVLkjNwEDZ9xMRPjG33b
     stdin_open: true
@@ -131,7 +131,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@mycent.kz
       PGADMIN_DEFAULT_PASSWORD: DVLkjNwEDZ9xMRPjG33b
     ports:
-      - "8090:80"
+      - "17313:80"
     stdin_open: true
     volumes:
     - mycent_production_postgres_data:/var/lib/postgresql/data
