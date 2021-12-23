@@ -6,31 +6,28 @@ networks:
   app_network:
     driver: bridge
 
-volumes:
-  mycent_production_postgres_data:
-    driver: local
-    # external: true
-
-  mycent_production_grafana_data:
-    driver: local
-    # external: true
-
-  mycent_production_redis_data:
-    driver: local
-    # external: true
-
 services:
+##############################################################################
+
   server:
-    image: reg.cic.kz/centras-projects/mycent:latest
-    container_name: server
-    hostname: server
+    image: reg.cic.kz/centras-projects/mycent:testing
+    container_name: php-app
+    hostname: php-app
+
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
       io.rancher.container.pull_image: always
       io.rancher.container.hostname_override: container_name
 
-    ports:
-      - "17311:80/tcp"
+    volumes:
+      - /var/data/mycent/test/app/storage:/app/storage
+      - /var/data/mycent/test/shared:/shared
+
+    networks:
+      - app_network
+
+    depends_on:
+      - db
 
     environment: &env
       APP_DEBUG: "true"
@@ -66,48 +63,6 @@ services:
 
       DEVELOPMENT_KEY: "123456789"
 
-    volumes:
-      - /home/student/mycent/shared/storage:/app/storage
-
-    networks:
-      - app_network
-
-    depends_on:
-      - db
-
-##############################################################################
-
-  redis:
-    image: redis:alpine
-    container_name: redis
-    hostname: redis
-    restart: unless-stopped
-    # ports:
-    #   - "6379:6379"
-
-    labels:
-      io.rancher.scheduler.affinity:host_label: name=mycic
-
-    volumes: []
-      # - mycent_production_redis_data:/data
-
-    networks:
-      - app_network
-
-##############################################################################
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "7317:3000"
-    networks:
-      - app_network
-    volumes: []
-      # - mycent_production_grafana_data:/var/lib/grafana
-
-    labels:
-      io.rancher.scheduler.affinity:host_label: name=mycic
 
 ##############################################################################
 
@@ -142,5 +97,26 @@ services:
     - mycent_production_postgres_data:/var/lib/postgresql/data
     networks:
       - app_network
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+
+######################
+#   Балансировщики   #
+######################
+
+  lb:
+    image: rancher/lb-service-haproxy:v0.9.14
+    ports:
+      - "17311:17311/tcp"
+    networks:
+      - app_network
+
+    links:
+      - server
+
+    depends_on:
+      - server
+
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
