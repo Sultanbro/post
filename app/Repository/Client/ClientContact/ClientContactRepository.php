@@ -18,4 +18,12 @@ class ClientContactRepository extends BaseRepository implements ClientContactRep
         parent::__construct($model);
         $this->model = $model;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByClientId($id)
+    {
+        return $this->model->firstWhere('client_id', $id);
+    }
 }

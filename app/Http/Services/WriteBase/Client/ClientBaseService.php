@@ -100,12 +100,8 @@ class ClientBaseService implements ClientBaseServiceInterface
                         }
                         if ($clientModel->type_id == 2 or $clientModel->type_id == 3) {
 
-                            if (!$this->userRepository->userById($clientModel->id)) {
+                            $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
 
-                                $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
-                            }else{
-                                $result[] = ['message' => 'this user is in the base', $client];
-                            }
                         }
                     } else {
                         $client['address'] = json_encode($client['address']);
@@ -125,7 +121,7 @@ class ClientBaseService implements ClientBaseServiceInterface
                     $result[] = $client;
                 }
         }
-        if (isset($result[0])) {
+        if ($result) {
             return response()->json($result);
         }else{
             return response()->json(['message' => 'ok'], 200);
@@ -145,14 +141,28 @@ class ClientBaseService implements ClientBaseServiceInterface
         }else{
             $client_info['duty_id'] = 6;
         }
-        $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id], $client_info));
-        $this->saveContact($client_info, $clientModel_id, $user_make);
-        $city_id = $this->cityRepository->firstForeignCompanyId($client_info['city_id'], $client_info['company_id'])->id;
-        $region_id = $this->regionRepository->firstByForeignIdCompanyId($client_info['region_id'], $client_info['company_id'])->id;
-        $country_id = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['country_id'], $client_info['company_id'])->id;
-        $client_info['employee']['nation_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['nation_id'], $client_info['company_id'])->id;
-        $client_info['employee']['science_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['science_id'], $client_info['company_id'])->id;
-        $this->employeeRepository->create(array_merge(array_merge(['id' => $clientModel_id, 'city_id' => $city_id, 'region_id' => $region_id, 'country_id' => $country_id], $client_info['employee']), $user_make));
+        if (!$this->userRepository->userById($clientModel_id)) {
+            $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id], $client_info));
+        }else{
+            $result['user'] = ['message' => 'this is in the base'];
+        }
+        if (!$this->clientContactRepository->getByClientId($clientModel_id)){
+            $this->saveContact($client_info, $clientModel_id, $user_make);
+        }else{
+            $result['contact'] = ['message' => 'this is in the base'];
+        }
+        if (!$this->employeeRepository->firstById($clientModel_id)) {
+            $city_id = $this->cityRepository->firstForeignCompanyId($client_info['city_id'], $client_info['company_id'])->id;
+            $region_id = $this->regionRepository->firstByForeignIdCompanyId($client_info['region_id'], $client_info['company_id'])->id;
+            $country_id = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['country_id'], $client_info['company_id'])->id;
+            $client_info['employee']['nation_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['nation_id'], $client_info['company_id'])->id;
+            $client_info['employee']['science_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['science_id'], $client_info['company_id'])->id;
+            $this->employeeRepository->create(array_merge(array_merge(['id' => $clientModel_id, 'city_id' => $city_id, 'region_id' => $region_id, 'country_id' => $country_id], $client_info['employee']), $user_make));
+        }else{
+            $result['employee'] = ['message' => 'this is in the base'];
+        }
+        return $result;
+
     }
 
     /**

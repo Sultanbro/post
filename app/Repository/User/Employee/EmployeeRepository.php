@@ -18,4 +18,12 @@ class EmployeeRepository extends BaseRepository implements EmployeeRepositoryInt
         parent::__construct($model);
         $this->model = $model;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function firstById($id)
+    {
+        return $this->model->firstWhere('id', $id);
+    }
 }
