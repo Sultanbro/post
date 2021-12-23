@@ -1,0 +1,88 @@
+version: '2'
+
+#################################
+
+networks:
+  app_network:
+    driver: bridge
+
+services:
+##############################################################################
+
+  server:
+    image: reg.cic.kz/centras-projects/mycent:testing
+    container_name: php-app
+    hostname: php-app
+
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+      io.rancher.container.pull_image: always
+      io.rancher.container.hostname_override: container_name
+
+    volumes:
+      - /var/data/mycic/test/app/storage:/app/storage
+      - /var/data/mycic/test/shared:/shared
+
+    networks:
+      - app_network
+
+    depends_on:
+      - db
+
+
+##############################################################################
+
+  pg:
+    image: postgres:12
+    hostname: pg
+    # ports:
+    #   - "17314:5432"
+    environment:
+      POSTGRES_PASSWORD: DVLkjNwEDZ9xMRPjG33b
+    stdin_open: true
+    volumes:
+      - mycent_production_postgres_data:/var/lib/postgresql/data
+    tty: true
+    networks:
+      - app_network
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+##############################################################################
+
+  pgadmin:
+    image: dpage/pgadmin4
+    hostname: pg
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mycent.kz
+      PGADMIN_DEFAULT_PASSWORD: DVLkjNwEDZ9xMRPjG33b
+    ports:
+      - "17313:80"
+    stdin_open: true
+    volumes:
+    - mycent_production_postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+
+######################
+#   Балансировщики   #
+######################
+
+  lb:
+    image: rancher/lb-service-haproxy:v0.9.14
+    ports:
+      - "7311:7311/tcp"
+    networks:
+      - app_network
+
+    links:
+      - server
+
+    depends_on:
+      - server
+
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
