@@ -20,8 +20,8 @@ services:
       io.rancher.container.hostname_override: container_name
 
     volumes:
-      - /var/data/mycic/test/app/storage:/app/storage
-      - /var/data/mycic/test/shared:/shared
+      - /var/data/mycent/test/app/storage:/app/storage
+      - /var/data/mycent/test/shared:/shared
 
     networks:
       - app_network
