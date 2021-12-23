@@ -16,6 +16,7 @@ class Comment extends Model
         'user_id',
         'created_by',
         'updated_by',
+        'link',
 ];
     use HasFactory;
 

@@ -66,4 +66,12 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
     {
         return $this->model->where('post_id', $postId)->get();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getChildCommentById($id)
+    {
+        return $this->model->where('parent_id', $id)->get();
+    }
 }

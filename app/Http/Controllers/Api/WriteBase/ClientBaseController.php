@@ -56,4 +56,17 @@ class ClientBaseController
             return response()->json($e);
         }
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse|mixed
+     */
+    public function acceptAvatar(Request $request)
+    {
+        try {
+            return $this->clientBaseService->acceptAvatar($request->all());
+        }catch (\Exception $e) {
+            return response()->json($e);
+        }
+    }
 }

@@ -3,8 +3,10 @@
 namespace App\Http\Services\Post;
 
 use App\Http\Resources\Post\PostResource;
+use App\Repository\Post\Comment\CommentRepositoryInterface;
 use App\Repository\Post\PostFile\PostFileRepositoryInterface;
 use App\Repository\Post\PostRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Exception;
 
@@ -18,14 +20,20 @@ class PostService implements PostServiceInterface
      * @var PostFileRepositoryInterface
      */
     private $postFileRepo;
+    /**
+     * @var CommentRepositoryInterface
+     */
+    private $commentRepository;
 
     /**
      * PostService constructor.
      * @param PostRepositoryInterface $postRepository
      * @param PostFileRepositoryInterface $postFileRepository
+     * @param CommentRepositoryInterface $commentRepository
      */
-    public function __construct(PostRepositoryInterface $postRepository, PostFileRepositoryInterface $postFileRepository)
+    public function __construct(PostRepositoryInterface $postRepository, PostFileRepositoryInterface $postFileRepository, CommentRepositoryInterface $commentRepository)
     {
+        $this->commentRepository = $commentRepository;
         $this->postFileRepo = $postFileRepository;
         $this->postRepository = $postRepository;
     }
@@ -78,6 +86,56 @@ class PostService implements PostServiceInterface
                 'success' => $success,
                 'error'   => $error
             ];
+        }
+    }
+
+    /**
+     * @param $req
+     * @param $id
+     * @return mixed|void
+     */
+    public function saveCommentFile($req, $id)
+    {
+            $fileName = $req['file']->getClientOriginalName();
+            $content = file_get_contents($req['file']->getRealPath());
+            $link = "public/comments/$id/$fileName";
+            Storage::disk('local')->put($link, $content);
+            return $link;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteComment($id)
+    {
+        if ($model = $this->commentRepository->getById($id)) {
+            if (Auth::id() === $model->user_id) {
+                $child_comments = $this->commentRepository->getChildCommentById($id);
+                if (count($child_comments) >= 1) {
+                    foreach ($child_comments as $child_comment) {
+                        $this->deleteCommentsStore($child_comment->id);
+                    }
+                }
+                if ($this->commentRepository->deleteByParentId($id)) {
+                    $this->deleteCommentsStore($id);
+                    if ($this->commentRepository->deleteById($id)) {
+                        return response()->json(['post_id' => $model->post_id, 'comment_count' => $this->commentRepository->getAllCommentsByPostId($model->post_id)->count()], 200);
+                    }
+                }
+                return response()->json(['message' => 'Not Found'], 404);
+            }
+        }
+        return response()->json(['message' => 'Forbidden '], 403);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteCommentsStore($id)
+    {
+        if (Storage::disk('local')->exists("public/comments/$id")) {
+            Storage::disk('local')->deleteDirectory("public/comments/$id");
         }
     }
 }

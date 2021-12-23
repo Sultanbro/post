@@ -17,4 +17,17 @@ interface ClientBaseServiceInterface
      * @return mixed
      */
     public function acceptEOrder($e_orders);
+
+    /**
+     * @param $req
+     * @return mixed
+     */
+    public function acceptAvatar($req);
+
+    /**
+     * @param $req
+     * @param $user_id
+     * @return mixed
+     */
+    public function saveAvatar($req, $user_id);
 }

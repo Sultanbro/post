@@ -16,6 +16,8 @@ use App\Repository\User\UserRepositoryInterface;
 use http\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use phpDocumentor\Reflection\Types\This;
 
 class ClientBaseService implements ClientBaseServiceInterface
 {
@@ -219,4 +221,34 @@ class ClientBaseService implements ClientBaseServiceInterface
         return response()->json($result);
     }
 
+    /**
+     * @param $req
+     * @return string[]
+     */
+    public function acceptAvatar($req)
+    {
+        $result = [];
+        foreach ($req as $re) {
+            if (!$model = $this->clientRepository->firstWhereForeignId($re['foreign_id'], $re['company_id'])) {
+                $result = [$re['foreign_id'] => 'not found foreign_id'];
+            }else {
+                $result = $this->saveAvatar($re, $model->id);
+            }
+        }
+        return $result;
+
+    }
+
+    /**
+     * @param $req
+     * @param $user_id
+     * @return string[]
+     */
+    public function saveAvatar($req, $user_id)
+    {
+
+            $content = file_get_contents($req['file']->getRealPath());
+            Storage::disk('local')->put("public/avatars/" . $user_id . ".jpeg", $content);
+            return [$req['foreign_id'] => 'ok'];
+    }
 }

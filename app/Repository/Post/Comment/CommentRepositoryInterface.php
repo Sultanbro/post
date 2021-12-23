@@ -36,4 +36,10 @@ interface CommentRepositoryInterface extends EloquentRepositoryInterface
      */
     public function getAllCommentsByPostId($postId);
 
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getChildCommentById($id);
+
 }

@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\CommentStoreRequest;
 use App\Http\Requests\Post\CommentUpdateRequest;
 use App\Http\Resources\Post\CommentResource;
+use App\Http\Services\Post\PostServiceInterface;
 use App\Repository\Post\Comment\CommentRepositoryInterface;
 use App\Repository\Post\PostRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CommentController extends Controller
 {
@@ -21,14 +23,20 @@ class CommentController extends Controller
      * @var PostRepositoryInterface
      */
     private $postRepository;
+    /**
+     * @var PostServiceInterface
+     */
+    private $postService;
 
     /**
      * CommentController constructor.
      * @param CommentRepositoryInterface $commentRepository
      * @param PostRepositoryInterface $postRepository
+     * @param PostServiceInterface $postService
      */
-    public function __construct(CommentRepositoryInterface $commentRepository, PostRepositoryInterface $postRepository)
+    public function __construct(CommentRepositoryInterface $commentRepository, PostRepositoryInterface $postRepository, PostServiceInterface $postService)
     {
+        $this->postService = $postService;
         $this->postRepository = $postRepository;
         $this->commentRepository = $commentRepository;
     }
@@ -51,7 +59,15 @@ class CommentController extends Controller
      */
     public function store(CommentStoreRequest $request)
     {
-        return new CommentResource($this->commentRepository->create(array_merge($request->all(),['user_id' => Auth::id(), 'created_by' => Auth::id(), 'updated_by' => Auth::id(),])));
+        try {
+            $model = $this->commentRepository->create(array_merge($request->all(), ['user_id' => Auth::id(), 'created_by' => Auth::id(), 'updated_by' => Auth::id(),]));
+            if ($request->has('file')) {
+                $this->commentRepository->update($model->id, ['link' => $this->postService->saveCommentFile($request, $model->id)]);
+            }
+            return new CommentResource($this->commentRepository->find($model->id));
+        }catch (\Exception $e) {
+            return response()->json($e);
+        }
     }
 
     /**
@@ -91,17 +107,7 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        if ($model = $this->commentRepository->getById($id)) {
-            if (Auth::id() === $model->user_id) {
-                if ($this->commentRepository->deleteByParentId($id)) {
-                    if ($this->commentRepository->deleteById($id)) {
-                        return response()->json(['post_id' => $model->post_id, 'comment_count' => $this->commentRepository->getAllCommentsByPostId($model->post_id)->count()], 200);
-                    }
-                }
-                return response()->json(['message' => 'Not Found'], 404);
-            }
-        }
-        return response()->json(['message' => 'Forbidden '], 403);
+        return $this->postService->deleteComment($id);
     }
 
 }

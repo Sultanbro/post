@@ -26,6 +26,7 @@ class CommentResource extends JsonResource
           'created' => $this->created_at,
           'is_liked' => is_null($this->isLiked) ? 0 : 1,
           'like_count' => count(data_get($this, 'countLike')),
+          'link' => $this->link,
           'child_comments' => CommentResource::collection($this->comment),
         ];
     }
