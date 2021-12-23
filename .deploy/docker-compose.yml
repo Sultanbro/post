@@ -120,6 +120,8 @@ services:
     tty: true
     networks:
       - app_network
+    labels:
+      io.rancher.scheduler.affinity:host_label: type=internal
 
 ##############################################################################
 
@@ -136,3 +138,5 @@ services:
     - mycent_production_postgres_data:/var/lib/postgresql/data
     networks:
       - app_network
+    labels:
+      io.rancher.scheduler.affinity:host_label: type=internal
