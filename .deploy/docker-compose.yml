@@ -95,7 +95,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
-      - "8089:3000"
+      - "7317:3000"
     networks:
       - app_network
     volumes: []
