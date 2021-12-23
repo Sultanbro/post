@@ -111,7 +111,7 @@ services:
     image: postgres:12
     hostname: pg
     ports:
-      - "5432:5432"
+      - "17314:5432"
     environment:
       POSTGRES_PASSWORD: DVLkjNwEDZ9xMRPjG33b
     stdin_open: true
