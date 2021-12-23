@@ -120,7 +120,7 @@ services:
       POSTGRES_PASSWORD: DVLkjNwEDZ9xMRPjG33b
     stdin_open: true
     volumes:
-    - mycent_production_postgres_data:/var/lib/postgresql/data
+      - mycent_production_postgres_data:/var/lib/postgresql/data
     tty: true
     networks:
       - app_network
