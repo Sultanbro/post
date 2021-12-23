@@ -119,8 +119,8 @@ services:
     tty: true
     networks:
       - app_network
-    labels:
-      io.rancher.scheduler.affinity:host_label: name=mycic
+    # labels:
+    #  io.rancher.scheduler.affinity:host_label: name=mycic
 
 ##############################################################################
 
