@@ -29,7 +29,7 @@ deploy-app:
 
   script:
     - rancher up -d
-      --stack Mycent-Test
+      --stack Mycent-Prod
       --file .deploy/docker-compose.yml
       --rancher-file .deploy/rancher-compose.yml
 
@@ -38,7 +38,7 @@ deploy-app:
       --rancher-file .deploy/rancher-compose.yml
       --force-upgrade
       --pull
-      --stack Mycent-Test
+      --stack Mycent-Prod
       --confirm-upgrade server
 
   after_script: # https://github.com/rancher/rancher/issues/7971#issuecomment-286856228
