@@ -91,7 +91,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@mycent.kz
       PGADMIN_DEFAULT_PASSWORD: DVLkjNwEDZ9xMRPjG33b
     ports:
-      - "17313:80"
+      - "7313:80"
     stdin_open: true
     volumes:
     - mycent_production_postgres_data:/var/lib/postgresql/data
