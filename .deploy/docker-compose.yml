@@ -75,6 +75,8 @@ services:
     depends_on:
       - db
 
+##############################################################################
+
   redis:
     image: redis:alpine
     container_name: redis
