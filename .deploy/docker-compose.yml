@@ -83,6 +83,9 @@ services:
     # ports:
     #   - "6379:6379"
 
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
     volumes: []
       # - mycent_production_redis_data:/data
 
