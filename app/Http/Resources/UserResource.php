@@ -24,6 +24,8 @@ class UserResource extends JsonResource
             'user_info' => new ClientResource($this->clientInfo),
             'user_contact' => $this->clientContact,
             'order_info' => $this->eOrder,
+            'employees' => $this->employees,
+            'career' => $this->career,
         ];
     }
 }

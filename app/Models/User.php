@@ -6,6 +6,7 @@ use App\Models\Client\Client;
 use App\Models\Client\ClientContact;
 use App\Models\Client\Department;
 use App\Models\Client\Eorder;
+use App\Models\Client\UserStory\CareerUser;
 use App\Models\Client\UserStory\Employee;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
@@ -46,5 +47,10 @@ class User extends Model implements Authenticatable
     public function employees()
     {
         return $this->hasOne(Employee::class, 'id', 'id');
+    }
+
+    public function career()
+    {
+        return $this->hasMany(CareerUser::class, 'client_id', 'id');
     }
 }
