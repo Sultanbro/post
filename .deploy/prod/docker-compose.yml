@@ -76,7 +76,7 @@ services:
     stdin_open: true
     volumes:
       # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
-      - vol_mycent_prod_pg:/var/lib/postgresql/data
+      - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
     tty: true
     networks:
       - app_network
@@ -96,7 +96,7 @@ services:
     stdin_open: true
     volumes:
       # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
-      - vol_mycent_prod_pg:/var/lib/postgresql/data
+      - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
     networks:
       - app_network
     labels:
