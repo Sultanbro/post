@@ -20,8 +20,8 @@ services:
       io.rancher.container.hostname_override: container_name
 
     volumes:
-      - /share/common/data/mycic/prod/application:/app/storage
-      - /share/common/data/mycic/prod/shared:/shared
+      - /var/data/mycent/prod/application:/app/storage
+      - /var/data/mycent/prod/shared:/shared
 
     networks:
       - app_network
@@ -76,7 +76,7 @@ services:
     stdin_open: true
     volumes:
       # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
-      - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
+      - /var/data/mycent/prod/pg:/var/lib/postgresql/data
     tty: true
     networks:
       - app_network
@@ -96,7 +96,7 @@ services:
     stdin_open: true
     volumes:
       # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
-      - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
+      - /var/data/mycent/prod/pg:/var/lib/postgresql/data
     networks:
       - app_network
     labels:
