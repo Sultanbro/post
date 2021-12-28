@@ -51,6 +51,11 @@ class User extends Model implements Authenticatable
 
     public function career()
     {
-        return $this->hasMany(CareerUser::class, 'client_id', 'id');
+        return $this->hasMany(Eorder::class, 'client_id', 'id')->where('type_id', 12)->orWhere('type_id', 14);
+    }
+
+    public function vacation()
+    {
+        return $this->hasMany(Eorder::class, 'client_id', 'id')->where('type_id', 13);
     }
 }

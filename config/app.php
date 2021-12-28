@@ -185,6 +185,7 @@ return [
         App\Providers\DutyServiceProvide::class,
         App\Providers\CareerServiceProvide::class,
         App\Providers\StaffServiceProvide::class,
+        App\Providers\UserServiceProvider::class,
     ),
 
     /*
