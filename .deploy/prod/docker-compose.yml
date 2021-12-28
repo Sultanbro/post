@@ -20,8 +20,8 @@ services:
       io.rancher.container.hostname_override: container_name
 
     volumes:
-      - /var/data/mycent/test/app/storage:/app/storage
-      - /var/data/mycent/test/shared:/shared
+      - /var/data/mycent/prod/application:/app/storage
+      - /var/data/mycent/prod/shared:/shared
 
     networks:
       - app_network
@@ -63,6 +63,20 @@ services:
 
       DEVELOPMENT_KEY: "123456789"
 
+##############################################################################
+
+  frontend:
+    image: reg.cic.kz/centras/mycic-new-design:latest
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+    networks:
+      - app_network
+
+    depends_on:
+      - db
+
 
 ##############################################################################
 
@@ -75,7 +89,8 @@ services:
       POSTGRES_PASSWORD: DVLkjNwEDZ9xMRPjG33b
     stdin_open: true
     volumes:
-      - mycent_production_postgres_data:/var/lib/postgresql/data
+      # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
+      - /var/data/mycent/prod/pg:/var/lib/postgresql/data
     tty: true
     networks:
       - app_network
@@ -94,7 +109,8 @@ services:
       - "7313:80"
     stdin_open: true
     volumes:
-    - mycent_production_postgres_data:/var/lib/postgresql/data
+      # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
+      - /var/data/mycent/prod/pgadmin:/var/lib/pgadmin
     networks:
       - app_network
     labels:

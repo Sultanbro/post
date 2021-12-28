@@ -63,6 +63,6 @@ Route::resource('likes', LikeController::class);
 Route::get('/command/', [CommandController::class, 'command'])->withoutMiddleware('auth.bearer');
 
 //User route
-Route::resource('user/info',UserController::class);
+Route::resource('user/info',UserController::class)->middleware('auth.bearer');
 
 
