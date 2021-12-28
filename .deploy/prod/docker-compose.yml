@@ -110,7 +110,7 @@ services:
     stdin_open: true
     volumes:
       # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
-      - /var/data/mycent/prod/pg:/var/lib/postgresql/data
+      - /var/data/mycent/prod/pgadmin:/var/lib/pgadmin
     networks:
       - app_network
     labels:
