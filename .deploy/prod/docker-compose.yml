@@ -71,9 +71,6 @@ services:
       io.rancher.container.pull_image: always
       io.rancher.scheduler.affinity:host_label: name=mycic
 
-    ports:
-      - "8880:3000"
-
     networks:
       - app_network
 
