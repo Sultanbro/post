@@ -61,7 +61,8 @@ class KeyCloakService implements KeyCloakServiceInterface
         $params = ['username' => $email,
             'password' => $password,
             'grant_type' => 'password',
-            'client_id' => 'rest-client',];
+            'client_id' => 'rest-client',
+            'client_secret' => '439a7958-24a0-4adb-a76f-064214bc1efa',];
 
         $response=Http::asForm()->withHeaders($this->headers)->post($this->urlAuth, $params);
 
@@ -81,6 +82,7 @@ class KeyCloakService implements KeyCloakServiceInterface
             'refresh_token' => $refresh_token,
             'grant_type' => 'refresh_token',
             'client_id' => 'rest-client',
+            'client_secret' => '439a7958-24a0-4adb-a76f-064214bc1efa',
         ];
         $response = Http::asForm()->withHeaders($this->headers)->post($this->urlAuth, $params);
 
