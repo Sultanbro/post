@@ -36,6 +36,12 @@ services:
         service: server
         source_port: 7311
         target_port: 80
+      - path: /storage
+        priority: 3
+        protocol: http
+        service: server
+        source_port: 7311
+        target_port: 80
     health_check:
       response_timeout: 2000
       healthy_threshold: 2
