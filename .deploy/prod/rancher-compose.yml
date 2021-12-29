@@ -25,11 +25,17 @@ services:
     lb_config:
       certs: []
       port_rules:
-        - priority: 1
-          protocol: http
-          service: server
-          source_port: 7311
-          target_port: 80
+      - priority: 1
+        protocol: http
+        service: frontend
+        source_port: 7311
+        target_port: 80
+      - path: /api
+        priority: 2
+        protocol: http
+        service: server
+        source_port: 7311
+        target_port: 80
     health_check:
       response_timeout: 2000
       healthy_threshold: 2
