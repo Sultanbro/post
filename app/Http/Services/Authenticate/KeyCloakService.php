@@ -10,8 +10,8 @@ use PhpParser\Node\Stmt\DeclareDeclare;
 class KeyCloakService implements KeyCloakServiceInterface
 {
 
-    protected $urlAuth = 'http://192.168.30.11:8022/auth/realms/MyCent/protocol/openid-connect/token';
-    protected $urlInfo = 'http://192.168.30.11:8022/auth/realms/MyCent/protocol/openid-connect/userinfo';
+    protected $urlAuth = 'http://192.168.30.31:8022/auth/realms/MyCent/protocol/openid-connect/token';
+    protected $urlInfo = 'http://192.168.30.31:8022/auth/realms/MyCent/protocol/openid-connect/userinfo';
     protected $headers = [
         'content-type' => 'application/x-www-form-urlencoded',
         'Accept' => 'application/json',
