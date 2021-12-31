@@ -19,3 +19,5 @@ COPY . .
 COPY .deploy/conf/nginx/default.conf /opt/docker/etc/nginx/vhost.conf
 
 RUN composer dump-autoload
+
+RUN php artisan storage:link
