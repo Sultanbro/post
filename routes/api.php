@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\Email\EmailController;
 use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
 use App\Http\Controllers\Api\Post\PostController;
@@ -65,4 +66,6 @@ Route::get('/command/', [CommandController::class, 'command'])->withoutMiddlewar
 //User route
 Route::resource('user/info',UserController::class)->middleware('auth.bearer');
 
+//Email route
+Route::post('send/email', [EmailController::class, 'sendEmail']);
 
