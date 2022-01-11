@@ -17,6 +17,7 @@ COPY --from=vendor /app/vendor /app/vendor
 COPY . .
 
 COPY .deploy/conf/nginx/default.conf /opt/docker/etc/nginx/vhost.conf
+COPY .deploy/conf/supervisor/laravel-worker.conf /opt/docker/etc/supervisor.d/laravel-worker.conf
 
 RUN composer dump-autoload
 
