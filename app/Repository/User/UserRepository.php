@@ -39,4 +39,5 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return $this->model->firstWhere('id', $id);
     }
+
 }

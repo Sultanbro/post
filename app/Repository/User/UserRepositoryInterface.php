@@ -19,4 +19,5 @@ interface UserRepositoryInterface extends EloquentRepositoryInterface
      */
     public function userById($id);
 
+
 }
