@@ -1,19 +1,8 @@
 FROM webdevops/php-nginx:8.0 as vendor
 
+RUN apt-get install -y supervisor
 
-# Run updates
-RUN apt-get update --fix-missing && apt-get install -y
-
-# Install Curl
-RUN apt-get install curl -y
-
-# Install supervisor
-RUN apt-get install python3 -y
-RUN curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
-RUN python3 get-pip.py
-RUN pip install supervisor
-
-
+COPY ./deploy/conf/supervisor/laravel-worker.conf /etc/supervisord/conf.d/laravel-worker.conf
 
 WORKDIR /app
 
