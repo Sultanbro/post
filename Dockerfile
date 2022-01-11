@@ -8,7 +8,7 @@ RUN apt-get update --fix-missing && apt-get install -y
 RUN apt-get install curl -y
 
 # Install supervisor
-RUN apt-get install python -y
+RUN apt-get install python3 -y
 RUN curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
 RUN python get-pip.py
 RUN pip install supervisor
