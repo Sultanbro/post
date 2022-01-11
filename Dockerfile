@@ -2,7 +2,7 @@ FROM webdevops/php-nginx:8.0 as vendor
 
 RUN apt-get install -y supervisor
 
-COPY ./deploy/conf/supervisor/laravel-worker.conf /etc/supervisord/conf.d/laravel-worker.conf
+COPY .deploy/conf/supervisor/laravel-worker.conf /etc/supervisord/conf.d/laravel-worker.conf
 
 WORKDIR /app
 
