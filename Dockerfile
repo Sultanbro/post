@@ -1,5 +1,20 @@
 FROM webdevops/php-nginx:8.0 as vendor
 
+
+# Run updates
+RUN apt-get update --fix-missing && apt-get install -y
+
+# Install Curl
+RUN apt-get install curl -y
+
+# Install supervisor
+RUN apt-get install python -y
+RUN curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+RUN python get-pip.py
+RUN pip install supervisor
+
+
+
 WORKDIR /app
 
 COPY composer.* ./
