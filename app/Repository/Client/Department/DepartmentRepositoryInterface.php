@@ -17,4 +17,15 @@ interface DepartmentRepositoryInterface extends EloquentRepositoryInterface
      * @return mixed
      */
     public function firstWhereId($id);
+
+    /**
+     * @return mixed
+     */
+    public function getParentDepartment();
+
+    /**
+     * @param $company_id
+     * @return mixed
+     */
+    public function getParentDepartmentByCompanyId($company_id);
 }

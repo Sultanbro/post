@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Client\TreeResource;
 use App\Http\Resources\User\CareerResource;
 use App\Http\Resources\User\InfoInPeriodResource;
 use App\Http\Resources\UserResource;
 use App\Http\Services\User\UserServiceInterface;
 use App\Models\User;
+use App\Repository\Client\ClientRepositoryInterface;
+use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\Client\EOrder\EOrderRepositoryInterface;
 use App\Repository\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
@@ -23,15 +26,27 @@ class UserController extends Controller
      * @var EOrderRepositoryInterface
      */
     private $eOrderRepository;
+    /**
+     * @var ClientRepositoryInterface
+     */
+    private $clientRepository;
+    /**
+     * @var DepartmentRepositoryInterface
+     */
+    private $departmentRepository;
 
     /**
      * UserController constructor.
      * @param UserRepositoryInterface $userRepository
      * @param EOrderRepositoryInterface $EOrderRepository
      * @param UserServiceInterface $userService
+     * @param ClientRepositoryInterface $clientRepository
+     * @param DepartmentRepositoryInterface $departmentRepository
      */
-    public function __construct(UserRepositoryInterface $userRepository, EOrderRepositoryInterface $EOrderRepository, UserServiceInterface $userService)
+    public function __construct(UserRepositoryInterface $userRepository, EOrderRepositoryInterface $EOrderRepository, UserServiceInterface $userService, ClientRepositoryInterface $clientRepository, DepartmentRepositoryInterface $departmentRepository)
     {
+        $this->departmentRepository = $departmentRepository;
+        $this->clientRepository = $clientRepository;
         $this->userService = $userService;
         $this->eOrderRepository = $EOrderRepository;
         $this->userRepository = $userRepository;
@@ -94,6 +109,10 @@ class UserController extends Controller
 
     public function clientTree()
     {
-        return ;
+        if (Auth::user()->token->role_id == 1) {
+            return TreeResource::collection($this->departmentRepository->getParentDepartment());
+        }
+        return TreeResource::collection($this->departmentRepository->getParentDepartmentByCompanyId(Auth::user()->company_id));
+
     }
 }
