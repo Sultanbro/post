@@ -31,7 +31,7 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
      */
     public function getPostsByCompanyId($company_id)
     {
-        return $this->model->whereIn('company_id', $company_id)->get();
+        return $this->model->whereIn('company_id', $company_id)->paginate(6);
     }
 
     /**
@@ -60,5 +60,14 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
     public function getByPostId($id)
     {
         return $this->model->where('id', $id)->get();
+    }
+
+    /**
+     * @param $params
+     * @return mixed
+     */
+    public function getFilterPosts($params)
+    {
+        return $this->model->userLiked($params['liked'])->company($params['company'])->date($params['date'])->paginate(6);
     }
 }

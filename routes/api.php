@@ -59,6 +59,7 @@ Route::post('/avatar', [ClientBaseController::class, 'acceptAvatar']);
 Route::resource('posts', PostController::class);
 Route::resource('comments', CommentController::class);
 Route::resource('likes', LikeController::class);
+Route::get('/filter/posts',[PostController::class, 'getFilter']);
 
 //Command route
 Route::get('/command/', [CommandController::class, 'command'])->withoutMiddleware('auth.bearer');

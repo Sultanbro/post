@@ -44,10 +44,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->token->role_id == 1) {
-            return PostResource::collection($this->postRepository->getPostsWithData());
-        }
-        return PostResource::collection($this->postRepository->getPostsByCompanyId([Auth::user()->company_id, 2]));
+//        if (Auth::user()->token->role_id == 1) {
+//            return PostResource::collection($this->postRepository->getPostsWithData());
+//        }
+        return PostResource::collection($this->postRepository->getPostsByCompanyId([Auth::user()->company_id]));
     }
 
     /**
@@ -113,5 +113,14 @@ class PostController extends Controller
         }
         return response()->json(['message' => 'Forbidden'], 403);
 
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getFilter(Request $request)
+    {
+        return PostResource::collection($this->postRepository->getFilterPosts($request));
     }
 }
