@@ -71,7 +71,7 @@ class Post extends Model
     {
         if (!is_null($date)) {
             if ($date == 'old') {
-                return $query->latest();
+                return $query;
             }
         }
 

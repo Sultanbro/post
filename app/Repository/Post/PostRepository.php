@@ -31,7 +31,7 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
      */
     public function getPostsByCompanyId($company_id)
     {
-        return $this->model->whereIn('company_id', $company_id)->paginate(6);
+        return $this->model->whereIn('company_id', $company_id)->latest()->paginate(6);
     }
 
     /**
