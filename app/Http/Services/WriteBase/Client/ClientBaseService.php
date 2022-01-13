@@ -4,6 +4,7 @@
 namespace App\Http\Services\WriteBase\Client;
 
 
+use App\Models\Avatar;
 use App\Repository\Client\ClientContact\ClientContactRepositoryInterface;
 use App\Repository\Client\ClientRepositoryInterface;
 use App\Repository\Client\Department\DepartmentRepositoryInterface;
@@ -289,9 +290,10 @@ class ClientBaseService implements ClientBaseServiceInterface
      */
     public function saveAvatar($req, $user_id)
     {
-
         $content = file_get_contents($req['file']->getRealPath());
-        Storage::disk('local')->put("public/avatars/" . $user_id . ".jpeg", $content);
+        $fileName = $req['file']->getClientOriginalName();
+        Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
+        Avatar::firstOrCreate(['link' => "storage/$user_id/$fileName", 'user_id' => $user_id]);
         return [$req['foreign_id'] => 'ok'];
     }
 }

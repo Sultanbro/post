@@ -67,6 +67,7 @@ Route::get('/command/', [CommandController::class, 'command'])->withoutMiddlewar
 //User route
 Route::resource('user/info',UserController::class)->middleware('auth.bearer');
 Route::get('/client/tree', [UserController::class, 'clientTree']);
+Route::get('/birthday/', [UserController::class, 'getBDay']);
 
 //Email route
 Route::post('send/email', [EmailController::class, 'sendEmail']);

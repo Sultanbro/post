@@ -6,6 +6,7 @@ namespace App\Repository\Client;
 
 use App\Models\Client\Client;
 use App\Repository\Eloquent\BaseRepository;
+use Carbon\Carbon;
 
 class ClientRepository extends BaseRepository implements ClientRepositoryInterface
 {
@@ -30,4 +31,11 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
     }
 
 
+    /**
+     * @inheritDoc
+     */
+    public function getComingBDay($addDay)
+    {
+        return $this->model->whereBetween('birthday', [Carbon::today()->toDateString(), Carbon::now()->addDays(10)->toDateString()])->where('type_id', 1)->get();
+    }
 }
