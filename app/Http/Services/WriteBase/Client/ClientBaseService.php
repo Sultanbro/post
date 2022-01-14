@@ -85,8 +85,7 @@ class ClientBaseService implements ClientBaseServiceInterface
 
     public function saveClients($clients)
     {
-        mt_srand(rand(1, 100));
-        $user_make = ['created_by' => Auth::id(), 'updated_by' => Auth::id(), 'password' => bcrypt(mt_rand())];
+        $user_make = ['created_by' => Auth::id(), 'updated_by' => Auth::id()];
 
         foreach ($clients as $client) {
 //            return $this->clientRepository->firstWhereForeignId($client['parent_foreign_id'], $client['company_id']);
@@ -145,7 +144,8 @@ class ClientBaseService implements ClientBaseServiceInterface
 
         if (!$this->userRepository->userById($clientModel_id)) {
 
-            $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id], $client_info));
+            mt_srand(rand(1, 100));
+            $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id, 'password' => bcrypt(mt_rand())], $client_info));
             $result['user'] = ['ok'];
         } else {
             $result['user'] = ['message' => 'this is in the base'];
