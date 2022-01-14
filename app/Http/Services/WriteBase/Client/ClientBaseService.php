@@ -144,9 +144,7 @@ class ClientBaseService implements ClientBaseServiceInterface
 
         if (!$this->userRepository->userById($clientModel_id)) {
 
-            mt_srand(rand(1, 100));
-            $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id, 'password' => bcrypt(mt_rand())], $client_info));
-            $result['user'] = ['ok'];
+            $result['user'] = $this->registerUser($clientModel_id, $parent_foreign_id, $client_info);
         } else {
             $result['user'] = ['message' => 'this is in the base'];
         }
@@ -165,6 +163,23 @@ class ClientBaseService implements ClientBaseServiceInterface
             $result['employee'] = ['message' => 'this is in the base'];
         }
         return $result;
+
+    }
+
+    public function registerUser($clientModel_id, $parent_foreign_id, $client_info, $password = null)
+    {
+        try {
+            if (is_null($password)) {
+                mt_srand(rand(1, 100));
+                $password = bcrypt(mt_rand());
+            }
+
+            $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id, 'password' => $password], $client_info));
+
+            return 'ok';
+        }catch (\Exception $exception) {
+            return $exception;
+        }
 
     }
 
