@@ -4,6 +4,7 @@
 namespace App\Http\Services\WriteBase\Client;
 
 
+use App\Http\Services\Authenticate\KeyCloakServiceInterface;
 use App\Models\Avatar;
 use App\Repository\Client\ClientContact\ClientContactRepositoryInterface;
 use App\Repository\Client\ClientRepositoryInterface;
@@ -58,6 +59,10 @@ class ClientBaseService implements ClientBaseServiceInterface
      * @var EOrderRepositoryInterface
      */
     private $eOrderRepository;
+    /**
+     * @var KeyCloakServiceInterface
+     */
+    private $cloakService;
 
     /**
      * @param ClientRepositoryInterface $clientRepository
@@ -69,9 +74,11 @@ class ClientBaseService implements ClientBaseServiceInterface
      * @param CityRepositoryInterface $cityRepository
      * @param RegionRepositoryInterface $regionRepository
      * @param EOrderRepositoryInterface $eOrderRepository
+     * @param KeyCloakServiceInterface $cloakService
      */
-    public function __construct(ClientRepositoryInterface $clientRepository, DepartmentRepositoryInterface $departmentRepository, UserRepositoryInterface $userRepository, DictiRepositoryInterface $dictiRepository, ClientContactRepositoryInterface $clientContactRepository, EmployeeRepositoryInterface $employeeRepository, CityRepositoryInterface $cityRepository, RegionRepositoryInterface $regionRepository, EOrderRepositoryInterface $eOrderRepository)
+    public function __construct(ClientRepositoryInterface $clientRepository, DepartmentRepositoryInterface $departmentRepository, UserRepositoryInterface $userRepository, DictiRepositoryInterface $dictiRepository, ClientContactRepositoryInterface $clientContactRepository, EmployeeRepositoryInterface $employeeRepository, CityRepositoryInterface $cityRepository, RegionRepositoryInterface $regionRepository, EOrderRepositoryInterface $eOrderRepository, KeyCloakServiceInterface $cloakService)
     {
+        $this->cloakService = $cloakService;
         $this->eOrderRepository = $eOrderRepository;
         $this->regionRepository = $regionRepository;
         $this->cityRepository = $cityRepository;
@@ -174,9 +181,12 @@ class ClientBaseService implements ClientBaseServiceInterface
                 $password = bcrypt(mt_rand());
             }
 
-            $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id, 'password' => $password], $client_info));
+            if ($cloak = $this->cloakService->registerUser($client_info['email'], $client_info['firstName'], $client_info['lastName'])) {
+                $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id, 'password' => $password], $client_info));
+                return 'ok';
+            }
 
-            return 'ok';
+            return $cloak;
         }catch (\Exception $exception) {
             return $exception;
         }

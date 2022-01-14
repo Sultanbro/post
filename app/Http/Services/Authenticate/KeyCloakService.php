@@ -12,6 +12,7 @@ class KeyCloakService implements KeyCloakServiceInterface
 
     protected $urlAuth = 'http://192.168.30.31:8022/auth/realms/MyCent/protocol/openid-connect/token';
     protected $urlInfo = 'http://192.168.30.31:8022/auth/realms/MyCent/protocol/openid-connect/userinfo';
+    protected $urlRegister = 'http://192.168.30.31:8022/auth/admin/realms/MyCent/users';
     protected $headers = [
         'content-type' => 'application/x-www-form-urlencoded',
         'Accept' => 'application/json',
@@ -91,5 +92,20 @@ class KeyCloakService implements KeyCloakServiceInterface
         }
         $UserToken = $this->userTokenRepository->findFromUserToken($refresh_token)->update(['access_token' => $response['access_token'], 'refresh_token' => $response['refresh_token'], 'role_id' => 1]);
         return $UserToken;
+    }
+
+    public function registerUser($email, $firstName, $lastName)
+    {
+        $master_info = $this->getToken(env('KEY_CLOAK_ADMIN_EMAIL'), env('KEY_CLOAK_ADMIN_PASSWORD'));
+
+        $params['emailVerified'] = true;
+
+        if (isset($master_info->access_token)) {
+            $response = Http::asForm()->withHeaders($this->headers)->post($this->urlRegister, $params);
+            if ($response->status() === 201) {
+                return true;
+            }
+            return $response;
+        }
     }
 }

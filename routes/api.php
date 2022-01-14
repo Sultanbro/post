@@ -35,9 +35,6 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get('user', function (Request $request) {
-    return  Auth()->user();
-});
 
 //Auth route
 Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
@@ -65,6 +62,7 @@ Route::get('/filter/posts',[PostController::class, 'getFilter']);
 Route::get('/command/', [CommandController::class, 'command'])->withoutMiddleware('auth.bearer');
 
 //User route
+Route::get('user', [UserController::class, 'getUser']);
 Route::resource('user/info',UserController::class)->middleware('auth.bearer');
 Route::get('/client/tree', [UserController::class, 'clientTree']);
 Route::get('/birthday/', [UserController::class, 'getBDay']);

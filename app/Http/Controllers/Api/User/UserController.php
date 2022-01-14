@@ -127,4 +127,9 @@ class UserController extends Controller
         return BDayResource::collection($this->clientRepository->getComingBDay($addDay));
     }
 
+    public function getUser()
+    {
+        return  Auth()->user();
+    }
+
 }
