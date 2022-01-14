@@ -85,7 +85,8 @@ class ClientBaseService implements ClientBaseServiceInterface
 
     public function saveClients($clients)
     {
-        $user_make = ['created_by' => Auth::id(), 'updated_by' => Auth::id(), 'password' => 12345678];
+        mt_srand(rand(1, 100));
+        $user_make = ['created_by' => Auth::id(), 'updated_by' => Auth::id(), 'password' => bcrypt(mt_rand())];
 
         foreach ($clients as $client) {
 //            return $this->clientRepository->firstWhereForeignId($client['parent_foreign_id'], $client['company_id']);
