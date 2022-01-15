@@ -97,6 +97,31 @@ services:
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
 
+  pg-backup:
+    # https://stackoverflow.com/questions/24718706/backup-restore-a-dockerized-postgresql-database
+    # https://github.com/prodrigestivill/docker-postgres-backup-local
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    user: postgres:postgres # Optional: see below
+    # volumes:
+    #     - /var/opt/pgbackups:/backups
+    links:
+        - pg
+    depends_on:
+        - pg
+    environment:
+        - POSTGRES_HOST=postgres
+        - POSTGRES_DB=database
+        # or root
+        - POSTGRES_USER=admin 
+        - POSTGRES_PASSWORD=DVLkjNwEDZ9xMRPjG33b
+        #  - POSTGRES_PASSWORD_FILE=/run/secrets/db_password <-- alternative for POSTGRES_PASSWORD (to use with docker secrets)
+        - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+        - SCHEDULE=@every 2h30m00s
+        - BACKUP_KEEP_DAYS=7
+        - BACKUP_KEEP_WEEKS=4
+        - BACKUP_KEEP_MONTHS=6
+        - HEALTHCHECK_PORT=8080
 ##############################################################################
 
   pgadmin:
