@@ -22,7 +22,7 @@ COPY .deploy/conf/supervisor/laravel-worker.conf /opt/docker/etc/supervisor.d/la
 RUN composer dump-autoload
 
 RUN php artisan storage:link
-RUN php artisan config:cache
+# RUN php artisan config:cache
 RUN php artisan route:cache
 
 
