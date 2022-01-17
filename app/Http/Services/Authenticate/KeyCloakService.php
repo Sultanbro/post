@@ -108,4 +108,9 @@ class KeyCloakService implements KeyCloakServiceInterface
             return $response;
         }
     }
+
+    public function getUserByEmail($email)
+    {
+        return Http::asForm()->withHeaders($this->headers)->get($this->urlRegister . "?email=$email");
+    }
 }
