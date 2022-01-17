@@ -1,0 +1,165 @@
+version: '2'
+
+#################################
+
+networks:
+  app_network:
+    driver: bridge
+
+services:
+##############################################################################
+
+  server:
+    image: reg.cic.kz/centras-projects/mycent:latest
+    container_name: php-app
+    hostname: php-app
+
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+      io.rancher.container.pull_image: always
+      io.rancher.container.hostname_override: container_name
+
+    volumes:
+      - /var/data/mycent/prod/application:/app/storage
+      - /var/data/mycent/prod/shared:/shared
+
+    networks:
+      - app_network
+
+    depends_on:
+      - db
+
+    environment: &env
+      APP_DEBUG: "true"
+      APP_KEY: "base64:SaYfcUjht1j8/4uJ810xTHG46S/yLjQ/AkYPJJWhsNQ="
+      APP_ENV: "production"
+      APP_URL: "http://192.168.30.31:4444/"
+
+      DB_CONNECTION: "pgsql"
+      DB_HOST: "pg"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "DVLkjNwEDZ9xMRPjG33b"
+      DB_PORT: "5432"
+      DB_DATABASE: "mycent_prod"
+
+      REDIS_HOST: "redis"
+      CACHE_DRIVER: "file"
+      QUEUE_CONNECTION: "database"
+
+      MAIL_MAILER: "smtp"
+      MAIL_HOST: "mailtrap"
+      MAIL_PORT: "25"
+      MAIL_USERNAME: "mailtrap"
+      MAIL_PASSWORD: "mailtrap"
+      MAIL_ENCRYPTION: "null"
+      MAIL_FROM_ADDRESS: "laravel@mycompany.com"
+      MAIL_FROM_NAME: "Laravel"
+
+      FRONTEND_DOMAIN: "mycent.kz"
+
+      # KIAS_URL: "http://192.168.1.26:8083/kiassvctest/kiassvc.asmx?wsdl"
+      # KIAS_LOGIN: "MyCIC"
+      # KIAS_PASSWORD: "mycickz321"
+
+      DEVELOPMENT_KEY: "123456789"
+
+##############################################################################
+
+  frontend:
+    image: reg.cic.kz/centras/mycic-new-design:latest
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+    networks:
+      - app_network
+
+    depends_on:
+      - db
+
+
+##############################################################################
+
+  pg:
+    image: postgres:12
+    hostname: pg
+    # ports:
+    #   - "17314:5432"
+    environment:
+      POSTGRES_PASSWORD: DVLkjNwEDZ9xMRPjG33b
+    stdin_open: true
+    volumes:
+      # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
+      - /var/data/mycent/prod/pg:/var/lib/postgresql/data
+    tty: true
+    networks:
+      - app_network
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+  pg-backup:
+    # https://stackoverflow.com/questions/24718706/backup-restore-a-dockerized-postgresql-database
+    # https://github.com/prodrigestivill/docker-postgres-backup-local
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    user: postgres:postgres # Optional: see below
+    # volumes:
+    #     - /var/opt/pgbackups:/backups
+    links:
+        - pg
+    depends_on:
+        - pg
+    environment:
+        - POSTGRES_HOST=postgres
+        - POSTGRES_DB=database
+        # or root
+        - POSTGRES_USER=admin 
+        - POSTGRES_PASSWORD=DVLkjNwEDZ9xMRPjG33b
+        #  - POSTGRES_PASSWORD_FILE=/run/secrets/db_password <-- alternative for POSTGRES_PASSWORD (to use with docker secrets)
+        - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+        - SCHEDULE=@every 2h30m00s
+        - BACKUP_KEEP_DAYS=7
+        - BACKUP_KEEP_WEEKS=4
+        - BACKUP_KEEP_MONTHS=6
+        - HEALTHCHECK_PORT=8080
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+##############################################################################
+
+  pgadmin:
+    image: dpage/pgadmin4
+    hostname: pg
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mycent.kz
+      PGADMIN_DEFAULT_PASSWORD: DVLkjNwEDZ9xMRPjG33b
+    ports:
+      - "7313:80"
+    stdin_open: true
+    volumes:
+      # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
+      - /var/data/mycent/prod/pgadmin:/var/lib/pgadmin
+    networks:
+      - app_network
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+
+######################
+#   Балансировщики   #
+######################
+
+  lb:
+    image: rancher/lb-service-haproxy:v0.9.14
+    ports:
+      - "7311:7311/tcp"
+    networks:
+      - app_network
+
+    links:
+      - server
+
+    depends_on:
+      - server
+
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic

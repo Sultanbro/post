@@ -3,8 +3,7 @@
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
-use App\Http\Controllers\Api\Centcoin\CentcoinApplyController;
-use App\Http\Controllers\Api\Centcoin\CentcoinController;
+use App\Http\Controllers\Api\Email\EmailController;
 use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
 use App\Http\Controllers\Api\Post\PostController;
@@ -13,7 +12,6 @@ use App\Http\Controllers\Api\WriteBase\CareerUserController;
 use App\Http\Controllers\Api\WriteBase\CityController;
 use App\Http\Controllers\Api\WriteBase\ClientBaseController;
 use App\Http\Controllers\Api\WriteBase\DictisController;
-use App\Models\Centcoin;
 use App\Http\Controllers\Api\WriteBase\DutyController;
 use App\Http\Controllers\Api\WriteBase\RegionController;
 use App\Http\Controllers\Api\WriteBase\StaffController;
@@ -37,9 +35,6 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get('user', function (Request $request) {
-    return  Auth()->user();
-});
 
 //Auth route
 Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
@@ -55,18 +50,23 @@ Route::post('/regions/info/accept', [RegionController::class, 'saveRegions']);
 Route::post('/duty/info/accept', [DutyController::class, 'saveDuties']);
 Route::post('/staff/info/accept', [StaffController::class, 'saveStaff']);
 Route::post('/career/info/accept', [CareerUserController::class, 'saveCareer']);
+Route::post('/avatar', [ClientBaseController::class, 'acceptAvatar']);
 
 //Post route
 Route::resource('posts', PostController::class);
 Route::resource('comments', CommentController::class);
 Route::resource('likes', LikeController::class);
-Route::resource('centcoin', CentcoinController::class);
-Route::resource('centcoin-apply',CentcoinApplyController::class);
+Route::get('/filter/posts',[PostController::class, 'getFilter']);
 
 //Command route
 Route::get('/command/', [CommandController::class, 'command'])->withoutMiddleware('auth.bearer');
 
 //User route
-Route::resource('user/info',UserController::class);
+Route::get('user', [UserController::class, 'getUser']);
+Route::resource('user/info',UserController::class)->middleware('auth.bearer');
+Route::get('/client/tree', [UserController::class, 'clientTree']);
+Route::get('/birthday/', [UserController::class, 'getBDay']);
 
+//Email route
+Route::post('send/email', [EmailController::class, 'sendEmail']);
 

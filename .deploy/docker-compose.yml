@@ -30,7 +30,7 @@ services:
       io.rancher.container.hostname_override: container_name
 
     ports:
-      - "5556:80/tcp"
+      - "17311:80/tcp"
 
     environment: &env
       APP_DEBUG: "true"
@@ -75,13 +75,35 @@ services:
     depends_on:
       - db
 
+##############################################################################
+
+  frontend:
+    image: reg.cic.kz/centras/mycic-new-design:latest
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+    ports:
+      - "8880:3000"
+
+    networks:
+      - app_network
+
+    depends_on:
+      - db
+
+##############################################################################
+
   redis:
     image: redis:alpine
     container_name: redis
     hostname: redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
+    # ports:
+    #   - "6379:6379"
+
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
 
     volumes: []
       # - mycent_production_redis_data:/data
@@ -95,27 +117,32 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
-      - "8089:3000"
+      - "7317:3000"
     networks:
       - app_network
     volumes: []
       # - mycent_production_grafana_data:/var/lib/grafana
+
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
 
 ##############################################################################
 
   pg:
     image: postgres:12
     hostname: pg
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "17314:5432"
     environment:
       POSTGRES_PASSWORD: DVLkjNwEDZ9xMRPjG33b
     stdin_open: true
     volumes:
-    - mycent_production_postgres_data:/var/lib/postgresql/data
+      - mycent_production_postgres_data:/var/lib/postgresql/data
     tty: true
     networks:
       - app_network
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
 
 ##############################################################################
 
@@ -126,9 +153,11 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@mycent.kz
       PGADMIN_DEFAULT_PASSWORD: DVLkjNwEDZ9xMRPjG33b
     ports:
-      - "8090:80"
+      - "17313:80"
     stdin_open: true
     volumes:
     - mycent_production_postgres_data:/var/lib/postgresql/data
     networks:
       - app_network
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic

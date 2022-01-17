@@ -46,7 +46,7 @@ class RegionSaveService implements RegionSaveServiceInterface
         $make_user = ['created_by' => Auth::id(), 'updated_by' => Auth::id()];
         $result = [];
         foreach ($regions as $region) {
-            if ($this->regionRepository->firstByForeignIdCompanyId($region['foreign_id'], $region['company_id'])){
+            if ($this->regionRepository->firstByForeignIdCompanyId($region['foreign_id'], $region['company_id'])) {
                 $result[$region['foreign_id']] = ['message' => 'is foreign in base'];
             }elseif ($model = $this->regionRepository->firstByForeignId($region['parent_foreign_id']) or $region['parent_foreign_id'] == 0) {
                 $region['parent_id'] = $region['parent_foreign_id'] == 0 ? $region['parent_foreign_id'] : $model->id;

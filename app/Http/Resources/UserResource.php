@@ -4,6 +4,10 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\Client\ClientResource;
 use App\Http\Resources\Department\DepartmentResource;
+use App\Http\Resources\User\CareerResource;
+use App\Http\Resources\User\UserContactResource;
+use App\Http\Resources\User\UserHistoryResource;
+use App\Http\Resources\User\VacationResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -19,10 +23,12 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'email' => $this->email,
-            'department' => new DepartmentResource(data_get($this, 'userDepartment')),
-//            'company' => new CompanyResource(data_get($this, 'userCompany')),
-            'client_info' => new ClientResource(data_get($this, 'clientInfo')),
-            'order_info' => $this->eOrder,
+            'avatar' => $this->avatar->link,
+            'department' => new DepartmentResource($this->userDepartment),
+            'user_info' => new ClientResource($this->clientInfo),
+            'user_contact' => new UserContactResource($this->clientContact),
+            'user_career' => CareerResource::collection($this->career),
+            'user_vacation' => VacationResource::collection($this->vacation),
         ];
     }
 }

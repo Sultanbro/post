@@ -24,4 +24,12 @@ interface KeyCloakServiceInterface
      * @return mixed
      */
     public function refreshToken($refresh_token);
+
+    /**
+     * @param $email
+     * @param $firstName
+     * @param $lastName
+     * @return mixed
+     */
+    public function registerUser($email, $firstName, $lastName);
 }

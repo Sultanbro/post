@@ -2,6 +2,8 @@
 
 namespace App\Models\Client;
 
+use App\Models\Avatar;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,6 +11,7 @@ class Client extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'id',
         'first_name',
         'last_name',
         'parent_name',
@@ -26,4 +29,14 @@ class Client extends Model
         'foreign_id',
         'company_id',
     ];
+
+    public function user()
+    {
+        return $this->hasOne(User::class,'id', 'id');
+    }
+
+    protected function avatar()
+    {
+        return $this->hasOne(Avatar::class, 'user_id', 'id');
+    }
 }

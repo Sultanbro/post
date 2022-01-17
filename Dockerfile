@@ -17,5 +17,18 @@ COPY --from=vendor /app/vendor /app/vendor
 COPY . .
 
 COPY .deploy/conf/nginx/default.conf /opt/docker/etc/nginx/vhost.conf
+COPY .deploy/conf/supervisor/laravel-worker.conf /opt/docker/etc/supervisor.d/laravel-worker.conf
 
 RUN composer dump-autoload
+
+RUN php artisan storage:link
+RUN php artisan config:cache
+RUN php artisan route:cache
+
+
+
+# Push useful bash aliases
+# https://www.atatus.com/blog/14-useful-bash-aliases-that-make-shell-less-complex-and-more-fun/
+RUN echo 'alias a="php /app/artisan"' >> ~/.bashrc
+RUN echo 'alias ll="ls -la"' >> ~/.bashrc
+RUN echo 'alias tin="php /app/artisan tinker"' >> ~/.bashrc

@@ -24,9 +24,9 @@ class PostResource extends JsonResource
             'group_id' => $this->group_id,
             'created' => $this->created_at,
             'updated' => $this->updated_at,
-            'post_files' => data_get($this, 'postFiles'),
+            'post_files' => PostFileResource::collection($this->postFiles),
             'like_count' => count(data_get($this, 'like')),
-            'liked' => $this->liked_count,
+            'liked' => $this->liked,
             'comments' => PostCommentResource::collection($this->postComments->take(1)),
             'comments_count' => $this->allComments->count(),
         ];

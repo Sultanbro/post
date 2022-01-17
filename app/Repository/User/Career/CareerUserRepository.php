@@ -4,7 +4,7 @@
 namespace App\Repository\User\Career;
 
 
-use App\Models\CareerUser;
+use App\Models\Client\UserStory\CareerUser;
 use App\Repository\Eloquent\BaseRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -22,4 +22,11 @@ class CareerUserRepository extends BaseRepository implements CareerUserRepositor
         $this->model = $model;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getByForeign_idAndCompany_id($foreign_id, $company_id)
+    {
+        return $this->model->whereForeign_idAndCompany_id($foreign_id, $company_id)->first();
+    }
 }

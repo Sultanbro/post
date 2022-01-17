@@ -22,4 +22,10 @@ interface PostRepositoryInterface extends EloquentRepositoryInterface
      * @return mixed
      */
     public function getByPostId($id);
+
+    /**
+     * @param $params
+     * @return mixed
+     */
+    public function getFilterPosts($params);
 }

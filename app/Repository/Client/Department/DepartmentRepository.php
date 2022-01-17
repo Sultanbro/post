@@ -36,4 +36,22 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
     {
         return $this->model->firstWhere('id', $id);
     }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getParentDepartment()
+    {
+        return $this->model->where('parent_id', 0)->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getParentDepartmentByCompanyId($company_id)
+    {
+        return $this->model->where('id', $company_id)->get();
+    }
+
 }

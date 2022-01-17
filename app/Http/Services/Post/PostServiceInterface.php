@@ -17,4 +17,23 @@ interface PostServiceInterface
      * @return mixed
      */
     public function store($req, $user_id);
+
+    /**
+     * @param $req
+     * @param $id
+     * @return mixed
+     */
+    public function saveCommentFile($req, $id);
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function deleteComment($id);
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function deleteCommentsStore($id);
 }
