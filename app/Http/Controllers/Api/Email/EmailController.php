@@ -14,6 +14,7 @@ class EmailController extends Controller
      */
     private $userRepository;
 
+    //
     /**
      * EmailController constructor.
      * @param UserRepositoryInterface $userRepository
