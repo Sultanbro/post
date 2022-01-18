@@ -124,7 +124,7 @@ class ClientBaseService implements ClientBaseServiceInterface
                     }
                 }
             } else {
-                $result[] = $client;
+                $result[$client['foreign_id']] = ['is not found parent id'];
             }
         }
         if ($result) {
@@ -142,37 +142,47 @@ class ClientBaseService implements ClientBaseServiceInterface
      */
     public function saveUsers($client_info, $parent_foreign_id, $clientModel_id, $user_make)
     {
-        if ($model = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['duty_id'], $client_info['company_id'])) {
+        try {
+            if ($model = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['duty_id'], $client_info['company_id'])) {
 
-            $client_info['duty_id'] = $model->id;
-        } else {
-            $client_info['duty_id'] = 6;
+                $client_info['duty_id'] = $model->id;
+            } else {
+                $client_info['duty_id'] = 6;
+            }
+
+            if (!$this->userRepository->userById($clientModel_id)) {
+                $result['user'] = $this->registerUser($clientModel_id, $parent_foreign_id, $client_info);
+            } else {
+                $result['user'] = ['message' => 'this is in the base'];
+            }
+
+            $result['contact'] = $this->saveContact($client_info, $clientModel_id, $user_make);
+
+            if (!$this->employeeRepository->firstById($clientModel_id)) {
+                $city_id = $this->cityRepository->firstForeignCompanyId($client_info['city_id'], $client_info['company_id'])->id;
+                $region_id = $this->regionRepository->firstByForeignIdCompanyId($client_info['region_id'], $client_info['company_id'])->id;
+                $country_id = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['country_id'], $client_info['company_id'])->id;
+                $client_info['employee']['nation_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['nation_id'], $client_info['company_id'])->id;
+                $client_info['employee']['science_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['science_id'], $client_info['company_id'])->id;
+                $this->employeeRepository->create(array_merge(array_merge(['id' => $clientModel_id, 'city_id' => $city_id, 'region_id' => $region_id, 'country_id' => $country_id], $client_info['employee']), $user_make));
+                $result['employee'] = ['ok'];
+            } else {
+                $result['employee'] = ['message' => 'this is in the base'];
+            }
+            return $result;
+        }catch (\Exception $e) {
+            dd($e);
         }
-
-        if (!$this->userRepository->userById($clientModel_id)) {
-
-            $result['user'] = $this->registerUser($clientModel_id, $parent_foreign_id, $client_info);
-        } else {
-            $result['user'] = ['message' => 'this is in the base'];
-        }
-
-        $result['contact'] = $this->saveContact($client_info, $clientModel_id, $user_make);
-
-        if (!$this->employeeRepository->firstById($clientModel_id)) {
-            $city_id = $this->cityRepository->firstForeignCompanyId($client_info['city_id'], $client_info['company_id'])->id;
-            $region_id = $this->regionRepository->firstByForeignIdCompanyId($client_info['region_id'], $client_info['company_id'])->id;
-            $country_id = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['country_id'], $client_info['company_id'])->id;
-            $client_info['employee']['nation_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['nation_id'], $client_info['company_id'])->id;
-            $client_info['employee']['science_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['science_id'], $client_info['company_id'])->id;
-            $this->employeeRepository->create(array_merge(array_merge(['id' => $clientModel_id, 'city_id' => $city_id, 'region_id' => $region_id, 'country_id' => $country_id], $client_info['employee']), $user_make));
-            $result['employee'] = ['ok'];
-        } else {
-            $result['employee'] = ['message' => 'this is in the base'];
-        }
-        return $result;
 
     }
 
+    /**
+     * @param $clientModel_id
+     * @param $parent_foreign_id
+     * @param $client_info
+     * @param null $password
+     * @return \Exception|mixed|string
+     */
     public function registerUser($clientModel_id, $parent_foreign_id, $client_info, $password = null)
     {
         try {
@@ -181,7 +191,7 @@ class ClientBaseService implements ClientBaseServiceInterface
                 $password = bcrypt(mt_rand());
             }
 
-            if ($cloak = $this->cloakService->registerUser($client_info['email'], $client_info['firstName'], $client_info['lastName'])) {
+            if ($cloak = $this->cloakService->registerUser($client_info['email'], $client_info['first_name'], $client_info['parent_name'])) {
                 $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id, 'password' => $password], $client_info));
                 return 'ok';
             }

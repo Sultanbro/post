@@ -96,12 +96,22 @@ class KeyCloakService implements KeyCloakServiceInterface
 
     public function registerUser($email, $firstName, $lastName)
     {
-        $master_info = $this->getToken(env('KEY_CLOAK_ADMIN_EMAIL'), env('KEY_CLOAK_ADMIN_PASSWORD'));
+        $master_info = $this->getToken('Master@mycent.kz', 'MyCent1@#');
 
-        $params['emailVerified'] = true;
+        $params = [
+            'emailVerified' => true,
+            'email' => $email,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+        ];
 
-        if (isset($master_info->access_token)) {
-            $response = Http::asForm()->withHeaders($this->headers)->post($this->urlRegister, $params);
+        if (isset($master_info['access_token'])) {
+            $headers = [
+                'content-type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer '. $master_info['access_token'],
+            ];
+            $response = Http::withHeaders($headers)->post($this->urlRegister, $params);
             if ($response->status() === 201) {
                 return true;
             }

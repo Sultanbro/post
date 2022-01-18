@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 
+use App\Repository\CentcoinApplyRepositoryInterface;
+use App\Repository\CentcoinRepositoryInterface;
 use App\Repository\Client\ClientContact\ClientContactRepository;
 use App\Repository\Client\ClientContact\ClientContactRepositoryInterface;
 use App\Repository\Client\ClientRepository;
@@ -12,6 +14,8 @@ use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\Client\EOrder\EOrderRepository;
 use App\Repository\Client\EOrder\EOrderRepositoryInterface;
 use App\Repository\Eloquent\BaseRepository;
+use App\Repository\Eloquent\CentcoinApplyRepository;
+use App\Repository\Eloquent\CentcoinRepository;
 use App\Repository\Eloquent\EloquentRepositoryInterface;
 use App\Repository\Post\Comment\CommentRepository;
 use App\Repository\Post\Comment\CommentRepositoryInterface;
@@ -68,6 +72,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(DutyRepositoryInterface::class, DutyRepository::class);
         $this->app->bind(CareerUserRepositoryInterface::class, CareerUserRepository::class);
         $this->app->bind(StaffUserRepositoryInterface::class, StaffUserRepository::class);
+        $this->app->bind(CentcoinRepositoryInterface::class, CentcoinRepository::class);
+        $this->app->bind(CentcoinApplyRepositoryInterface::class, CentcoinApplyRepository::class);
     }
 
     /**
