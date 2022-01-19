@@ -73,6 +73,9 @@ class Post extends Model
             if ($date == 'old') {
                 return $query;
             }
+            if ($date == 'new') {
+                return $query->latest();
+            }
         }
 
         return $query;
