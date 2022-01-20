@@ -4,6 +4,7 @@ namespace App\Models\Client;
 
 use App\Models\Avatar;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,5 +39,21 @@ class Client extends Model
     protected function avatar()
     {
         return $this->hasOne(Avatar::class, 'user_id', 'id');
+    }
+
+    public function scopeBirthDayBetween ($query, Carbon $from, Carbon $till)
+    {
+        $fromMonthDay = $from->format('m-d');
+        $tillMonthDay = $till->format('m-d');
+        if ($fromMonthDay <= $tillMonthDay) {
+            //normal search within the one year
+            $query->whereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN '{$fromMonthDay}' AND '{$tillMonthDay}'");
+        } else {
+            //we are overlapping a year, search at end and beginning of year
+            $query->where(function ($query) use ($fromMonthDay, $tillMonthDay) {
+                $query->whereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN '{$fromMonthDay}' AND '12-31'")
+                    ->orWhereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN '01-01' AND '{$tillMonthDay}'");
+            });
+        }
     }
 }

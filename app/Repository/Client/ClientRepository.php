@@ -36,6 +36,6 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
      */
     public function getComingBDay($addDay)
     {
-        return $this->model->whereBetween('birthday', [Carbon::today()->toDateString(), Carbon::now()->addDays(10)->toDateString()])->where('type_id', 1)->get();
+        return $this->model->birthDayBetween(Carbon::now(), Carbon::now()->addDays($addDay))->where('type_id', 1)->get();
     }
 }
