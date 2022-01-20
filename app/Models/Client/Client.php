@@ -43,17 +43,18 @@ class Client extends Model
 
     public function scopeBirthDayBetween ($query, Carbon $from, Carbon $till)
     {
-        $fromMonthDay = $from->format('m-d');
-        $tillMonthDay = $till->format('m-d');
-        if ($fromMonthDay <= $tillMonthDay) {
+//        $fromMonthDay = $from->format('m-d');
+//        $tillMonthDay = $till->format('m-d');
+//        if ($fromMonthDay <= $tillMonthDay) {
 
-            $query->whereRaw("DATE_FORMAT(birthday, '%mm-%dd') BETWEEN '{$fromMonthDay}' AND '{$tillMonthDay}'");
-        } else {
-
-            $query->where(function ($query) use ($fromMonthDay, $tillMonthDay) {
-                $query->whereRaw("DATE_FORMAT(birthday, '%mm-%dd') BETWEEN '{$fromMonthDay}' AND '12-31'")
-                    ->orWhereRaw("DATE_FORMAT(birthday, '%mm-%dd') BETWEEN '01-01' AND '{$tillMonthDay}'");
-            });
-        }
+            $query->whereRaw("date_part('doy', birth_date) BETWEEN date_part('doy', CURRENT_DATE) AND date_part('doy', CURRENT_DATE + INTERVAL '10 days')");
+//        }
+//        else {
+//
+//            $query->where(function ($query) use ($fromMonthDay, $tillMonthDay) {
+//                $query->whereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN '{$fromMonthDay}' AND '12-31'")
+//                    ->orWhereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN '01-01' AND '{$tillMonthDay}'");
+//            });
+//        }
     }
 }
