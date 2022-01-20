@@ -34,10 +34,10 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
 
 
     /**
-     * @inheritDoc
+     * @return mixed
      */
-    public function getComingBDay($addDay)
+    public function getComingBDay()
     {
-        return $this->model->birthDayBetween(Carbon::now(), $addDay)->where('type_id', 1)->get();
+        return $this->model->birthDayBetween(Carbon::now())->where('type_id', 1)->get();
     }
 }
