@@ -37,7 +37,7 @@ class DutySaveService implements DutySaveServiceInterface
     public function saveDuty($duties)
     {
         $make_user = ['created_by' => Auth::id(), 'updated_by' => Auth::id()];
-        $result['message'] = 'keldi';
+        $result['message'] = $duties;
 
         foreach ($duties as $duty) {
             if (!$this->dutyRepository->getByForeignIdCompanyId($duty['foreign_id'], $duty['company_id'])) {
