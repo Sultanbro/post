@@ -37,7 +37,8 @@ class DutySaveService implements DutySaveServiceInterface
     public function saveDuty($duties)
     {
         $make_user = ['created_by' => Auth::id(), 'updated_by' => Auth::id()];
-        $result = [];
+        $result['message'] = 'keldi';
+
         foreach ($duties as $duty) {
             if (!$this->dutyRepository->getByForeignIdCompanyId($duty['foreign_id'], $duty['company_id'])) {
 
@@ -47,6 +48,7 @@ class DutySaveService implements DutySaveServiceInterface
                 $result[$duty['foreign_id']] = 'is in base';
             }
         }
+
         return $result;
     }
 
