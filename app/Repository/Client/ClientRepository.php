@@ -38,13 +38,15 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
      */
     public function getComingBDay($addDay)
     {
-        return DB::raw("select id, full_name, birthday, company_id  from clients
-                where date_part('doy', birthday) between
-                date_part('doy', CURRENT_DATE) and
-                date_part('doy', CURRENT_DATE + INTERVAL '10 days') or
-                date_part('doy', birthday) between
-                date_part('doy', CURRENT_DATE + INTERVAL '10 days') and
-                date_part('doy', CURRENT_DATE))");
+        return DB::table('clients')->whereBetween("date_part('doy', birthday)", ["date_part('doy', CURRENT_DATE)", "date_part('doy', CURRENT_DATE + INTERVAL '10 days')"])
+            ->orWhereBetween("date_part('doy', birthday)", ["date_part('doy', CURRENT_DATE + INTERVAL '10 days')", "date_part('doy', CURRENT_DATE))"])->get();
+//        return DB::raw("select id, full_name, birthday, company_id  from clients
+//                where date_part('doy', birthday) between
+//                date_part('doy', CURRENT_DATE) and
+//                date_part('doy', CURRENT_DATE + INTERVAL '10 days') or
+//                date_part('doy', birthday) between
+//                date_part('doy', CURRENT_DATE + INTERVAL '10 days') and
+//                date_part('doy', CURRENT_DATE))")->getValue();
 //        return $this->model->where("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE) AND date_part('doy', CURRENT_DATE + INTERVAL '10 days')")->get();
 //        return $this->model->where(['between', "date_part('doy', birthday)", ["date_part('doy', CURRENT_DATE)", "date_part('doy', CURRENT_DATE + INTERVAL '10 days')"]])->get();
 //        return $this->model->whereBetween('date_part('doy', birthday)', [date_part('doy', 'CURRENT_DATE'), date_part('doy', 'CURRENT_DATE + INTERVAL '10 days'')])->get()
