@@ -99,12 +99,12 @@ class ClientBaseService implements ClientBaseServiceInterface
             $client_info = array_merge($user_make, $client);
             if ($parent_foreign = $this->clientRepository->firstWhereForeignId($client['parent_foreign_id'], $client['company_id'])) {
                 if ($clientModel = $this->clientRepository->firstWhereForeignId($client['foreign_id'], $client['company_id'])) {
-                    if ($clientModel->type_id == 1) {
+                    if ($clientModel->type_id == 1 or $clientModel->type_id == 2) {
 
                         $result[$client['foreign_id']] = $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
 
                     }
-                    if ($clientModel->type_id == 2 or $clientModel->type_id == 3) {
+                    if ($clientModel->type_id == 3 or $clientModel->type_id == 4) {
 
                         $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
 
@@ -113,11 +113,11 @@ class ClientBaseService implements ClientBaseServiceInterface
                     $client['address'] = json_encode($client['address']);
                     if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
 
-                        if ($clientModel->type_id == 1) {
+                        if ($clientModel->type_id == 1 || $clientModel->type_id == 2) {
 
                             $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
                         }
-                        if ($clientModel->type_id == 2 or $clientModel->type_id == 3) {
+                        if ($clientModel->type_id == 3 or $clientModel->type_id == 4) {
 
                             $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
                         }
