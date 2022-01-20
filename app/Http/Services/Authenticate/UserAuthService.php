@@ -3,6 +3,7 @@
 namespace App\Http\Services\Authenticate;
 
 
+use App\Repository\User\UserRepositoryInterface;
 use App\Repository\User\UserTokenRepositoryInterface;
 
 class UserAuthService implements UserAuthServiceInterface
@@ -11,13 +12,25 @@ class UserAuthService implements UserAuthServiceInterface
      * @var UserTokenRepositoryInterface
      */
     private $userTokenRepository;
+    /**
+     * @var KeyCloakServiceInterface
+     */
+    private $keyCloakService;
+    /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
 
     /**
      * UserAuthService constructor.
      * @param UserTokenRepositoryInterface $userTokenRepository
+     * @param KeyCloakServiceInterface $keyCloakService
+     * @param UserRepositoryInterface $userRepository
      */
-    public function __construct(UserTokenRepositoryInterface $userTokenRepository)
+    public function __construct(UserTokenRepositoryInterface $userTokenRepository, KeyCloakServiceInterface $keyCloakService, UserRepositoryInterface $userRepository)
     {
+        $this->userRepository = $userRepository;
+        $this->keyCloakService = $keyCloakService;
         $this->userTokenRepository = $userTokenRepository;
     }
 
@@ -47,6 +60,18 @@ class UserAuthService implements UserAuthServiceInterface
             'updated' => 1,
             'user_info' => $user,
         ], 200);
+    }
+
+    public function resetPassword($user)
+    {
+        $token = Str::random(59);
+
+        if ($this->saveUserToken($user, $token)->status() === 200) {
+            return 'not save';
+        }
+
+        return 'ok';
+
     }
 
 }
