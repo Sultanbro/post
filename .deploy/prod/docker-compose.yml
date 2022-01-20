@@ -57,6 +57,8 @@ services:
 
       FRONTEND_DOMAIN: "mycent.kz"
 
+      LOG_CHANNEL: "daily"
+
       # KIAS_URL: "http://192.168.1.26:8083/kiassvctest/kiassvc.asmx?wsdl"
       # KIAS_LOGIN: "MyCIC"
       # KIAS_PASSWORD: "mycickz321"
