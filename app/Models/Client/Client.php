@@ -47,7 +47,7 @@ class Client extends Model
 //        $tillMonthDay = $till->format('m-d');
 //        if ($fromMonthDay <= $tillMonthDay) {
 
-            $query->whereRaw("date_part('doy', birth_date) BETWEEN date_part('doy', CURRENT_DATE) AND date_part('doy', CURRENT_DATE + INTERVAL '10 days')");
+            $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE) AND date_part('doy', CURRENT_DATE + INTERVAL '10 days')");
 //        }
 //        else {
 //
