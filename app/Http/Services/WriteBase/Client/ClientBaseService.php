@@ -114,7 +114,7 @@ class ClientBaseService implements ClientBaseServiceInterface
                     $client['address'] = json_encode($client['address']);
                     if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
 
-                        if ($clientModel->type_id == 1 || $clientModel->type_id == 2) {
+                        if ($clientModel->type_id == 1 or $clientModel->type_id == 2) {
 
                             $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
                         }
