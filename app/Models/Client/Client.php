@@ -43,11 +43,11 @@ class Client extends Model
 
     public function scopeBirthDayBetween ($query, Carbon $from)
     {
-        if ($from->format('m-d') == '12-25') {
+//        if ($from->format('m-d') == '12-25') {
 
             $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE) AND date_part('doy', CURRENT_DATE + INTERVAL '10 days')");
-        } else {
-            $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE + INTERVAL '10 days') AND date_part('doy', CURRENT_DATE)");
-        }
+//        } else {
+//            $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE + INTERVAL '10 days') AND date_part('doy', CURRENT_DATE)");
+//        }
     }
 }
