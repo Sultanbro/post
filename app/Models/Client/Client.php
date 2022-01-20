@@ -45,11 +45,12 @@ class Client extends Model
     {
 //        $fromMonthDay = $from->format('m-d');
 //        $tillMonthDay = $till->format('m-d');
-//        if ($fromMonthDay <= $tillMonthDay) {
+        if ($from->format('m-d') == '12-25') {
 
-            $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE) AND date_part('doy', CURRENT_DATE + INTERVAL '10 days')");
-//        }
-//        else {
+            $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE) AND date_part('doy', CURRENT_DATE + INTERVAL '$till days')");
+        } else {
+            $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE + INTERVAL '$till days') AND date_part('doy', CURRENT_DATE)");
+        }
 //
 //            $query->where(function ($query) use ($fromMonthDay, $tillMonthDay) {
 //                $query->whereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN '{$fromMonthDay}' AND '12-31'")
