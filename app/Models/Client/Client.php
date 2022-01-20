@@ -47,12 +47,12 @@ class Client extends Model
         $tillMonthDay = $till->format('m-d');
         if ($fromMonthDay <= $tillMonthDay) {
 
-            $query->whereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN '{$fromMonthDay}' AND '{$tillMonthDay}'");
+            $query->whereRaw("DATE_FORMAT(birthday, '%mm-%dd') BETWEEN '{$fromMonthDay}' AND '{$tillMonthDay}'");
         } else {
 
             $query->where(function ($query) use ($fromMonthDay, $tillMonthDay) {
-                $query->whereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN '{$fromMonthDay}' AND '12-31'")
-                    ->orWhereRaw("DATE_FORMAT(birthday, '%m-%d') BETWEEN '01-01' AND '{$tillMonthDay}'");
+                $query->whereRaw("DATE_FORMAT(birthday, '%mm-%dd') BETWEEN '{$fromMonthDay}' AND '12-31'")
+                    ->orWhereRaw("DATE_FORMAT(birthday, '%mm-%dd') BETWEEN '01-01' AND '{$tillMonthDay}'");
             });
         }
     }
