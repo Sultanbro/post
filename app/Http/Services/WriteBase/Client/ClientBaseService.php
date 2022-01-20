@@ -95,38 +95,44 @@ class ClientBaseService implements ClientBaseServiceInterface
         $user_make = ['created_by' => Auth::id(), 'updated_by' => Auth::id()];
         $result['request'] = $clients;
 
-        foreach ($clients as $client) {
+        try {
+
+            foreach ($clients as $client) {
 //            return $this->clientRepository->firstWhereForeignId($client['parent_foreign_id'], $client['company_id']);
-            $client_info = array_merge($user_make, $client);
-            if ($parent_foreign = $this->clientRepository->firstWhereForeignId($client['parent_foreign_id'], $client['company_id'])) {
-                if ($clientModel = $this->clientRepository->firstWhereForeignId($client['foreign_id'], $client['company_id'])) {
-                    if ($clientModel->type_id == 1 or $clientModel->type_id == 2) {
-
-                        $result[$client['foreign_id']] = $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
-
-                    }
-                    if ($clientModel->type_id == 3 or $clientModel->type_id == 4) {
-
-                        $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
-
-                    }
-                } else {
-                    $client['address'] = json_encode($client['address']);
-                    if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
-
+                $client_info = array_merge($user_make, $client);
+                if ($parent_foreign = $this->clientRepository->firstWhereForeignId($client['parent_foreign_id'], $client['company_id'])) {
+                    if ($clientModel = $this->clientRepository->firstWhereForeignId($client['foreign_id'], $client['company_id'])) {
                         if ($clientModel->type_id == 1 or $clientModel->type_id == 2) {
 
-                            $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
+                            $result[$client['foreign_id']] = $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
+
                         }
                         if ($clientModel->type_id == 3 or $clientModel->type_id == 4) {
 
-                            $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                            $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+
+                        }
+                    } else {
+                        $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
+                        if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
+
+                            if ($clientModel->type_id == 1 or $clientModel->type_id == 2) {
+
+                                $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
+                            }
+                            if ($clientModel->type_id == 3 or $clientModel->type_id == 4) {
+
+                                $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                            }
                         }
                     }
+                } else {
+                    $result[$client['foreign_id']] = ['is not found parent id'];
                 }
-            } else {
-                $result[$client['foreign_id']] = ['is not found parent id'];
             }
+        }
+        catch (\Exception $exception) {
+            return $exception;
         }
         if ($result) {
             return response()->json($result);
@@ -222,7 +228,9 @@ class ClientBaseService implements ClientBaseServiceInterface
             $result['department'] = ['message' => 'this is in the base'];
         }
 
-        $result['contact'] = $this->saveContact($client_info, $clientModel_id, $user_make);
+        if (isset($client_info['contact'])) {
+            $result['contact'] = $this->saveContact($client_info, $clientModel_id, $user_make);
+        }
 
         return $result;
     }
