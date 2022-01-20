@@ -41,7 +41,7 @@ class Client extends Model
         return $this->hasOne(Avatar::class, 'user_id', 'id');
     }
 
-    public function scopeBirthDayBetween ($query, Carbon $from, Carbon $till)
+    public function scopeBirthDayBetween ($query, Carbon $from, $till)
     {
 //        $fromMonthDay = $from->format('m-d');
 //        $tillMonthDay = $till->format('m-d');
