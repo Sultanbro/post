@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/login', [LoginController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/logout', [LogoutController::class, 'index'])->middleware('auth.bearer');
+Route::get('/reset/', [RegisterController::class, 'resetPassword'])->withoutMiddleware('auth.bearer');
 
 //Rest api route
 Route::post('/clients/info/accept', [ClientBaseController::class, 'acceptClientInfo']);

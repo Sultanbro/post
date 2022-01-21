@@ -124,7 +124,12 @@ class KeyCloakService implements KeyCloakServiceInterface
         return Http::asForm()->withHeaders($this->headers)->get($this->urlRegister . "?email=$email");
     }
 
-    protected function setPassword($password, $user_id)
+    /**
+     * @param $password
+     * @param $user_id
+     * @return \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response|mixed
+     */
+    public function setPassword($password, $user_id)
     {
         $master_info = $this->getToken('Master@mycent.kz', 'MyCent1@#');
 

@@ -27,9 +27,22 @@ interface KeyCloakServiceInterface
 
     /**
      * @param $email
+     * @return mixed
+     */
+    public function getUserByEmail($email);
+
+    /**
+     * @param $email
      * @param $firstName
      * @param $lastName
      * @return mixed
      */
     public function registerUser($email, $firstName, $lastName);
+
+    /**
+     * @param $password
+     * @param $user_id
+     * @return mixed
+     */
+    public function setPassword($password, $user_id);
 }

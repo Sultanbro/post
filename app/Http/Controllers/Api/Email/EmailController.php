@@ -52,7 +52,8 @@ class EmailController extends Controller
 
         if (isset($users)) {
             foreach ($users as $user) {
-                $details['content'] = $this->userAuthService->tokenResetPassword($user);
+
+                $details['email_content']['content'] = $this->userAuthService->tokenResetPassword($user);
                 $details['email'] = $user->email;
                 dispatch(new SendEmailJob($details));
             }
