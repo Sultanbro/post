@@ -94,7 +94,7 @@ class ClientBaseService implements ClientBaseServiceInterface
     public function saveClients($clients)
     {
         $user_make = ['created_by' => Auth::id(), 'updated_by' => Auth::id()];
-        $result['request'] = $clients;
+//        $result['request'] = $clients;
 
         try {
 
