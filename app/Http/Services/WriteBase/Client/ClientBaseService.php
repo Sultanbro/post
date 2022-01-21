@@ -202,6 +202,8 @@ class ClientBaseService implements ClientBaseServiceInterface
                 $password = Str::random(9);
             }
 
+            $client_info['email'] = mb_strtolower($client_info['email']);
+
             if ($cloak = $this->cloakService->registerUser($client_info['email'], $client_info['first_name'], $client_info['parent_name'])) {
                 $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id, 'password' => $password], $client_info));
                 return 'ok';
