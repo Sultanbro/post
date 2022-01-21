@@ -12,8 +12,8 @@ interface UserAuthServiceInterface
     public function saveUserToken($user_id, $token);
 
     /**
-     * @param $user_email
+     * @param $user
      * @return mixed
      */
-    public function resetPassword($user_email);
+    public function tokenResetPassword($user);
 }

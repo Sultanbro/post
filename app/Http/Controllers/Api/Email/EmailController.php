@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Email;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\Authenticate\UserAuthServiceInterface;
 use App\Jobs\SendEmailJob;
 use App\Repository\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
@@ -16,11 +17,18 @@ class EmailController extends Controller
 
     //
     /**
+     * @var UserAuthServiceInterface
+     */
+    private $userAuthService;
+
+    /**
      * EmailController constructor.
      * @param UserRepositoryInterface $userRepository
+     * @param UserAuthServiceInterface $userAuthService
      */
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository, UserAuthServiceInterface $userAuthService)
     {
+        $this->userAuthService = $userAuthService;
         $this->userRepository = $userRepository;
     }
 
@@ -42,10 +50,9 @@ class EmailController extends Controller
             }
         }
 
-        $details = $request->all();
-
         if (isset($users)) {
             foreach ($users as $user) {
+                $details['content'] = $this->userAuthService->tokenResetPassword($user);
                 $details['email'] = $user->email;
                 dispatch(new SendEmailJob($details));
             }

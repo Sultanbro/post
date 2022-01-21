@@ -62,7 +62,7 @@ class UserAuthService implements UserAuthServiceInterface
         ], 200);
     }
 
-    public function resetPassword($user)
+    public function tokenResetPassword($user)
     {
         $token = Str::random(59);
 
@@ -70,7 +70,7 @@ class UserAuthService implements UserAuthServiceInterface
             return 'not save';
         }
 
-        return 'ok';
+        return $token;
 
     }
 
