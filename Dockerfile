@@ -25,7 +25,7 @@ RUN php artisan storage:link
 # RUN php artisan config:cache
 RUN php artisan route:cache
 
-
+RUN ln -s /shared/.env /app/.env
 
 # Push useful bash aliases
 # https://www.atatus.com/blog/14-useful-bash-aliases-that-make-shell-less-complex-and-more-fun/
