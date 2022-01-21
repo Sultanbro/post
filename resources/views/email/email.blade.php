@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>{{$content['title']}}</title>
-</head>
+{{--<head>--}}
+{{--    <title>{{$content['title']}}</title>--}}
+{{--</head>--}}
 <body>
 
 <p>{{$content['content']}}</p>

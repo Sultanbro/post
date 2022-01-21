@@ -5,6 +5,8 @@ namespace App\Http\Services\Authenticate;
 
 use App\Repository\User\UserRepositoryInterface;
 use App\Repository\User\UserTokenRepositoryInterface;
+use Illuminate\Support\Str;
+use PHPUnit\Exception;
 
 class UserAuthService implements UserAuthServiceInterface
 {
@@ -64,13 +66,30 @@ class UserAuthService implements UserAuthServiceInterface
 
     public function tokenResetPassword($user)
     {
-        $token = Str::random(59);
+        $token = [];
+        $rand = Str::random(59);
+        $token['access_token'] = $rand;
+        $token['refresh_token'] = $rand;
 
-        if ($this->saveUserToken($user, $token)->status() === 200) {
+        if (!$this->saveUserToken($user, $token)->status() == 200) {
             return 'not save';
         }
 
-        return $token;
+        return $token['access_token'];
+
+    }
+
+    public function resetPassword($token, $password)
+    {
+        try {
+
+            if ($userToken = $this->userTokenRepository->findFromUserAccessToken($token)) {
+                $userKeyCloak = $this->keyCloakService->getUserByEmail($userToken->user->email);
+                $this->keyCloakService->setPassword($password, $userKeyCloak->id);
+            }
+        }catch (Exception $e) {
+            return $e;
+        }
 
     }
 

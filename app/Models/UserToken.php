@@ -14,4 +14,9 @@ class UserToken extends Model
         'user_id',
     ];
     use HasFactory;
+
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
 }

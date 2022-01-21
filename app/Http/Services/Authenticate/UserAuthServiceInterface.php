@@ -16,4 +16,11 @@ interface UserAuthServiceInterface
      * @return mixed
      */
     public function tokenResetPassword($user);
+
+    /**
+     * @param $token
+     * @param $password
+     * @return mixed
+     */
+    public function resetPassword($token, $password);
 }
