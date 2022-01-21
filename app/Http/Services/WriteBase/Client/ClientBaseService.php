@@ -19,6 +19,7 @@ use http\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use phpDocumentor\Reflection\Types\This;
 
 class ClientBaseService implements ClientBaseServiceInterface
@@ -182,7 +183,7 @@ class ClientBaseService implements ClientBaseServiceInterface
             }
             return $result;
         }catch (\Exception $e) {
-            dd($e);
+            return $e;
         }
 
     }
@@ -198,8 +199,7 @@ class ClientBaseService implements ClientBaseServiceInterface
     {
         try {
             if (is_null($password)) {
-                mt_srand(rand(1, 100));
-                $password = bcrypt(mt_rand());
+                $password = Str::random(9);
             }
 
             if ($cloak = $this->cloakService->registerUser($client_info['email'], $client_info['first_name'], $client_info['parent_name'])) {

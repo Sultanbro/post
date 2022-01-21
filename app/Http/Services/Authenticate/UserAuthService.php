@@ -5,6 +5,7 @@ namespace App\Http\Services\Authenticate;
 
 use App\Repository\User\UserRepositoryInterface;
 use App\Repository\User\UserTokenRepositoryInterface;
+use Illuminate\Support\Str;
 
 class UserAuthService implements UserAuthServiceInterface
 {
