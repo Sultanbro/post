@@ -39,6 +39,8 @@ use App\Repository\User\Employee\EmployeeRepository;
 use App\Repository\User\Employee\EmployeeRepositoryInterface;
 use App\Repository\User\Staff\StaffUserRepository;
 use App\Repository\User\Staff\StaffUserRepositoryInterface;
+use App\Repository\User\UserDetailsRepository;
+use App\Repository\User\UserDetailsRepositoryInterface;
 use App\Repository\User\UserRepository;
 use App\Repository\User\UserRepositoryInterface;
 use App\Repository\User\UserTokenRepository;
@@ -74,6 +76,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(StaffUserRepositoryInterface::class, StaffUserRepository::class);
         $this->app->bind(CentcoinRepositoryInterface::class, CentcoinRepository::class);
         $this->app->bind(CentcoinApplyRepositoryInterface::class, CentcoinApplyRepository::class);
+        $this->app->bind(UserDetailsRepositoryInterface::class, UserDetailsRepository::class);
     }
 
     /**

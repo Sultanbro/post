@@ -90,4 +90,13 @@ class BaseRepository implements EloquentRepositoryInterface
     {
         return $this->model->firstOrCreate($attributes);
     }
+
+    /**
+     * @param array $attributes
+     * @return mixed
+     */
+    public function createOrUpdate(array $attributes)
+    {
+        return $this->model->updateOrCreate($attributes);
+    }
 }

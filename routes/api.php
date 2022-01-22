@@ -52,6 +52,7 @@ Route::post('/duty/info/accept', [DutyController::class, 'saveDuties']);
 Route::post('/staff/info/accept', [StaffController::class, 'saveStaff']);
 Route::post('/career/info/accept', [CareerUserController::class, 'saveCareer']);
 Route::post('/avatar', [ClientBaseController::class, 'acceptAvatar']);
+Route::post('user/details/accept', [ClientBaseController::class, 'userDetails']);
 
 //Post route
 Route::resource('posts', PostController::class);

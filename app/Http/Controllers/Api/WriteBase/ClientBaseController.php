@@ -40,7 +40,7 @@ class ClientBaseController
         try {
             return $this->clientBaseService->saveClients($request->all());
         }catch (\Exception $e) {
-            return response()->json($e);
+            return response()->json($e, 404);
         }
     }
 
@@ -53,7 +53,7 @@ class ClientBaseController
         try {
             return $this->clientBaseService->acceptEOrder($request->all());
         }catch (\Exception $e) {
-            return response()->json($e);
+            return response()->json($e, 404);
         }
     }
 
@@ -66,7 +66,16 @@ class ClientBaseController
         try {
             return $this->clientBaseService->acceptAvatar($request->all());
         }catch (\Exception $e) {
-            return response()->json($e);
+            return response()->json($e, 404);
+        }
+    }
+
+    public function userDetails(Request $request)
+    {
+        try {
+            return$this->clientBaseService->userDetails($request->all());
+        }catch(\Exception $e) {
+            return response()->json($e,404);
         }
     }
 }

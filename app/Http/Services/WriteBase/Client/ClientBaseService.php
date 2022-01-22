@@ -14,6 +14,7 @@ use App\Repository\Reference\City\CityRepositoryInterface;
 use App\Repository\Reference\Dicti\DictiRepositoryInterface;
 use App\Repository\Reference\Region\RegionRepositoryInterface;
 use App\Repository\User\Employee\EmployeeRepositoryInterface;
+use App\Repository\User\UserDetailsRepository;
 use App\Repository\User\UserRepositoryInterface;
 use http\Message;
 use Illuminate\Http\JsonResponse;
@@ -64,6 +65,10 @@ class ClientBaseService implements ClientBaseServiceInterface
      * @var KeyCloakServiceInterface
      */
     private $cloakService;
+    /**
+     * @var UserDetailsRepository
+     */
+    private $userDetailsRepository;
 
     /**
      * @param ClientRepositoryInterface $clientRepository
@@ -76,9 +81,21 @@ class ClientBaseService implements ClientBaseServiceInterface
      * @param RegionRepositoryInterface $regionRepository
      * @param EOrderRepositoryInterface $eOrderRepository
      * @param KeyCloakServiceInterface $cloakService
+     * @param UserDetailsRepository $userDetailsRepository
      */
-    public function __construct(ClientRepositoryInterface $clientRepository, DepartmentRepositoryInterface $departmentRepository, UserRepositoryInterface $userRepository, DictiRepositoryInterface $dictiRepository, ClientContactRepositoryInterface $clientContactRepository, EmployeeRepositoryInterface $employeeRepository, CityRepositoryInterface $cityRepository, RegionRepositoryInterface $regionRepository, EOrderRepositoryInterface $eOrderRepository, KeyCloakServiceInterface $cloakService)
+    public function __construct(ClientRepositoryInterface $clientRepository,
+                                DepartmentRepositoryInterface $departmentRepository,
+                                UserRepositoryInterface $userRepository,
+                                DictiRepositoryInterface $dictiRepository,
+                                ClientContactRepositoryInterface $clientContactRepository,
+                                EmployeeRepositoryInterface $employeeRepository,
+                                CityRepositoryInterface $cityRepository,
+                                RegionRepositoryInterface $regionRepository,
+                                EOrderRepositoryInterface $eOrderRepository,
+                                KeyCloakServiceInterface $cloakService,
+                                UserDetailsRepository $userDetailsRepository)
     {
+        $this->userDetailsRepository = $userDetailsRepository;
         $this->cloakService = $cloakService;
         $this->eOrderRepository = $eOrderRepository;
         $this->regionRepository = $regionRepository;
@@ -346,5 +363,21 @@ class ClientBaseService implements ClientBaseServiceInterface
         Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
         Avatar::firstOrCreate(['link' => "storage/$user_id/$fileName", 'user_id' => $user_id]);
         return [$req['foreign_id'] => 'ok'];
+    }
+
+    /**
+     * @param $params
+     * @return \Illuminate\Database\Eloquent\Model|mixed
+     */
+    public function userDetails($params)
+    {
+        if ($user = $this->userRepository->getByForeignId($params['foreign_id'])) {
+            $params['user_id'] = $user->id;
+            $params['user_info'] = json_encode($params['user_info']);
+            if ($detail = $this->userDetailsRepository->getByForeignId($user->id)) {
+                return $this->userDetailsRepository->update($detail->id, $params);
+            }
+            return $this->userDetailsRepository->create($params);
+        }
     }
 }
