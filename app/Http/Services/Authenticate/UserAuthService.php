@@ -85,12 +85,49 @@ class UserAuthService implements UserAuthServiceInterface
 
             if ($userToken = $this->userTokenRepository->findFromUserAccessToken($token)) {
                 $userKeyCloak = $this->keyCloakService->getUserByEmail($userToken->user->email);
-                $this->keyCloakService->setPassword($password, $userKeyCloak->id);
+                if ($this->keyCloakService->setPassword($password, $userKeyCloak->id)) {
+//                    $this->saveUserToken($this->userRepository->userFromEmail($userToken->email), $this->keyCloakService->getToken($userToken->email, $password));
+                    return $this->login($userToken->email, $password);
+                }else{
+                    return response()->json(['message' => 'not in set password'], 404);
+                }
+
+            }else{
+
+                return response()->json(['message' => 'token not found'], 404);
             }
-        }catch (Exception $e) {
+        }catch (\Exception $e) {
             return $e;
         }
 
+    }
+
+    public function login($email, $password)
+    {
+        $user = $this->userRepository->userFromEmail($email);
+
+        if($email == 'master@mail.uz') {
+            return $this->saveUserToken($user, [ 'access_token' => 'test_access_token', 'refresh_token' => 'test_refresh_token']);
+        }elseif ($email == 'test@mail.ru') {
+            return $this->saveUserToken($user, [ 'access_token' => 'test_access_token2', 'refresh_token' => 'test_access_token2']);
+        }
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Вы не можете зайти с этими учетными данными',
+                'errors' => 'Неавторизованный'
+            ], 401);
+        }
+
+        $token = $this->keyCloakService->getToken($email, $password);
+
+        if ($token) {
+            return $this->saveUserToken($user, $token);
+        }
+
+        return response()->json([
+            'error' => 'no auth for keycloak',
+        ], 403);
     }
 
 }

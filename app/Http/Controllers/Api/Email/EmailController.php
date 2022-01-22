@@ -53,7 +53,7 @@ class EmailController extends Controller
         if (isset($users)) {
             foreach ($users as $user) {
 
-                $details['email_content']['content'] = $this->userAuthService->tokenResetPassword($user);
+                $details['email_content']['content'] = "Для обновления пароли перейдите по ссылке: http://mycent.kz/auth?token=" . $this->userAuthService->tokenResetPassword($user) . "&email=$user->email";
                 $details['email'] = $user->email;
                 dispatch(new SendEmailJob($details));
             }

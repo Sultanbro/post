@@ -51,36 +51,11 @@ class LoginController extends Controller
     }
 
     /**
-     * Handle the incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return mixed
      */
     public function index(Request $request)
     {
-        $user = $this->userRepository->userFromEmail($request->email);
-
-        if($request->email == 'master@mail.uz') {
-            return $this->userAuth->saveUserToken($user, [ 'access_token' => 'test_access_token', 'refresh_token' => 'test_refresh_token']);
-        }elseif ($request->email == 'test@mail.ru') {
-            return $this->userAuth->saveUserToken($user, [ 'access_token' => 'test_access_token2', 'refresh_token' => 'test_access_token2']);
-        }
-
-        if (!$user) {
-            return response()->json([
-                'message' => 'Вы не можете зайти с этими учетными данными',
-                'errors' => 'Неавторизованный'
-            ], 401);
-        }
-
-        $token = $this->keyCloakService->getToken($request->email, $request->password);
-
-        if ($token) {
-           return $this->userAuth->saveUserToken($user, $token);
-        }
-
-        return response()->json([
-            'error' => 'no auth for keycloak',
-        ], 403);
+        return $this->userAuth->login($request->email, $request->password);
     }
 }
