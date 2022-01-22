@@ -22,11 +22,11 @@ class Department extends Model
 
     public function department()
     {
-        return $this->hasMany(Department::class, 'parent_id', 'id')->where('type_id', 2);
+        return $this->hasMany(Department::class, 'parent_id', 'id')->where('type_id', 2)->orWhere('type_id', 1);
     }
 
     public function users()
     {
-        return $this->hasManyThrough(Client::class, User::class, 'department_id', 'id', 'id')->where('type_id', 3);
+        return $this->hasManyThrough(Client::class, User::class, 'department_id', 'id', 'id');
     }
 }
