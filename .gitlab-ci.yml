@@ -1,6 +1,8 @@
 stages:
   - build
   - deploy
+  - linting
+
 
 include:
   - project: 'devops/ci-templates'
@@ -68,3 +70,52 @@ deploy-test-app:
     UPGRADE: server
 
 ################# /Test #################
+
+################# Lint #################
+
+php-linter:
+  stage: linting
+  image: registry.gitlab.com/pipeline-components/php-linter:latest
+  allow_failure: true
+  tags:
+    - docker
+  script:
+    - parallel-lint --colors .
+
+php-security-checker:
+  stage: linting
+  image: pipelinecomponents/php-security-checker:latest
+  allow_failure: true
+  tags:
+    - docker
+  script:
+    cd ${COMPOSER_LOCATION:-.} && security-checker security:check composer.lock
+  except:
+    variables:
+      - $DISABLE_PHP_SECURITYCHECKER
+
+phpcs-PSR2:
+  stage: linting
+  image: pipelinecomponents/php-codesniffer:latest
+  allow_failure: true
+  tags:
+    - docker
+  script:
+    - phpcs -s -p --colors --extensions=php --standard=PSR2 .
+  except:
+    variables:
+      - $DISABLE_PHP_PSR2
+
+phpcs PSR12:
+  stage: linting
+  image: pipelinecomponents/php-codesniffer:latest
+  allow_failure: true
+  tags:
+    - docker
+  script:
+    - phpcs -s -p --colors --extensions=php --standard=PSR12 .
+  except:
+    variables:
+      - $DISABLE_PHP_PSR12
+
+################# /Lint #################
