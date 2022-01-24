@@ -46,8 +46,9 @@ class Client extends Model
     {
 //        if ($from->format('m-d') == '12-25') {
 
+        $user_comapy_id = Auth::user()->company_id;
             $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE) AND date_part('doy', CURRENT_DATE + INTERVAL '10 days')");
-            $query->whereRaw("'company_id' =  ". Auth::user()->company_id);
+            $query->whereRaw("company_id =  $user_comapy_id");
             $query->orderByRaw("date_part('doy', birthday)");
 //        } else {
 //            $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE + INTERVAL '10 days') AND date_part('doy', CURRENT_DATE)");
