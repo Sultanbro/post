@@ -46,13 +46,10 @@ class Client extends Model
 //        if ($from->format('m-d') == '12-25') {
 
             $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE) AND date_part('doy', CURRENT_DATE + INTERVAL '10 days')");
+            $query->orderBy('doy');
 //        } else {
 //            $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE + INTERVAL '10 days') AND date_part('doy', CURRENT_DATE)");
 //        }
     }
 
-    public function scopeSortByDate($query, $day)
-    {
-        return $query->sortBy($day);
-    }
 }
