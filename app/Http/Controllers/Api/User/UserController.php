@@ -122,9 +122,9 @@ class UserController extends Controller
 
     }
 
-    public function getBDay()
+    public function getBDay(Request $request)
     {
-        return BDayResource::collection($this->clientRepository->getComingBDay());
+        return BDayResource::collection($this->clientRepository->getComingBDay($request->company_id));
     }
 
     public function getUser()

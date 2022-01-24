@@ -14,8 +14,9 @@ interface ClientRepositoryInterface extends EloquentRepositoryInterface
     public function firstWhereForeignId($foreign_id, $company_id);
 
     /**
+     * @param $company_id
      * @return mixed
      */
-    public function getComingBDay();
+    public function getComingBDay($company_id);
 
 }
