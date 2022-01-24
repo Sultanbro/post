@@ -59,6 +59,9 @@ class Client extends Model
             $company_id = Auth::user()->company_id;
             return $query->whereRaw("company_id =  $company_id");
         }
+        if ($company_id == 1){
+            return $query;
+        }
         return $query->whereRaw("company_id =  $company_id");
     }
 
