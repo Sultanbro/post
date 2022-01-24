@@ -50,4 +50,9 @@ class Client extends Model
 //            $query->whereRaw("date_part('doy', birthday) BETWEEN date_part('doy', CURRENT_DATE + INTERVAL '10 days') AND date_part('doy', CURRENT_DATE)");
 //        }
     }
+
+    public function scopeSortByDate($query, $day)
+    {
+        return $query->sortBy($day);
+    }
 }
