@@ -27,13 +27,15 @@ class BearerAuthenticate
     public function handle(Request $request, Closure $next)
     {
         if (($this->token = $request->header('Authorization', null)) === null)
-            throw new UnauthorizedException();
+            return \response()->json(['token' => 'not found'], 404);
+//            throw new UnauthorizedException();
         $this->token = str_replace('Bearer ', '', $this->token);
 
         if($this->checkToken()) {
-           return $next($request );
+           return $next($request);
         }
-        throw new UnauthorizedException();
+        return \response()->json(['token' => 'not found'], 404);
+//        throw new UnauthorizedException();
     }
 
     private function checkToken()

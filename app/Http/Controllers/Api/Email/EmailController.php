@@ -35,7 +35,7 @@ class EmailController extends Controller
     /**
      * @param Request $request
      */
-    public function sendEmail(Request $request)
+    public function sendResetPasswordEmail(Request $request)
     {
         $result = [];
         if ($request->user == 'all') {

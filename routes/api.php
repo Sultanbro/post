@@ -70,5 +70,5 @@ Route::get('/client/tree', [UserController::class, 'clientTree']);
 Route::get('/birthday/', [UserController::class, 'getBDay']);
 
 //Email route
-Route::post('send/email', [EmailController::class, 'sendEmail']);
+Route::post('send/email/reset/password', [EmailController::class, 'sendResetPasswordEmail']);
 
