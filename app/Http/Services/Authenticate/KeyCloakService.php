@@ -96,7 +96,7 @@ class KeyCloakService implements KeyCloakServiceInterface
 
     public function registerUser($email, $firstName, $lastName)
     {
-        $master_info = $this->getToken('Master@mycent.kz', 'MyCent1@#');
+        $master_info = $this->getToken('Master@mycent.kz', 'MyCent!2@#');
 
         $params = [
             'emailVerified' => true,

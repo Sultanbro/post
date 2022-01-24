@@ -62,6 +62,8 @@ class Post extends Model
     {
         if (!is_null($company_id)) {
             return $query->where('company_id', $company_id);
+        }else{
+            return $query->where('company_id', Auth::user()->company_id);
         }
 
         return $query;

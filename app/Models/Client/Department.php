@@ -22,7 +22,7 @@ class Department extends Model
 
     public function department()
     {
-        return $this->hasMany(Department::class, 'parent_id', 'id')->where('type_id', 2)->orWhere('type_id', 1);
+        return $this->hasMany(Department::class, 'parent_id', 'id')->whereIn('type_id', [1, 2]);
     }
 
     public function users()
