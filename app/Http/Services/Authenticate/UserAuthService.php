@@ -49,7 +49,6 @@ class UserAuthService implements UserAuthServiceInterface
             return response()->json([
                 'token_type' => 'Bearer',
                 'access_token' => $token['access_token'],
-                'refresh_token' => $token['refresh_token'],
                 'created' => 1,
                 'user_info' => $user,
             ], 200);
@@ -58,7 +57,6 @@ class UserAuthService implements UserAuthServiceInterface
         return response()->json([
             'token_type' => 'Bearer',
             'access_token' => $token['access_token'],
-            'refresh_token' => $token['refresh_token'],
             'updated' => 1,
             'user_info' => $user,
         ], 200);

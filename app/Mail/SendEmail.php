@@ -35,6 +35,7 @@ class SendEmail extends Mailable
             ->subject('Уведомление с портала mycent.kz')
             ->replyTo(env('MAIL_REPLY_TO'))
             ->view('email.email', compact('content'));
+//            ->attach('public/storage/avatars/2/ava.jpeg');
 
         return $email;
 
