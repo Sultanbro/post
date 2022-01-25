@@ -19,9 +19,11 @@ use App\Repository\User\UserRepositoryInterface;
 use http\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use phpDocumentor\Reflection\Types\This;
+use const http\Client\Curl\Features\HTTP2;
 
 class ClientBaseService implements ClientBaseServiceInterface
 {
@@ -360,7 +362,7 @@ class ClientBaseService implements ClientBaseServiceInterface
     {
         try {
             if (isset($req['url'])) {
-                $content = file_get_contents($req['url']);
+                $content = Http::get($req['url'])->body();
                 $fileName = basename($req['url']);
                 Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
                 Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
