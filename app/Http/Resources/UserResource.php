@@ -24,7 +24,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'email' => $this->email,
             'avatar' => $this->avatar,
-            'department' => new DepartmentResource($this->userDepartment),
+//            'department' => new DepartmentResource($this->userDepartment),
             'user_info' => new ClientResource($this->clientInfo),
             'user_detail' => json_decode($this->details->user_info),
 //            'user_contact' => new UserContactResource($this->clientContact),
