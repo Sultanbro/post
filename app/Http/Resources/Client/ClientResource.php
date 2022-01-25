@@ -23,7 +23,7 @@ class ClientResource extends JsonResource
             'full_name' => $this->full_name,
 //            'iin' => $this->iin,
 //            'sex' => $this->sex,
-            'address' => json_decode($this->address),
+            'address' => json_decode($this->address, true),
             'birthday' => $this->birthday,
 //            'updated_by' => $this->updated_by,
 //            'created_by' => $this->created_by,
