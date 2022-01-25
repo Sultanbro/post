@@ -362,13 +362,13 @@ class ClientBaseService implements ClientBaseServiceInterface
             $content = file_get_contents($req['file']['url']);
             $fileName = basename($req['file']['url']);
             Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
-            Avatar::firstOrCreate(['link' => "storage/$user_id/$fileName", 'user_id' => $user_id]);
+            Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
             return [$req['foreign_id'] => 'ok'];
         }
         $content = file_get_contents($req['file']);
         $fileName = $req['file']->getClientOriginalName();
         Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
-        Avatar::firstOrCreate(['link' => "storage/$user_id/$fileName", 'user_id' => $user_id]);
+        Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
         return [$req['foreign_id'] => 'ok'];
     }
 
