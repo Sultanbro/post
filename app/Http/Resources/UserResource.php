@@ -26,7 +26,7 @@ class UserResource extends JsonResource
             'avatar' => $this->avatar,
 //            'department' => new DepartmentResource($this->userDepartment),
             'user_info' => new ClientResource($this->clientInfo),
-            'user_detail' => json_decode($this->details->user_info),
+            'user_detail' => isset($this->details->user_info) ? null : json_decode($this->details->user_info),
 //            'user_contact' => new UserContactResource($this->clientContact),
 //            'user_career' => CareerResource::collection($this->career),
 //            'user_vacation' => VacationResource::collection($this->vacation),
