@@ -358,18 +358,24 @@ class ClientBaseService implements ClientBaseServiceInterface
      */
     public function saveAvatar($req, $user_id)
     {
-        if (isset($req['file']['url'])) {
-            $content = file_get_contents($req['file']['url']);
-            $fileName = basename($req['file']['url']);
-            Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
-            Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
-            return [$req['foreign_id'] => 'ok'];
+        try {
+            if (isset($req['url'])) {
+                $content = file_get_contents($req['url']);
+                $fileName = basename($req['url']);
+                Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
+                Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
+                return [$req['foreign_id'] => 'ok'];
+            }elseif (isset($req['file'])) {
+                $content = file_get_contents($req['file']->getRealPath());
+                $fileName = $req['file']->getClientOriginalName();
+                Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
+                Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
+                return [$req['foreign_id'] => 'ok'];
+            }
+            return 'not storage';
+        }catch (\Exception $e) {
+            return $e;
         }
-        $content = file_get_contents($req['file']->getRealPath());
-        $fileName = $req['file']->getClientOriginalName();
-        Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
-        Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
-        return [$req['foreign_id'] => 'ok'];
     }
 
     /**

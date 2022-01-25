@@ -47,6 +47,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
      */
     public function getByForeignIdAndCompany_id($foreign_id, $company_id)
     {
-        return $this->model->firstWhereForeign_idAndCompany_id($foreign_id, $company_id);
+        return $this->model->whereForeign_idAndCompany_id($foreign_id, $company_id)->first();
     }
 }
