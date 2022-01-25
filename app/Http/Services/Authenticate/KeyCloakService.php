@@ -13,6 +13,8 @@ class KeyCloakService implements KeyCloakServiceInterface
     protected $urlAuth = 'http://192.168.30.31:8022/auth/realms/MyCent/protocol/openid-connect/token';
     protected $urlInfo = 'http://192.168.30.31:8022/auth/realms/MyCent/protocol/openid-connect/userinfo';
     protected $urlRegister = 'http://192.168.30.31:8022/auth/admin/realms/MyCent/users';
+    protected $keyCloakMasterEmail =  'Master@mycent.kz';
+    protected $keyCloakMasterPassword = 'MyCent!2@#';
     protected $headers = [
         'content-type' => 'application/x-www-form-urlencoded',
         'Accept' => 'application/json',
@@ -96,7 +98,7 @@ class KeyCloakService implements KeyCloakServiceInterface
 
     public function registerUser($email, $firstName, $lastName)
     {
-        $master_info = $this->getToken('Master@mycent.kz', 'MyCent!2@#');
+        $master_info = $this->getToken($this->keyCloakMasterEmail, $this->keyCloakMasterPassword);
 
         $params = [
             'emailVerified' => true,
@@ -121,7 +123,17 @@ class KeyCloakService implements KeyCloakServiceInterface
 
     public function getUserByEmail($email)
     {
-        return Http::asForm()->withHeaders($this->headers)->get($this->urlRegister . "?email=$email");
+        $master_info = $this->getToken($this->keyCloakMasterEmail, $this->keyCloakMasterPassword);
+
+        $headers = [
+            'content-type' => 'application/json',
+            'Accept' => '*/*',
+            'Authorization' => 'Bearer '. $master_info['access_token'],
+        ];
+
+        $result = Http::withHeaders($headers)->get($this->urlRegister, ['email' => $email]);
+
+        return json_decode($result->body(), true);
     }
 
     /**
@@ -131,7 +143,7 @@ class KeyCloakService implements KeyCloakServiceInterface
      */
     public function setPassword($password, $user_id)
     {
-        $master_info = $this->getToken('Master@mycent.kz', 'MyCent1@#');
+        $master_info = $this->getToken($this->keyCloakMasterEmail, $this->keyCloakMasterPassword);
 
         $params = [
             'value' => $password,
@@ -144,6 +156,10 @@ class KeyCloakService implements KeyCloakServiceInterface
             'Authorization' => 'Bearer '. $master_info['access_token'],
         ];
 
-        return Http::withHeaders($headers)->post($this->urlRegister."/$user_id/reset-password", $params);
+        if(Http::withHeaders($headers)->put($this->urlRegister."/$user_id/reset-password", $params)->status() === 204) {
+            Http::withHeaders($headers)->put($this->urlRegister."/$user_id/", ['enabled' => true]);
+            return true;
+        }
+        return false;
     }
 }
