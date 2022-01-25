@@ -358,7 +358,14 @@ class ClientBaseService implements ClientBaseServiceInterface
      */
     public function saveAvatar($req, $user_id)
     {
-        $content = file_get_contents($req['file']->getRealPath());
+        if (isset($req['file']['url'])) {
+            $content = file_get_contents($req['file']['url']);
+            $fileName = basename($req['file']['url']);
+            Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
+            Avatar::firstOrCreate(['link' => "storage/$user_id/$fileName", 'user_id' => $user_id]);
+            return [$req['foreign_id'] => 'ok'];
+        }
+        $content = file_get_contents($req['file']);
         $fileName = $req['file']->getClientOriginalName();
         Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
         Avatar::firstOrCreate(['link' => "storage/$user_id/$fileName", 'user_id' => $user_id]);
@@ -371,7 +378,7 @@ class ClientBaseService implements ClientBaseServiceInterface
      */
     public function userDetails($params)
     {
-        if ($user = $this->userRepository->getByForeignId($params['foreign_id'])) {
+        if ($user = $this->userRepository->getByForeignIdAndCompany_id($params['foreign_id'], $params['company_id'])) {
             $params['user_id'] = $user->id;
             $params['user_info'] = json_encode($params['user_info']);
             if ($detail = $this->userDetailsRepository->getByForeignId($user->id)) {
