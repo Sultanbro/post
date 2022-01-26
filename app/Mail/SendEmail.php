@@ -35,7 +35,7 @@ class SendEmail extends Mailable
             ->subject('Уведомление с портала mycent.kz')
             ->replyTo(env('MAIL_REPLY_TO'))
             ->view('email.email', compact('content'))
-            ->attach(public_path() . '/storage/email/test (копия).csv');
+            ->attach(public_path() . '/storage/email/Инструкция регистрации-авторизации mycent kz.pdf');
 
         return $email;
 
