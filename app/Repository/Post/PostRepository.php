@@ -68,6 +68,6 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
      */
     public function getFilterPosts($params)
     {
-        return $this->model->userLiked($params['liked'])->company($params['company'])->date($params['date'])->paginate(6);
+        return $this->model->userLiked($params['liked'])->company($params['company'])->date($params['date'])->scan($params['search'])->paginate(6);
     }
 }

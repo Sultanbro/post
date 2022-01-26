@@ -93,4 +93,13 @@ class Post extends Model
         return $query;
     }
 
+    public function scopeScan($query, $params)
+    {
+        if (!is_null($params)) {
+            return $query->where('content', 'like', "%$params%");
+        }
+
+        return $query;
+    }
+
 }
