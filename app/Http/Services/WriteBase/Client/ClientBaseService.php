@@ -362,7 +362,7 @@ class ClientBaseService implements ClientBaseServiceInterface
     {
         try {
             if (isset($req['url'])) {
-                $content = Http::get($req['url'])->body();
+                $content = Storage::get($req['url']);
                 $fileName = basename($req['url']);
                 Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
                 Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
