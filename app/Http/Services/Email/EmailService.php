@@ -71,14 +71,14 @@ class EmailService implements EmailServiceInterface
                 $content = file_get_contents($url);
                 $fileName = basename($f['url']);
                 $this->saveEmailFile($content, $fileName);
-                return [$f['foreign_id'] => 'ok'];
+                return ['file' => 'ok'];
 
-            } elseif (isset($req['file'])) {
+            } elseif (isset($f['file'])) {
 
                 $content = file_get_contents($f['file']->getRealPath());
                 $fileName = $f['file']->getClientOriginalName();
                 $this->saveEmailFile($content, $fileName);
-                return [$f['foreign_id'] => 'ok'];
+                return ['file' => 'ok'];
 
             }
         }

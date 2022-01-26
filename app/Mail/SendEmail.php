@@ -35,11 +35,9 @@ class SendEmail extends Mailable
             ->subject('Уведомление с портала mycent.kz')
             ->replyTo(env('MAIL_REPLY_TO'))
             ->view('email.email', compact('content'))
-            ->attach();
+            ->attach(public_path() . '/storage/email/test (копия).csv');
 
         return $email;
 
-//        $content = $this->email_content;
-//        return $this->view('email.email', compact('content'));
     }
 }
