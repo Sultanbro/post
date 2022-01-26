@@ -3,6 +3,12 @@
 namespace App\Providers;
 
 
+use App\Repository\Booking\BookingRepository;
+use App\Repository\Booking\BookingRepositoryInterface;
+use App\Repository\Booking\BookingUsers\BookingUsersRepository;
+use App\Repository\Booking\BookingUsers\BookingUsersRepositoryInterface;
+use App\Repository\Booking\Room\RoomRepository;
+use App\Repository\Booking\Room\RoomRepositoryInterface;
 use App\Repository\Client\ClientContact\ClientContactRepository;
 use App\Repository\Client\ClientContact\ClientContactRepositoryInterface;
 use App\Repository\Client\ClientRepository;
@@ -68,6 +74,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(DutyRepositoryInterface::class, DutyRepository::class);
         $this->app->bind(CareerUserRepositoryInterface::class, CareerUserRepository::class);
         $this->app->bind(StaffUserRepositoryInterface::class, StaffUserRepository::class);
+        $this->app->bind(BookingRepositoryInterface::class,BookingRepository::class);
+        $this->app->bind(RoomRepositoryInterface::class,RoomRepository::class);
+        $this->app->bind(BookingUsersRepositoryInterface::class,BookingUsersRepository::class);
     }
 
     /**

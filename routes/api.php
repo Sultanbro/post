@@ -3,6 +3,9 @@
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\Booking\BookingController;
+use App\Http\Controllers\Api\Booking\BookingUsersController;
+use App\Http\Controllers\Api\Booking\RoomController;
 use App\Http\Controllers\Api\Email\EmailController;
 use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
@@ -69,4 +72,9 @@ Route::get('/client/tree', [UserController::class, 'clientTree']);
 
 //Email route
 Route::post('send/email', [EmailController::class, 'sendEmail']);
+
+//Booking route
+Route::resource('rooms',RoomController::class);
+Route::resource('booking/users', BookingUsersController::class);
+Route::resource('booking',BookingController::class);
 
