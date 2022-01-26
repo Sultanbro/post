@@ -49,7 +49,7 @@ class EmailService implements EmailServiceInterface
         if (isset($users)) {
             foreach ($users as $user) {
 
-                $details['email_content']['content'] = "Для обновления пароли перейдите по ссылке: http://mycent.kz/auth/" . $this->userAuthService->tokenResetPassword($user) . "/$user->email";
+                $details['email_content']['content'] = "https://mycent.kz/auth/" . $this->userAuthService->tokenResetPassword($user) . "/$user->email";
                 $details['email'] = $user->email;
                 dispatch(new SendEmailJob($details));
             }
