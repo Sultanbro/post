@@ -67,10 +67,15 @@ class BookingService implements BookingServiceInterface
 
     /**
      * @param $id
+     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Http\JsonResponse|null
      */
     public function show($id)
     {
-        $this->bookingRepository->find($id);
+        if($this->bookingRepository->find($id) != null){
+            return $this->bookingRepository->find($id);
+        } else {
+            return response()->json(['message' => 'This booking not found for show'],404);
+        }
     }
 
     /**
@@ -81,8 +86,11 @@ class BookingService implements BookingServiceInterface
     public function update($id, $request)
     {
         $booking = $this->bookingRepository->find($id);
-
-        return $booking->update($request);
+        if($booking != null){
+            return $booking->update($request);
+        } else {
+            return response()->json(['message' => 'This booking not found for update'],404);
+        }
     }
 
     /**
@@ -91,6 +99,10 @@ class BookingService implements BookingServiceInterface
      */
     public function delete($id)
     {
-        return $this->bookingRepository->deleteById($id);
+        if($this->bookingRepository->deleteById($id) != null){
+            return $this->bookingRepository->deleteById($id);
+        }else {
+            return response()->json(['message' => 'This booking not found for delete'],404);
+        }
     }
 }

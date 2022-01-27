@@ -38,7 +38,7 @@ class RoomController extends Controller
     public function store(Request $request)
     {
         $user_id = Auth::id();
-        $rooms = $this->roomRepository->create(array_merge($request->all(), [
+        $rooms = $this->roomRepository->firstOrCreate(array_merge($request->all(), [
             'created_by' => $user_id,
             'updated_by' => $user_id
         ]));
@@ -47,23 +47,30 @@ class RoomController extends Controller
     }
 
     /**
-     * @param  int $id
-     * @return Model
+     * @param  $id
+     * @return Model|JsonResponse
      */
     public function show($id)
     {
-        return $this->roomRepository->find($id);
+        if($this->roomRepository->find($id) != null){
+            return $this->roomRepository->find($id);
+        } else {
+            return response()->json(['message' => 'This room not found for show'], 404);
+        }
     }
 
     /**
-     * @param  int $id
+     * @param $id
      * @param Request $request
      * @return bool|JsonResponse
      */
     public function update(Request $request, $id)
     {
-       $room = $this->roomRepository->find($id);
-        return  $room->update($request->all());
+       if($room = $this->roomRepository->find($id) != null){
+           return  $room->update($request->all());
+       } else {
+           return response()->json(['message' => 'This room not found for update'], 404);
+       }
     }
 
     /**
@@ -72,6 +79,10 @@ class RoomController extends Controller
      */
     public function destroy($id)
     {
-        return $this->roomRepository->deleteById($id);
+        if($this->roomRepository->deleteById($id) != null){
+            return $this->roomRepository->deleteById($id);
+        } else {
+            return response()->json(['message' => 'This room not found for delete'], 404);
+        }
     }
 }
