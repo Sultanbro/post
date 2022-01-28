@@ -17,7 +17,9 @@ class CreatePostFilesTable extends Migration
             $table->id();
             $table->foreignId('post_id')->constrained()->onDelete('cascade');
             $table->string('link');
-            $table->timestamps();
+            $table->integer('created_by');
+            $table->integer('updated_by');
+            $table->timestampsTz();
         });
     }
 

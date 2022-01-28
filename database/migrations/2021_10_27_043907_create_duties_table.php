@@ -24,7 +24,7 @@ class CreateDutiesTable extends Migration
             $table->integer('created_by')->index();
             $table->integer('updated_by')->index();
             $table->string('id1c')->comment('Уникальный код в 1с')->nullable();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

@@ -19,7 +19,7 @@ class CreateUserTokensTable extends Migration
             $table->text('access_token');
             $table->text('refresh_token');
             $table->integer('role_id');
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

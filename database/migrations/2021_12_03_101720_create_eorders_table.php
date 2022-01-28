@@ -68,7 +68,7 @@ class CreateEordersTable extends Migration
             $table->integer('doc_id')->index()->comment('(fk_docs) приказ в таблице с документами')->nullable();
             $table->integer('created_by')->index();
             $table->integer('updated_by')->comment('автор изменения')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

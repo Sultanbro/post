@@ -17,7 +17,7 @@ class CreateUserDetailsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->json('user_info');
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

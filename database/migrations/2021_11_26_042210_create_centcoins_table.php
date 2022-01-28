@@ -19,10 +19,10 @@ class CreateCentcoinsTable extends Migration
             $table->string('description');
             $table->integer('quantity');
             $table->integer('total');
-            $table->foreignId('user_id')->constrained('users');
+            $table->integer('user_id');
             $table->unsignedBigInteger('updated_by');
             $table->unsignedBigInteger('created_by');
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

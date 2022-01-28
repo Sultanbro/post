@@ -14,22 +14,24 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->unique();
-            $table->foreign('id')->references('id')->on('clients');
-            $table->string('email', 55)->unique();
+            $table->id();
+            $table->integer('client_id');
+            $table->string('username')->unique();
+            $table->string('email', 55);
             $table->string('password', 128);
+            $table->integer('type_id');
             $table->unsignedBigInteger('foreign_id')->index()->nullable();
             $table->unsignedBigInteger('department_id')->index();
-            //$table->foreign('dept_id')->references('id')->on('departments');
+            $table->foreign('department_id')->references('id')->on('departments');
             $table->unsignedBigInteger('company_id')->index();
-            //$table->foreign('company_id')->references('id')->on('departments');
+            $table->foreign('company_id')->references('id')->on('departments');
             $table->index(['foreign_id', 'company_id']);
-            $table->unsignedBigInteger('duty_id')->comment('dictis->id');
+            $table->unsignedBigInteger('duty_id')->comment('duty->id');
             $table->boolean('active')->default(true);
             $table->date('date_end')->index()->nullable();
             $table->unsignedBigInteger('updated_by')->index();
             $table->unsignedBigInteger('created_by')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 
@@ -41,15 +43,11 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['id']);
-            $table->dropUnique(['id']);
-            $table->dropUnique(['email']);
             $table->dropIndex('users_foreign_id_index');
+            $table->dropForeign( 'users_department_id_foreign') ;
             $table->dropIndex('users_department_id_index');
-            //$table->dropForeign( 'users_dept_id_foreign') ;
-            //$table->dropIndex('users_company_id_index');
-            $table->dropIndex(['company_id']);
-            //$table->dropForeign('users_company_id_foreign');
+            $table->dropForeign('users_company_id_foreign');
+            $table->dropIndex('users_company_id_index');
             $table->dropIndex('users_foreign_id_company_id_index');
             $table->dropIndex('users_date_end_index');
             $table->dropIndex('users_updated_by_index');
