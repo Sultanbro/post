@@ -42,7 +42,7 @@ class RoomController extends Controller
     {
         $user_id = Auth::id();
         $company_id = $clientRepository->find($request->company_id);
-        if($company_id != null){
+        if(!is_null($company_id)){
             $rooms = $this->roomRepository->firstOrCreate(array_merge($request->all(), [
                 'created_by' => $user_id,
                 'updated_by' => $user_id
@@ -59,7 +59,7 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        if($this->roomRepository->find($id) != null){
+        if($this->roomRepository->find($id)){
             return response()->json(['success' => true, 'data' => $this->roomRepository->find($id)], 200);
         } else {
             return response()->json(['message' => 'This room not found for show','error' => 'Enter correct id'], 404);

@@ -5,7 +5,6 @@ namespace App\Http\Services\Booking;
 
 use App\Http\Resources\Booking\BookingResource;
 use App\Repository\Booking\BookingRepositoryInterface;
-use App\Repository\Booking\Room\RoomRepositoryInterface;
 
 
 class BookingService implements BookingServiceInterface
@@ -72,7 +71,7 @@ class BookingService implements BookingServiceInterface
      */
     public function show($id)
     {
-        if($this->bookingRepository->find($id) != null){
+        if($this->bookingRepository->find($id)){
             return response()->json(['success' => true,'data' => $this->bookingRepository->find($id)],200);
         } else {
             return response()->json(['message' => 'This booking not found for show','error' => 'Enter correct id'],404);
@@ -87,7 +86,7 @@ class BookingService implements BookingServiceInterface
     public function update($id, $request)
     {
         $booking = $this->bookingRepository->find($id);
-        if($booking != null){
+        if(!is_null($booking)){
             return response()->json(['message' => 'Booking updated','success' => $booking->update($request)],200);
         } else {
             return response()->json(['message' => 'This booking not found for update','error' => 'Enter correct id'],404);

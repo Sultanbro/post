@@ -49,7 +49,7 @@ class BookingUsersController extends Controller
      */
     public function show($id)
     {
-        if($this->bookingUsersRepository->find($id) != null) {
+        if($this->bookingUsersRepository->find($id)) {
             return response()->json(['success' => true, 'data' => $this->bookingUsersRepository->find($id)],200);
         } else {
             return response()->json(['message' => 'This booking not found for show','error' => 'Enter correct id'],404);
@@ -64,7 +64,7 @@ class BookingUsersController extends Controller
     public function update(Request $request, $id)
     {
         $bookingUsers = $this->bookingUsersRepository->find($id);
-        if($bookingUsers != null){
+        if(!is_null($bookingUsers)){
             return response()->json(['message' => 'Booking or user updated','success' => $bookingUsers->update($request->all())],200);
         } else {
             return response()->json(['message' => 'This booking not found for update','error' => 'Enter correct id'],404);
