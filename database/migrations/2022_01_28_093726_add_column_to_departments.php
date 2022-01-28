@@ -14,8 +14,8 @@ class AddColumnToDepartments extends Migration
     public function up()
     {
         Schema::table('departments', function (Blueprint $table) {
-            $table->integer('company_id')->after('is_company');
-            $table->integer('foreign_id')->after('company_id');
+            $table->integer('company_id')->after('is_company')->nullable();
+            $table->integer('foreign_id')->after('company_id')->nullable();
         });
     }
 
