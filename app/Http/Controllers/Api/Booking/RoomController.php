@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Booking;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Booking\RoomResource;
+use App\Http\Services\Booking\BookingServiceInterface;
 use App\Repository\Booking\Room\RoomRepositoryInterface;
+use App\Repository\Client\ClientRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,17 +35,22 @@ class RoomController extends Controller
 
     /**
      * @param Request $request
-     * @return RoomResource
+     * @param ClientRepositoryInterface $clientRepository
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request, ClientRepositoryInterface $clientRepository)
     {
         $user_id = Auth::id();
-        $rooms = $this->roomRepository->firstOrCreate(array_merge($request->all(), [
-            'created_by' => $user_id,
-            'updated_by' => $user_id
-        ]));
-
-        return new RoomResource($rooms);
+        $company_id = $clientRepository->find($request->company_id);
+        if($company_id != null){
+            $rooms = $this->roomRepository->firstOrCreate(array_merge($request->all(), [
+                'created_by' => $user_id,
+                'updated_by' => $user_id
+            ]));
+            return response()->json(['message' => 'Room created', 'success' => true, 'data' => new RoomResource($rooms)], 200);
+        } else {
+            return response()->json(['message' => 'This company not found for create', 'error' => 'Enter correct id'], 404);
+        }
     }
 
     /**
@@ -53,9 +60,9 @@ class RoomController extends Controller
     public function show($id)
     {
         if($this->roomRepository->find($id) != null){
-            return $this->roomRepository->find($id);
+            return response()->json(['success' => true, 'data' => $this->roomRepository->find($id)], 200);
         } else {
-            return response()->json(['message' => 'This room not found for show'], 404);
+            return response()->json(['message' => 'This room not found for show','error' => 'Enter correct id'], 404);
         }
     }
 
@@ -66,23 +73,25 @@ class RoomController extends Controller
      */
     public function update(Request $request, $id)
     {
-       if($room = $this->roomRepository->find($id) != null){
-           return  $room->update($request->all());
+       if($this->roomRepository->find($id)){
+           $room = $this->roomRepository->find($id);
+           return  response()->json(['message' => 'Room updated', 'success' => $room->update($request->all())], 200);
        } else {
-           return response()->json(['message' => 'This room not found for update'], 404);
+           return response()->json(['message' => 'This room not found for update','error' => 'Enter correct id'], 404);
        }
     }
 
     /**
-     * @param  int  $id
+     * @param $id
+     * @param BookingServiceInterface $bookingService
      * @return JsonResponse
      */
     public function destroy($id)
     {
-        if($this->roomRepository->deleteById($id) != null){
-            return $this->roomRepository->deleteById($id);
+        if($this->roomRepository->find($id)){
+            return response()->json(['message' => 'Room delete','success' => $this->roomRepository->deleteById($id)],200);
         } else {
-            return response()->json(['message' => 'This room not found for delete'], 404);
+            return response()->json(['message' => 'This room not found for delete','error' => 'Enter correct id'], 404);
         }
     }
 }

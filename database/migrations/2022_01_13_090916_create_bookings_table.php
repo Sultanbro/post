@@ -15,7 +15,7 @@ class CreateBookingsTable extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_id')->index()->references('id')->on('rooms');
+            $table->foreignId('room_id')->index()->references('id')->on('rooms')->onDelete('cascade');
             $table->dateTime('begin');
             $table->dateTime('end');
             $table->string('description',255)->nullable();

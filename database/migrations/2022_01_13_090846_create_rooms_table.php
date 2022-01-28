@@ -15,7 +15,7 @@ class CreateRoomsTable extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->index()->references('id')->on('clients');
+            $table->foreignId('company_id')->index()->references('id')->on('clients')->onDelete('cascade');
             $table->string('name',255);
             $table->integer('capacity')->comment('Вместимость помещения');
             $table->string('address',255);

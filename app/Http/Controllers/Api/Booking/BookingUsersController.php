@@ -31,8 +31,8 @@ class BookingUsersController extends Controller
     }
 
     /**
-     * @param  Request $request
-     * @return BookingUsersResource
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -40,6 +40,7 @@ class BookingUsersController extends Controller
         foreach ($request->user_id as $elem){
             $bookingUsers->firstOrCreate(['user_id' => $elem, 'booking_id' => $request->booking_id]);
         }
+        return response()->json(['message' => 'Users of booking create', 'success'=> true,],200);
     }
 
     /**
@@ -49,9 +50,9 @@ class BookingUsersController extends Controller
     public function show($id)
     {
         if($this->bookingUsersRepository->find($id) != null) {
-            return $this->bookingUsersRepository->find($id);
+            return response()->json(['success' => true, 'data' => $this->bookingUsersRepository->find($id)],200);
         } else {
-            return response()->json(['message' => 'This booking not found for show'],404);
+            return response()->json(['message' => 'This booking not found for show','error' => 'Enter correct id'],404);
         }
     }
 
@@ -64,11 +65,10 @@ class BookingUsersController extends Controller
     {
         $bookingUsers = $this->bookingUsersRepository->find($id);
         if($bookingUsers != null){
-            return  $bookingUsers->update($request->all());
+            return response()->json(['message' => 'Booking or user updated','success' => $bookingUsers->update($request->all())],200);
         } else {
-            return response()->json(['message' => 'This booking not found for update'],404);
+            return response()->json(['message' => 'This booking not found for update','error' => 'Enter correct id'],404);
         }
-
     }
 
     /**
@@ -77,10 +77,10 @@ class BookingUsersController extends Controller
      */
     public function destroy($id)
     {
-        if($this->bookingUsersRepository->deleteById($id) != null){
-            return $this->bookingUsersRepository->deleteById($id);
+        if($this->bookingUsersRepository->find($id)){
+            return response()->json(['message' => 'User delete from booking','success' => $this->bookingUsersRepository->deleteById($id)],200);
         } else {
-            return response()->json(['message' => 'This booking not found for delete'],404);
+            return response()->json(['message' => 'This booking not found for delete','error' => 'Enter correct id'],404);
         }
     }
 }

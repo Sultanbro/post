@@ -15,8 +15,8 @@ class CreateBookingUsersTable extends Migration
     {
         Schema::create('booking_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('booking_id')->references('id')->on('bookings');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('booking_id')->references('id')->on('bookings')->onDelete('cascade');
             $table->timestamps();
         });
     }
