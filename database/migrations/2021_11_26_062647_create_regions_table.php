@@ -25,7 +25,7 @@ class CreateRegionsTable extends Migration
             $table->integer('company_id')->index();
             $table->integer('created_by')->index();
             $table->integer('updated_by')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

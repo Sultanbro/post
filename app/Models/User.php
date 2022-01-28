@@ -59,8 +59,13 @@ class User extends Model implements Authenticatable
         return $this->hasMany(Eorder::class, 'client_id', 'id')->where('type_id', 13);
     }
 
-    protected function avatar()
+    public function avatar()
     {
         return $this->hasOne(Avatar::class);
+    }
+
+    public function details()
+    {
+        return $this->hasOne(UserDetail::class);
     }
 }

@@ -16,13 +16,13 @@ class CreateCentcoinAppliesTable extends Migration
         Schema::create('centcoin_applies', function (Blueprint $table) {
             $table->id();
             $table->string('type_id');
-            $table->foreignId('user_id')->constrained('users');
+            $table->integer('user_id');
             $table->integer('total');
             $table->integer('quantity');
             $table->enum('status',['Ожидает','Исполнено','Отказано'])->default('Ожидает');
             $table->unsignedBigInteger('updated_by');
             $table->unsignedBigInteger('created_by');
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

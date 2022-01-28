@@ -21,9 +21,10 @@ interface UserRepositoryInterface extends EloquentRepositoryInterface
 
     /**
      * @param $foreign_id
+     * @param $company_id
      * @return mixed
      */
-    public function getByForeignId($foreign_id);
+    public function getByForeignIdAndCompany_id($foreign_id, $company_id);
 
 
 }

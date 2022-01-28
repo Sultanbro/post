@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Email;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\Authenticate\UserAuthServiceInterface;
+use App\Http\Services\Email\EmailServiceInterface;
 use App\Jobs\SendEmailJob;
 use App\Repository\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
@@ -20,14 +21,20 @@ class EmailController extends Controller
      * @var UserAuthServiceInterface
      */
     private $userAuthService;
+    /**
+     * @var EmailServiceInterface
+     */
+    private $emailService;
 
     /**
      * EmailController constructor.
      * @param UserRepositoryInterface $userRepository
      * @param UserAuthServiceInterface $userAuthService
+     * @param EmailServiceInterface $emailService
      */
-    public function __construct(UserRepositoryInterface $userRepository, UserAuthServiceInterface $userAuthService)
+    public function __construct(UserRepositoryInterface $userRepository, UserAuthServiceInterface $userAuthService, EmailServiceInterface $emailService)
     {
+        $this->emailService = $emailService;
         $this->userAuthService = $userAuthService;
         $this->userRepository = $userRepository;
     }
@@ -37,30 +44,11 @@ class EmailController extends Controller
      */
     public function sendResetPasswordEmail(Request $request)
     {
-        $result = [];
-        if ($request->user == 'all') {
-            $users = $this->userRepository->all();
-        }elseif (is_array($request->user)) {
-            foreach ($request->user as $user) {
-                if ($userModel = $this->userRepository->userById($user)) {
-                    $users[] = $userModel;
-                }else{
-                    $result[$user] = 'this not found';
-                }
-            }
-        }
+        return $this->emailService->sendResetPasswordEmail($request->all());
+    }
 
-        if (isset($users)) {
-            foreach ($users as $user) {
-
-                $details['email_content']['content'] = "Для обновления пароли перейдите по ссылке: http://mycent.kz/auth?token=" . $this->userAuthService->tokenResetPassword($user) . "&email=$user->email";
-                $details['email'] = $user->email;
-                dispatch(new SendEmailJob($details));
-            }
-            return 'ok';
-        }else{
-            return $result;
-        }
-
+    public function saveFile(Request $request)
+    {
+        return $this->emailService->saveFile($request->file());
     }
 }

@@ -23,7 +23,7 @@ class CreateClientContactsTable extends Migration
             $table->string('remark')->comment('Примечание')->nullable();
             $table->integer('created_by')->index();
             $table->integer('updated_by')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

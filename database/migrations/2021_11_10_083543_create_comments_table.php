@@ -19,9 +19,10 @@ class CreateCommentsTable extends Migration
             $table->foreignId('post_id')->index()->constrained()->onDelete('cascade');
             $table->text('content');
             $table->foreignId('user_id')->index()->constrained()->onDelete('cascade');
+            $table->string('link')->nullable()->comment('Ссылка вложения к коменттарий');
             $table->unsignedBigInteger('updated_by');
             $table->unsignedBigInteger('created_by');
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

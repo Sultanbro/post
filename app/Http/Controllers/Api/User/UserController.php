@@ -129,7 +129,9 @@ class UserController extends Controller
 
     public function getUser()
     {
-        return  Auth()->user();
+        $user_auth = Auth()->user();
+        unset($user_auth['password']);
+        return $user_auth;
     }
 
 }

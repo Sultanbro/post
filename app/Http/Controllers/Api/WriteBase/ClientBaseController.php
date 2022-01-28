@@ -73,7 +73,7 @@ class ClientBaseController
     public function userDetails(Request $request)
     {
         try {
-            return$this->clientBaseService->userDetails($request->all());
+            return $this->clientBaseService->userDetails($request->all());
         }catch(\Exception $e) {
             return response()->json($e,404);
         }

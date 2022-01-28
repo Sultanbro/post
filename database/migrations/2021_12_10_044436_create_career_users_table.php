@@ -17,7 +17,7 @@ class CreateCareerUsersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('foreign_id')->index()->nullable()->comment('Первичный ключ из внеших таблиц');
             $table->integer('parent_id')->index()->nullable()->comment('Предыдущая должность');
-            $table->foreignId('client_id')->index()->comment('Сотрудник')->constrained('clients');
+            $table->foreignId('user_id')->index()->comment('Сотрудник')->constrained('users');
             $table->foreignId('staff_user_id')->index()->comment('(FK_staff_user) Штатная еденица')->constrained('staff_users');
             $table->boolean('sign')->default(1)->comment('Тип записи карьеры');
             $table->integer('rate')->nullable()->default(1)->comment('Ставка');
@@ -38,7 +38,7 @@ class CreateCareerUsersTable extends Migration
             $table->integer('company_id')->comment('Компания');
             $table->integer('created_by')->index();
             $table->integer('updated_by')->comment('автор изменения')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 
@@ -50,7 +50,7 @@ class CreateCareerUsersTable extends Migration
     public function down()
     {
         Schema::table('career_users', function (Blueprint $table){
-            $table->dropForeign(['client_id']);
+            $table->dropForeign(['user_id']);
             $table->dropForeign(['staff_user_id']);
             $table->dropForeign(['eorder_beg_id']);
             $table->dropForeign(['eorder_end_id']);
@@ -58,7 +58,7 @@ class CreateCareerUsersTable extends Migration
             $table->dropForeign(['empl_type_id']);
             $table->dropIndex(['foreign_id']);
             $table->dropIndex(['parent_id']);
-            $table->dropIndex(['client_id']);
+            $table->dropIndex(['user_id']);
             $table->dropIndex(['staff_user_id']);
             $table->dropIndex(['eorder_beg_id']);
             $table->dropIndex(['eorder_end_id']);

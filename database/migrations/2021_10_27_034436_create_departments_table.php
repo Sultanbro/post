@@ -23,7 +23,7 @@ class CreateDepartmentsTable extends Migration
             $table->boolean('is_company')->default(false);
             $table->unsignedBigInteger('created_by')->index();
             $table->unsignedBigInteger('updated_by')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 
