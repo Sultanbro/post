@@ -49,4 +49,31 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return $this->model->whereForeign_idAndCompany_id($foreign_id, $company_id)->first();
     }
+
+    /**
+     * @param $username
+     * @return mixed
+     */
+    public function getUserByUsername($username)
+    {
+        return $this->model->firstWhere('username', $username);
+    }
+
+    /**
+     * @param $iin
+     * @return mixed
+     */
+    public function firstClientByIin($iin)
+    {
+        return $this->model->firstWhere('iin', $iin);
+    }
+
+    /**
+     * @param $username
+     * @return mixed
+     */
+    public function firstUserByUsername($username)
+    {
+        return $this->model->firstWhere('username', $username);
+    }
 }

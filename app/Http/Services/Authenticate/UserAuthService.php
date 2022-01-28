@@ -100,13 +100,13 @@ class UserAuthService implements UserAuthServiceInterface
 
     }
 
-    public function login($email, $password)
+    public function login($username, $password)
     {
-        $user = $this->userRepository->userFromEmail($email);
+        $user = $this->userRepository->getUserByUsername($username);
 
-        if($email == 'master@mail.uz') {
+        if($username == 'master@mail.uz') {
             return $this->saveUserToken($user, [ 'access_token' => 'test_access_token', 'refresh_token' => 'test_refresh_token']);
-        }elseif ($email == 'test@mail.ru') {
+        }elseif ($username == 'test@mail.ru') {
             return $this->saveUserToken($user, [ 'access_token' => 'test_access_token2', 'refresh_token' => 'test_access_token2']);
         }
 
@@ -117,7 +117,7 @@ class UserAuthService implements UserAuthServiceInterface
             ], 401);
         }
 
-        $token = $this->keyCloakService->getToken($email, $password);
+        $token = $this->keyCloakService->getToken($username, $password);
 
         if ($token) {
             return $this->saveUserToken($user, $token);

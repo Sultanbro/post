@@ -56,6 +56,6 @@ class LoginController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->userAuth->login($request->email, $request->password);
+        return $this->userAuth->login($request->username, $request->password);
     }
 }

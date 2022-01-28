@@ -13,11 +13,11 @@ interface KeyCloakServiceInterface
     public function getUserInfo($token);
 
     /**
-     * @param $email
+     * @param $username
      * @param $password
      * @return mixed
      */
-    public function getToken($email, $password);
+    public function getToken($username, $password);
 
     /**
      * @param $refresh_token
@@ -26,18 +26,19 @@ interface KeyCloakServiceInterface
     public function refreshToken($refresh_token);
 
     /**
-     * @param $email
+     * @param $username
      * @return mixed
      */
-    public function getUserByEmail($email);
+    public function getUserByUsername($username);
 
     /**
      * @param $email
      * @param $firstName
      * @param $lastName
+     * @param $username
      * @return mixed
      */
-    public function registerUser($email, $firstName, $lastName);
+    public function registerUser($email, $firstName, $lastName,$username);
 
     /**
      * @param $password

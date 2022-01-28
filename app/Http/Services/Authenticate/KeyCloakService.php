@@ -41,6 +41,7 @@ class KeyCloakService implements KeyCloakServiceInterface
     {
         if ($token == 'test_access_token') return true;
         if ($token == 'test_access_token2') return true;
+
         $headers = [
             'content-type' => 'application/json',
             'Accept' => 'application/json',
@@ -54,14 +55,14 @@ class KeyCloakService implements KeyCloakServiceInterface
     }
 
     /**
-     * @param $email
+     * @param $username
      * @param $password
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response|mixed
      */
-    public function getToken($email, $password)
+    public function getToken($username, $password)
     {
 
-        $params = ['username' => $email,
+        $params = ['username' => $username,
             'password' => $password,
             'grant_type' => 'password',
             'client_id' => 'rest-client',
@@ -96,13 +97,14 @@ class KeyCloakService implements KeyCloakServiceInterface
         return $UserToken;
     }
 
-    public function registerUser($email, $firstName, $lastName)
+    public function registerUser($email, $firstName, $lastName, $username)
     {
         $master_info = $this->getToken($this->keyCloakMasterEmail, $this->keyCloakMasterPassword);
 
         $params = [
             'emailVerified' => true,
             'email' => $email,
+            'username' => $username,
             'firstName' => $firstName,
             'lastName' => $lastName,
         ];
@@ -121,7 +123,7 @@ class KeyCloakService implements KeyCloakServiceInterface
         }
     }
 
-    public function getUserByEmail($email)
+    public function getUserByUsername($username)
     {
         $master_info = $this->getToken($this->keyCloakMasterEmail, $this->keyCloakMasterPassword);
 
@@ -131,7 +133,7 @@ class KeyCloakService implements KeyCloakServiceInterface
             'Authorization' => 'Bearer '. $master_info['access_token'],
         ];
 
-        $result = Http::withHeaders($headers)->get($this->urlRegister, ['email' => $email]);
+        $result = Http::withHeaders($headers)->get($this->urlRegister, ['username' => $username]);
 
         return json_decode($result->body(), true);
     }

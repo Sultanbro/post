@@ -19,4 +19,10 @@ interface ClientRepositoryInterface extends EloquentRepositoryInterface
      */
     public function getComingBDay($company_id);
 
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function firstById($id);
+
 }

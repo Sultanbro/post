@@ -120,35 +120,30 @@ class ClientBaseService implements ClientBaseServiceInterface
             foreach ($clients as $client) {
 //            return $this->clientRepository->firstWhereForeignId($client['parent_foreign_id'], $client['company_id']);
                 $client_info = array_merge($user_make, $client);
-                if ($parent_foreign = $this->clientRepository->firstWhereForeignId($client['parent_foreign_id'], $client['company_id'])) {
-                    if ($clientModel = $this->clientRepository->firstWhereForeignId($client['foreign_id'], $client['company_id'])) {
-                        if ($clientModel->type_id == 1 or $clientModel->type_id == 2) {
-
-                            $result[$client['foreign_id']] = $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
-
+                if ($parent_foreign = $this->departmentRepository->firstWhereForeignIdCompanyId($client['parent_foreign_id'], $client['company_id'])) {
+                if ($client['type_id'] == 2) {
+                        if (!$departmentModel = $this->departmentRepository->firstWhereForeignIdCompanyId($client['foreign_id'], $client['company_id'])) {
+                            $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
+                            if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
+                                $result[$client['foreign_id']] = $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
+                            }
+                        }else{
+                            $result[$client['foreign_id']] = ['client' => 'is in a base'];
                         }
-                        if ($clientModel->type_id == 3 or $clientModel->type_id == 4) {
-
-                            $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
-
-                        }
-                    } else {
-                        $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
+                }
+                if ($client['type_id'] == 3 or $client['type_id'] == 4) {
+                    if ($clientModel = $this->userRepository->firstClientByIin($client['iin'])) {
+                        $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                    }else{
                         if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
-
-                            if ($clientModel->type_id == 1 or $clientModel->type_id == 2) {
-
-                                $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
-                            }
-                            if ($clientModel->type_id == 3 or $clientModel->type_id == 4) {
-
-                                $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
-                            }
+                            $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
                         }
                     }
-                } else {
+                }
+                }else{
                     $result[$client['foreign_id']] = ['is not found parent id'];
                 }
+
             }
         }
         catch (\Exception $exception) {
@@ -177,11 +172,7 @@ class ClientBaseService implements ClientBaseServiceInterface
                 $client_info['duty_id'] = 6;
             }
 
-            if (!$this->userRepository->userById($clientModel_id)) {
                 $result['user'] = $this->registerUser($clientModel_id, $parent_foreign_id, $client_info);
-            } else {
-                $result['user'] = ['message' => 'this is in the base'];
-            }
 
             if (isset($client_info['contact'])) {
                 $result['contact'] = $this->saveContact($client_info, $clientModel_id, $user_make);
@@ -222,9 +213,10 @@ class ClientBaseService implements ClientBaseServiceInterface
             }
 
             $client_info['email'] = mb_strtolower($client_info['email']);
+            $client_info['username'] = $this->createUsername(stristr($client_info['email'], '@', true));
 
-            if ($cloak = $this->cloakService->registerUser($client_info['email'], $client_info['first_name'], $client_info['parent_name'])) {
-                $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id, 'password' => $password], $client_info));
+            if ($cloak = $this->cloakService->registerUser($client_info['email'], $client_info['first_name'], $client_info['parent_name'], $client_info['username'])) {
+                $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id, 'password' => $password, 'username' => $client_info['username']], $client_info));
                 return 'ok';
             }
 
@@ -234,6 +226,21 @@ class ClientBaseService implements ClientBaseServiceInterface
         }
 
     }
+
+    /**
+     * @param $username
+     * @param int $var
+     * @return string
+     */
+    public function createUsername($username, $var = 0)
+    {
+        if ($this->userRepository->firstUserByUsername($username)) {
+            $var++;
+            $this->createUsername($username, $var);
+        }
+        return $username.$var;
+    }
+
 
     /**
      * @param $clientModel_id

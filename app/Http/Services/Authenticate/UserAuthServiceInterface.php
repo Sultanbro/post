@@ -25,9 +25,9 @@ interface UserAuthServiceInterface
     public function resetPassword($token, $password);
 
     /**
-     * @param $email
+     * @param $username
      * @param $password
      * @return mixed
      */
-    public function login($email, $password);
+    public function login($username, $password);
 }

@@ -40,4 +40,12 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
     {
         return $this->model->birthDayBetween(Carbon::now())->company($company_id)->whereIn('type_id', [3, 4])->get();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function firstById($id)
+    {
+        return $this->model->firstWhere('id', $id);
+    }
 }

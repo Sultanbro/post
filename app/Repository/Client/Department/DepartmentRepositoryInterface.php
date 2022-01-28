@@ -1,6 +1,7 @@
 <?php
 namespace App\Repository\Client\Department;
 
+use Illuminate\Database\Eloquent\Model;
 use Ramsey\Collection\Collection;
 use App\Repository\Eloquent\EloquentRepositoryInterface;
 
@@ -28,4 +29,11 @@ interface DepartmentRepositoryInterface extends EloquentRepositoryInterface
      * @return mixed
      */
     public function getParentDepartmentByCompanyId($company_id);
+
+    /**
+     * @param $foreign_id
+     * @param $company_id
+     * @return mixed
+     */
+    public function firstWhereForeignIdCompanyId($foreign_id, $company_id);
 }

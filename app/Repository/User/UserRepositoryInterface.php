@@ -26,5 +26,24 @@ interface UserRepositoryInterface extends EloquentRepositoryInterface
      */
     public function getByForeignIdAndCompany_id($foreign_id, $company_id);
 
+    /**
+     * @param $username
+     * @return mixed
+     */
+    public function getUserByUsername($username);
+
+    /**
+     * @param $iin
+     * @return mixed
+     */
+    public function firstClientByIin($iin);
+
+    /**
+     * @param $username
+     * @return mixed
+     */
+    public function firstUserByUsername($username);
+
+
 
 }
