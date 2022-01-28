@@ -69,8 +69,8 @@ services:
     image: prodrigestivill/postgres-backup-local
     restart: always
     user: postgres:postgres # Optional: see below
-    # volumes:
-    #     - /var/opt/pgbackups:/backups
+    volumes:
+        - /var/data/mycent/prod/backups:/backups
     links:
         - pg
     depends_on:
