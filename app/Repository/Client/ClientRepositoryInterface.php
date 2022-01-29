@@ -25,4 +25,10 @@ interface ClientRepositoryInterface extends EloquentRepositoryInterface
      */
     public function firstById($id);
 
+    /**
+     * @param $iin
+     * @return mixed
+     */
+    public function firstClientByIin($iin);
+
 }

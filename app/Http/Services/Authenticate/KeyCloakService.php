@@ -14,7 +14,7 @@ class KeyCloakService implements KeyCloakServiceInterface
     protected $urlInfo = 'http://192.168.30.31:8022/auth/realms/MyCent/protocol/openid-connect/userinfo';
     protected $urlRegister = 'http://192.168.30.31:8022/auth/admin/realms/MyCent/users';
     protected $keyCloakMasterEmail =  'Master@mycent.kz';
-    protected $keyCloakMasterPassword = 'MyCent!2@#';
+    protected $keyCloakMasterPassword = 'MyCent!2@#1';
     protected $headers = [
         'content-type' => 'application/x-www-form-urlencoded',
         'Accept' => 'application/json',

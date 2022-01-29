@@ -60,15 +60,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param $iin
-     * @return mixed
-     */
-    public function firstClientByIin($iin)
-    {
-        return $this->model->firstWhere('iin', $iin);
-    }
-
-    /**
      * @param $username
      * @return mixed
      */

@@ -48,4 +48,13 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
     {
         return $this->model->firstWhere('id', $id);
     }
+
+    /**
+     * @param $iin
+     * @return mixed
+     */
+    public function firstClientByIin($iin)
+    {
+        return $this->model->firstWhere('iin', $iin);
+    }
 }

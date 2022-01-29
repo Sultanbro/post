@@ -33,12 +33,6 @@ interface UserRepositoryInterface extends EloquentRepositoryInterface
     public function getUserByUsername($username);
 
     /**
-     * @param $iin
-     * @return mixed
-     */
-    public function firstClientByIin($iin);
-
-    /**
      * @param $username
      * @return mixed
      */

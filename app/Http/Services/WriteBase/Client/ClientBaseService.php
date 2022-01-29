@@ -132,11 +132,21 @@ class ClientBaseService implements ClientBaseServiceInterface
                         }
                 }
                 if ($client['type_id'] == 3 or $client['type_id'] == 4) {
-                    if ($clientModel = $this->userRepository->firstClientByIin($client['iin'])) {
-                        $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                    if ($userModel = $this->userRepository->getByForeignIdAndCompany_id($client['foreign_id'], $client['company_id'])) {
+                        $this->userRepository->update($userModel->id, array_merge($client, $user_make));
+                        $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
+                        unset($client['company_id']);
+                        $this->clientRepository->update($userModel->client_id, array_merge($client, $user_make));
+                        $result[$client['foreign_id']] = ['this user in base'];
                     }else{
-                        if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
+                        if ($clientModel = $this->clientRepository->firstClientByIin($client['iin'])) {
                             $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                        } else {
+                            unset($client['company_id']);
+                            $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
+                            if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
+                                $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                            }
                         }
                     }
                 }
@@ -216,7 +226,7 @@ class ClientBaseService implements ClientBaseServiceInterface
             $client_info['username'] = $this->createUsername(stristr($client_info['email'], '@', true));
 
             if ($cloak = $this->cloakService->registerUser($client_info['email'], $client_info['first_name'], $client_info['parent_name'], $client_info['username'])) {
-                $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id, 'password' => $password, 'username' => $client_info['username']], $client_info));
+                $this->userRepository->create(array_merge(['department_id' => $parent_foreign_id, 'password' => $password, 'username' => $client_info['username'], 'client_id' => $clientModel_id], $client_info));
                 return 'ok';
             }
 
@@ -236,9 +246,9 @@ class ClientBaseService implements ClientBaseServiceInterface
     {
         if ($this->userRepository->firstUserByUsername($username)) {
             $var++;
-            $this->createUsername($username, $var);
+            $username = $this->createUsername($username.$var, $var);
         }
-        return $username.$var;
+        return $username;
     }
 
 
