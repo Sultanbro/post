@@ -29,7 +29,6 @@ class Client extends Model
         'updated_by',
         'created_by',
         'foreign_id',
-        'company_id',
     ];
 
     public function user()

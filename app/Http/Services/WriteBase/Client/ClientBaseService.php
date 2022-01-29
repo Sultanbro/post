@@ -135,14 +135,12 @@ class ClientBaseService implements ClientBaseServiceInterface
                     if ($userModel = $this->userRepository->getByForeignIdAndCompany_id($client['foreign_id'], $client['company_id'])) {
                         $this->userRepository->update($userModel->id, array_merge($client, $user_make));
                         $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
-                        unset($client['company_id']);
                         $this->clientRepository->update($userModel->client_id, array_merge($client, $user_make));
                         $result[$client['foreign_id']] = ['this user in base'];
                     }else{
                         if ($clientModel = $this->clientRepository->firstClientByIin($client['iin'])) {
                             $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
                         } else {
-                            unset($client['company_id']);
                             $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
                             if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
                                 $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);

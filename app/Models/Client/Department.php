@@ -17,6 +17,8 @@ class Department extends Model
         'is_company',
         'created_by',
         'updated_by',
+        'company_id',
+        'foreign_id',
         'id',
     ];
 
