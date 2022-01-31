@@ -54,4 +54,11 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
         return $this->model->where('id', $company_id)->get();
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function firstWhereForeignIdCompanyId($foreign_id, $company_id)
+    {
+        return $this->model->whereForeign_idAndCompany_id($foreign_id, $company_id)->first();
+    }
 }

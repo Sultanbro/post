@@ -4,6 +4,8 @@
 namespace App\Http\Services\WriteBase\Client;
 
 
+use App\Http\Services\Authenticate\KeyCloakServiceInterface;
+use App\Models\Avatar;
 use App\Repository\Client\ClientContact\ClientContactRepositoryInterface;
 use App\Repository\Client\ClientRepositoryInterface;
 use App\Repository\Client\Department\DepartmentRepositoryInterface;
@@ -12,12 +14,16 @@ use App\Repository\Reference\City\CityRepositoryInterface;
 use App\Repository\Reference\Dicti\DictiRepositoryInterface;
 use App\Repository\Reference\Region\RegionRepositoryInterface;
 use App\Repository\User\Employee\EmployeeRepositoryInterface;
+use App\Repository\User\UserDetailsRepository;
 use App\Repository\User\UserRepositoryInterface;
 use http\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use phpDocumentor\Reflection\Types\This;
+use const http\Client\Curl\Features\HTTP2;
 
 class ClientBaseService implements ClientBaseServiceInterface
 {
@@ -57,6 +63,14 @@ class ClientBaseService implements ClientBaseServiceInterface
      * @var EOrderRepositoryInterface
      */
     private $eOrderRepository;
+    /**
+     * @var KeyCloakServiceInterface
+     */
+    private $cloakService;
+    /**
+     * @var UserDetailsRepository
+     */
+    private $userDetailsRepository;
 
     /**
      * @param ClientRepositoryInterface $clientRepository
@@ -68,9 +82,23 @@ class ClientBaseService implements ClientBaseServiceInterface
      * @param CityRepositoryInterface $cityRepository
      * @param RegionRepositoryInterface $regionRepository
      * @param EOrderRepositoryInterface $eOrderRepository
+     * @param KeyCloakServiceInterface $cloakService
+     * @param UserDetailsRepository $userDetailsRepository
      */
-    public function __construct(ClientRepositoryInterface $clientRepository, DepartmentRepositoryInterface $departmentRepository, UserRepositoryInterface $userRepository, DictiRepositoryInterface $dictiRepository, ClientContactRepositoryInterface $clientContactRepository, EmployeeRepositoryInterface $employeeRepository, CityRepositoryInterface $cityRepository, RegionRepositoryInterface $regionRepository, EOrderRepositoryInterface $eOrderRepository)
+    public function __construct(ClientRepositoryInterface $clientRepository,
+                                DepartmentRepositoryInterface $departmentRepository,
+                                UserRepositoryInterface $userRepository,
+                                DictiRepositoryInterface $dictiRepository,
+                                ClientContactRepositoryInterface $clientContactRepository,
+                                EmployeeRepositoryInterface $employeeRepository,
+                                CityRepositoryInterface $cityRepository,
+                                RegionRepositoryInterface $regionRepository,
+                                EOrderRepositoryInterface $eOrderRepository,
+                                KeyCloakServiceInterface $cloakService,
+                                UserDetailsRepository $userDetailsRepository)
     {
+        $this->userDetailsRepository = $userDetailsRepository;
+        $this->cloakService = $cloakService;
         $this->eOrderRepository = $eOrderRepository;
         $this->regionRepository = $regionRepository;
         $this->cityRepository = $cityRepository;
@@ -84,40 +112,50 @@ class ClientBaseService implements ClientBaseServiceInterface
 
     public function saveClients($clients)
     {
-        $user_make = ['created_by' => Auth::id(), 'updated_by' => Auth::id(), 'password' => 12345678];
+        $user_make = ['created_by' => Auth::id(), 'updated_by' => Auth::id()];
+//        $result['request'] = $clients;
 
-        foreach ($clients as $client) {
+        try {
+
+            foreach ($clients as $client) {
 //            return $this->clientRepository->firstWhereForeignId($client['parent_foreign_id'], $client['company_id']);
-            $client_info = array_merge($user_make, $client);
-            if ($parent_foreign = $this->clientRepository->firstWhereForeignId($client['parent_foreign_id'], $client['company_id'])) {
-                if ($clientModel = $this->clientRepository->firstWhereForeignId($client['foreign_id'], $client['company_id'])) {
-                    if ($clientModel->type_id == 1) {
-
-                        $result[$client['foreign_id']] = $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
-
-                    }
-                    if ($clientModel->type_id == 2 or $clientModel->type_id == 3) {
-
-                        $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
-
-                    }
-                } else {
-                    $client['address'] = json_encode($client['address']);
-                    if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
-
-                        if ($clientModel->type_id == 1) {
-
-                            $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
+                $client_info = array_merge($user_make, $client);
+                if ($parent_foreign = $this->departmentRepository->firstWhereForeignIdCompanyId($client['parent_foreign_id'], $client['company_id'])) {
+                if ($client['type_id'] == 2) {
+                        if (!$departmentModel = $this->departmentRepository->firstWhereForeignIdCompanyId($client['foreign_id'], $client['company_id'])) {
+                            $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
+                            if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
+                                $result[$client['foreign_id']] = $this->saveDepartment($clientModel->id, $parent_foreign->id, $client_info, $user_make);
+                            }
+                        }else{
+                            $result[$client['foreign_id']] = ['client' => 'is in a base'];
                         }
-                        if ($clientModel->type_id == 2 or $clientModel->type_id == 3) {
-
-                            $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                }
+                if ($client['type_id'] == 3 or $client['type_id'] == 4) {
+                    if ($userModel = $this->userRepository->getByForeignIdAndCompany_id($client['foreign_id'], $client['company_id'])) {
+                        $this->userRepository->update($userModel->id, array_merge($client, $user_make));
+                        $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
+                        $this->clientRepository->update($userModel->client_id, array_merge($client, $user_make));
+                        $result[$client['foreign_id']] = ['this user in base'];
+                    }else{
+                        if ($clientModel = $this->clientRepository->firstClientByIin($client['iin'])) {
+                            $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                        } else {
+                            $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
+                            if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
+                                $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                            }
                         }
                     }
                 }
-            } else {
-                $result[] = $client;
+                }else{
+                    $result[$client['foreign_id']] = ['is not found parent id'];
+                }
+
             }
+        }
+        catch (\Exception $exception) {
+            return $exception;
         }
         if ($result) {
             return response()->json($result);
@@ -134,37 +172,83 @@ class ClientBaseService implements ClientBaseServiceInterface
      */
     public function saveUsers($client_info, $parent_foreign_id, $clientModel_id, $user_make)
     {
-        if ($model = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['duty_id'], $client_info['company_id'])) {
+        try {
+            if ($model = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['duty_id'], $client_info['company_id'])) {
 
-            $client_info['duty_id'] = $model->id;
-        } else {
-            $client_info['duty_id'] = 6;
+                $client_info['duty_id'] = $model->id;
+            } else {
+                $client_info['duty_id'] = 6;
+            }
+
+                $result['user'] = $this->registerUser($clientModel_id, $parent_foreign_id, $client_info);
+
+            if (isset($client_info['contact'])) {
+                $result['contact'] = $this->saveContact($client_info, $clientModel_id, $user_make);
+            }
+
+            if (isset($client_info['employee'])) {
+                if (!$this->employeeRepository->firstById($clientModel_id)) {
+                    $city_id = $this->cityRepository->firstForeignCompanyId($client_info['city_id'], $client_info['company_id'])->id;
+                    $region_id = $this->regionRepository->firstByForeignIdCompanyId($client_info['region_id'], $client_info['company_id'])->id;
+                    $country_id = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['country_id'], $client_info['company_id'])->id;
+                    $client_info['employee']['nation_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['nation_id'], $client_info['company_id'])->id;
+                    $client_info['employee']['science_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['science_id'], $client_info['company_id'])->id;
+                    $this->employeeRepository->create(array_merge(array_merge(['id' => $clientModel_id, 'city_id' => $city_id, 'region_id' => $region_id, 'country_id' => $country_id], $client_info['employee']), $user_make));
+                    $result['employee'] = ['ok'];
+                } else {
+                    $result['employee'] = ['message' => 'this is in the base'];
+                }
+            }
+            return $result;
+        }catch (\Exception $e) {
+            return $e;
         }
-
-        if (!$this->userRepository->userById($clientModel_id)) {
-
-            $this->userRepository->create(array_merge(['id' => $clientModel_id, 'department_id' => $parent_foreign_id], $client_info));
-            $result['user'] = ['ok'];
-        } else {
-            $result['user'] = ['message' => 'this is in the base'];
-        }
-
-        $result['contact'] = $this->saveContact($client_info, $clientModel_id, $user_make);
-
-        if (!$this->employeeRepository->firstById($clientModel_id)) {
-            $city_id = $this->cityRepository->firstForeignCompanyId($client_info['city_id'], $client_info['company_id'])->id;
-            $region_id = $this->regionRepository->firstByForeignIdCompanyId($client_info['region_id'], $client_info['company_id'])->id;
-            $country_id = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['country_id'], $client_info['company_id'])->id;
-            $client_info['employee']['nation_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['nation_id'], $client_info['company_id'])->id;
-            $client_info['employee']['science_id'] = $this->dictiRepository->firstWhereForeignIdCompanyId($client_info['employee']['science_id'], $client_info['company_id'])->id;
-            $this->employeeRepository->create(array_merge(array_merge(['id' => $clientModel_id, 'city_id' => $city_id, 'region_id' => $region_id, 'country_id' => $country_id], $client_info['employee']), $user_make));
-            $result['employee'] = ['ok'];
-        } else {
-            $result['employee'] = ['message' => 'this is in the base'];
-        }
-        return $result;
 
     }
+
+    /**
+     * @param $clientModel_id
+     * @param $parent_foreign_id
+     * @param $client_info
+     * @param null $password
+     * @return \Exception|mixed|string
+     */
+    public function registerUser($clientModel_id, $parent_foreign_id, $client_info, $password = null)
+    {
+        try {
+            if (is_null($password)) {
+                $password = Str::random(9);
+            }
+
+            $client_info['email'] = mb_strtolower($client_info['email']);
+            $client_info['username'] = $this->createUsername(stristr($client_info['email'], '@', true));
+
+            if ($cloak = $this->cloakService->registerUser($client_info['email'], $client_info['first_name'], $client_info['parent_name'], $client_info['username'])) {
+                $this->userRepository->create(array_merge(['department_id' => $parent_foreign_id, 'password' => $password, 'username' => $client_info['username'], 'client_id' => $clientModel_id], $client_info));
+                return 'ok';
+            }
+
+            return $cloak;
+        }catch (\Exception $exception) {
+            return $exception;
+        }
+
+    }
+
+    /**
+     * @param $username
+     * @param int $var
+     * @return string
+     */
+    public function createUsername($username, $var = 0)
+    {
+        if ($this->userRepository->firstUserByUsername($username)) {
+            $var++;
+            $username = $this->createUsername($username.$var, $var);
+        }
+        return $username;
+    }
+
 
     /**
      * @param $clientModel_id
@@ -184,7 +268,9 @@ class ClientBaseService implements ClientBaseServiceInterface
             $result['department'] = ['message' => 'this is in the base'];
         }
 
-        $result['contact'] = $this->saveContact($client_info, $clientModel_id, $user_make);
+        if (isset($client_info['contact'])) {
+            $result['contact'] = $this->saveContact($client_info, $clientModel_id, $user_make);
+        }
 
         return $result;
     }
@@ -289,9 +375,46 @@ class ClientBaseService implements ClientBaseServiceInterface
      */
     public function saveAvatar($req, $user_id)
     {
+        try {
+            if (isset($req['url'])) {
+                $content = file_get_contents($req['url']);
+                $fileName = basename($req['url']);
+                Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
+                Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
+                return [$req['foreign_id'] => 'ok'];
+            }elseif (isset($req['file'])) {
+                $content = file_get_contents($req['file']->getRealPath());
+                $fileName = $req['file']->getClientOriginalName();
+                Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
+                Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
+                return [$req['foreign_id'] => 'ok'];
+            }elseif (isset($req['basefile'])) {
+                $content = base64_decode($req['basefile']);
+                $fileName = $req['filename'];
+                Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
+                Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
+                return [$req['foreign_id'] => 'ok'];
 
-        $content = file_get_contents($req['file']->getRealPath());
-        Storage::disk('local')->put("public/avatars/" . $user_id . ".jpeg", $content);
-        return [$req['foreign_id'] => 'ok'];
+            }
+            return 'not storage';
+        }catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    /**
+     * @param $params
+     * @return \Illuminate\Database\Eloquent\Model|mixed
+     */
+    public function userDetails($params)
+    {
+        if ($user = $this->userRepository->getByForeignIdAndCompany_id($params['foreign_id'], $params['company_id'])) {
+            $params['user_id'] = $user->id;
+            $params['user_info'] = json_encode($params['user_info']);
+            if ($detail = $this->userDetailsRepository->getByForeignId($user->id)) {
+                return $this->userDetailsRepository->update($detail->id, $params);
+            }
+            return $this->userDetailsRepository->create($params);
+        }
     }
 }

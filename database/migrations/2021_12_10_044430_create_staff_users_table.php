@@ -28,7 +28,7 @@ class CreateStaffUsersTable extends Migration
             $table->integer('company_id')->comment('Компания');
             $table->integer('created_by')->index();
             $table->integer('updated_by')->comment('автор изменения')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

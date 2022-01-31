@@ -174,6 +174,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TelescopeServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
         App\Providers\KeyCloakServiceProvider::class,
         App\Providers\PostServiceProvide::class,
@@ -186,7 +187,8 @@ return [
         App\Providers\CareerServiceProvide::class,
         App\Providers\StaffServiceProvide::class,
         App\Providers\UserServiceProvider::class,
-        App\Providers\BookingServiceProvider::class
+        App\Providers\BookingServiceProvider::class,
+        App\Providers\EmailServiceProvider::class
     ),
 
     /*

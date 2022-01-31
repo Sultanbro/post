@@ -58,4 +58,48 @@ class Post extends Model
         return $this->hasMany(Comment::class, 'post_id', 'id')->whereNull('parent_id')->take(3);
     }
 
+    public function scopeCompany($query, $company_id)
+    {
+        if (!is_null($company_id)) {
+            return $query->where('company_id', $company_id);
+        }else{
+            return $query->where('company_id', Auth::user()->company_id);
+        }
+
+        return $query;
+    }
+
+    public function scopeDate($query, $date)
+    {
+        if (!is_null($date)) {
+            if ($date == 'old') {
+                return $query;
+            }
+            if ($date == 'new') {
+                return $query->latest();
+            }
+        }
+
+        return $query;
+    }
+
+    public function scopeUserLiked($query, $params)
+    {
+        if (!is_null($params)) {
+            $posts_id = Like::where('type', 1)->whereUserId(Auth::id())->select('parent_id')->get();
+                return $query->whereIn('id', $posts_id);
+        }
+
+        return $query;
+    }
+
+    public function scopeScan($query, $params)
+    {
+        if (!is_null($params)) {
+            return $query->where('content', 'like', "%$params%");
+        }
+
+        return $query;
+    }
+
 }

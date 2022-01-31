@@ -16,7 +16,7 @@ class CreateBranchesTable extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
             $table->string('full_name', 400);
-            $table->foreignId('user_id')->index()->constrained();
+            $table->integer('user_id')->index();
             $table->unsignedBigInteger('foreign_id')->index()->nullable();
             $table->unsignedBigInteger('parent_id')->index();
             $table->foreign('parent_id')->references('id')->on('departments');
@@ -24,7 +24,7 @@ class CreateBranchesTable extends Migration
             $table->boolean('is_human')->default(true);
             $table->unsignedBigInteger('updated_by')->index();
             $table->unsignedBigInteger('created_by')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 
@@ -36,8 +36,7 @@ class CreateBranchesTable extends Migration
     public function down()
     {
         Schema::table('branches', function (Blueprint $table) {
-            $table->dropIndex('branches_foreign_id_index');
-            $table->dropForeign( 'branches_user_id_foreign') ;
+//            $table->dropIndex('branches_foreign_id_index');
             $table->dropIndex('branches_user_id_index');
             $table->dropForeign('branches_parent_id_foreign');
             $table->dropIndex('branches_parent_id_index');

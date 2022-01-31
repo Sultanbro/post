@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Client\TreeResource;
+use App\Http\Resources\User\BDayResource;
 use App\Http\Resources\User\CareerResource;
 use App\Http\Resources\User\InfoInPeriodResource;
 use App\Http\Resources\UserResource;
@@ -13,8 +14,10 @@ use App\Repository\Client\ClientRepositoryInterface;
 use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\Client\EOrder\EOrderRepositoryInterface;
 use App\Repository\User\UserRepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -107,6 +110,9 @@ class UserController extends Controller
         //
     }
 
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function clientTree()
     {
         if (Auth::user()->token->role_id == 1) {
@@ -115,4 +121,17 @@ class UserController extends Controller
         return TreeResource::collection($this->departmentRepository->getParentDepartmentByCompanyId(Auth::user()->company_id));
 
     }
+
+    public function getBDay(Request $request)
+    {
+        return BDayResource::collection($this->clientRepository->getComingBDay($request->company_id));
+    }
+
+    public function getUser()
+    {
+        $user_auth = Auth()->user();
+        unset($user_auth['password']);
+        return $user_auth;
+    }
+
 }

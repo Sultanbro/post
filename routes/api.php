@@ -38,14 +38,12 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::get('user', function (Request $request) {
-    return  Auth()->user();
-});
 
 //Auth route
 Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/login', [LoginController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/logout', [LogoutController::class, 'index'])->middleware('auth.bearer');
+Route::post('/reset/', [RegisterController::class, 'resetPassword'])->withoutMiddleware('auth.bearer');
 
 //Rest api route
 Route::post('/clients/info/accept', [ClientBaseController::class, 'acceptClientInfo']);
@@ -57,21 +55,26 @@ Route::post('/duty/info/accept', [DutyController::class, 'saveDuties']);
 Route::post('/staff/info/accept', [StaffController::class, 'saveStaff']);
 Route::post('/career/info/accept', [CareerUserController::class, 'saveCareer']);
 Route::post('/avatar', [ClientBaseController::class, 'acceptAvatar']);
+Route::post('user/details/accept', [ClientBaseController::class, 'userDetails']);
 
 //Post route
 Route::resource('posts', PostController::class);
 Route::resource('comments', CommentController::class);
 Route::resource('likes', LikeController::class);
+Route::get('/filter/posts',[PostController::class, 'getFilter']);
 
 //Command route
 Route::get('/command/', [CommandController::class, 'command'])->withoutMiddleware('auth.bearer');
 
 //User route
+Route::get('user', [UserController::class, 'getUser']);
 Route::resource('user/info',UserController::class)->middleware('auth.bearer');
 Route::get('/client/tree', [UserController::class, 'clientTree']);
+Route::get('/birthday/', [UserController::class, 'getBDay']);
 
 //Email route
-Route::post('send/email', [EmailController::class, 'sendEmail']);
+Route::post('send/email/reset/password', [EmailController::class, 'sendResetPasswordEmail']);
+Route::post('email/save/file', [EmailController::class, 'saveFile']);
 
 //Booking route
 Route::resource('rooms',RoomController::class);

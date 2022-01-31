@@ -29,40 +29,6 @@ services:
     depends_on:
       - db
 
-    environment: &env
-      APP_DEBUG: "true"
-      APP_KEY: "base64:SaYfcUjht1j8/4uJ810xTHG46S/yLjQ/AkYPJJWhsNQ="
-      APP_ENV: "production"
-      APP_URL: "http://192.168.30.31:4444/"
-
-      DB_CONNECTION: "pgsql"
-      DB_HOST: "pg"
-      DB_USERNAME: "postgres"
-      DB_PASSWORD: "DVLkjNwEDZ9xMRPjG33b"
-      DB_PORT: "5432"
-      DB_DATABASE: "mycent_prod"
-
-      REDIS_HOST: "redis"
-      CACHE_DRIVER: "file"
-      QUEUE_CONNECTION: "database"
-
-      MAIL_MAILER: "smtp"
-      MAIL_HOST: "mailtrap"
-      MAIL_PORT: "25"
-      MAIL_USERNAME: "mailtrap"
-      MAIL_PASSWORD: "mailtrap"
-      MAIL_ENCRYPTION: "null"
-      MAIL_FROM_ADDRESS: "laravel@mycompany.com"
-      MAIL_FROM_NAME: "Laravel"
-
-      FRONTEND_DOMAIN: "mycent.kz"
-
-      # KIAS_URL: "http://192.168.1.26:8083/kiassvctest/kiassvc.asmx?wsdl"
-      # KIAS_LOGIN: "MyCIC"
-      # KIAS_PASSWORD: "mycickz321"
-
-      DEVELOPMENT_KEY: "123456789"
-
 ##############################################################################
 
   frontend:
@@ -97,6 +63,33 @@ services:
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
 
+  pg-backup:
+    # https://stackoverflow.com/questions/24718706/backup-restore-a-dockerized-postgresql-database
+    # https://github.com/prodrigestivill/docker-postgres-backup-local
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    user: postgres:postgres # Optional: see below
+    volumes:
+        - /var/data/mycent/prod/backups:/backups
+    links:
+        - pg
+    depends_on:
+        - pg
+    environment:
+        - POSTGRES_HOST=postgres
+        - POSTGRES_DB=database
+        # or root
+        - POSTGRES_USER=admin
+        - POSTGRES_PASSWORD=DVLkjNwEDZ9xMRPjG33b
+        #  - POSTGRES_PASSWORD_FILE=/run/secrets/db_password <-- alternative for POSTGRES_PASSWORD (to use with docker secrets)
+        - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+        - SCHEDULE=@every 2h30m00s
+        - BACKUP_KEEP_DAYS=7
+        - BACKUP_KEEP_WEEKS=4
+        - BACKUP_KEEP_MONTHS=6
+        - HEALTHCHECK_PORT=8080
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
 ##############################################################################
 
   pgadmin:

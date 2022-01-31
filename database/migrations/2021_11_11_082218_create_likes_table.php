@@ -17,7 +17,8 @@ class CreateLikesTable extends Migration
             $table->id();
             $table->integer('parent_id');
             $table->integer('type')->comment('1 - post, 2 - comment');
-            $table->timestamps();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->timestampsTz();
         });
     }
 

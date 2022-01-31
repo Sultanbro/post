@@ -6,6 +6,9 @@ namespace App\Repository\Client;
 
 use App\Models\Client\Client;
 use App\Repository\Eloquent\BaseRepository;
+use Carbon\Carbon;
+use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Facades\DB;
 
 class ClientRepository extends BaseRepository implements ClientRepositoryInterface
 {
@@ -30,4 +33,28 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
     }
 
 
+    /**
+     * @return mixed
+     */
+    public function getComingBDay($company_id)
+    {
+        return $this->model->birthDayBetween(Carbon::now())->company($company_id)->whereIn('type_id', [3, 4])->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function firstById($id)
+    {
+        return $this->model->firstWhere('id', $id);
+    }
+
+    /**
+     * @param $iin
+     * @return mixed
+     */
+    public function firstClientByIin($iin)
+    {
+        return $this->model->firstWhere('iin', $iin);
+    }
 }

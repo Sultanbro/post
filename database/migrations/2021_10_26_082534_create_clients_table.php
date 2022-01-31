@@ -28,9 +28,10 @@ class CreateClientsTable extends Migration
             $table->json('address')->nullable();
             $table->unsignedBigInteger('type_id')->index();
             $table->date('birthday')->index()->nullable();
+            $table->integer('foreign_id')->index()->nullable();
             $table->unsignedBigInteger('updated_by')->index();
             $table->unsignedBigInteger('created_by')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

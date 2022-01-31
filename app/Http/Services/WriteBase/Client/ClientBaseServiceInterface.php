@@ -30,4 +30,17 @@ interface ClientBaseServiceInterface
      * @return mixed
      */
     public function saveAvatar($req, $user_id);
+
+    /**
+     * @param $params
+     * @return mixed
+     */
+    public function userDetails($params);
+
+    /**
+     * @param $username
+     * @param int $var
+     * @return mixed
+     */
+    public function createUsername($username, $var = 0);
 }

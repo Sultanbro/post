@@ -14,7 +14,7 @@ class CreateEmployeesTable extends Migration
     public function up()
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->foreignId('id')->comment('Связка с clients id')->constrained('clients')->onDelete('cascade');
+            $table->foreignId('id')->comment('Связка с users id')->constrained('users')->onDelete('cascade');
             $table->foreignId('nation_id')->index()->comment('Нацианальность.  Связка с dictis_id')->nullable()->constrained('dictis')->nullOnDelete();
             $table->foreignId('science_id')->index()->comment('Ученая степень.  Связка с dictis_id')->nullable()->constrained('dictis')->nullOnDelete();
             $table->string('personal_file')->nullable()->comment('Личное дело');
@@ -31,7 +31,7 @@ class CreateEmployeesTable extends Migration
             $table->date('date_release')->nullable()->comment('Дата увольнения');
             $table->integer('created_by')->index();
             $table->integer('updated_by')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

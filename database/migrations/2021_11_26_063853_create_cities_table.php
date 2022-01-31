@@ -16,6 +16,7 @@ class CreateCitiesTable extends Migration
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->integer('foreign_id')->index()->comment('Первичный ключ от КИАС');
+            $table->integer('parent_id')->index()->nullable()->comment('Город для населенного пункта');
             $table->foreignId('region_id')->nullable()->index()->comment('Регион')->constrained()->nullOnDelete();
             $table->foreignId('country_id')->index()->comment('Страна')->constrained('dictis')->onDelete('cascade');
             $table->boolean('active')->default(true)->comment('Признак активности');
@@ -26,7 +27,7 @@ class CreateCitiesTable extends Migration
             $table->integer('company_id')->index();
             $table->integer('created_by')->index();
             $table->integer('updated_by')->index();
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 

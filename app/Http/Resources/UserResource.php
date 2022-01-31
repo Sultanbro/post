@@ -20,14 +20,31 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $temp_details = '{
+                            "duty": "Не заполнено",
+                            "city": "Казахстан",
+                            "married": "Не заполнено",
+                            "edu": "Не заполнено",
+                            "pro": "Не заполнено",
+                            "datebeg": null,
+                            "dateend": 0,
+                            "countdays": 0,
+                            "contactmail": "Не заполнено",
+                            "workphone": "0",
+                            "mobilephone": null,
+                            "insidephone": null,
+                            "AdmDays": 0,
+                            "carier": null,
+                            "vacation": null,
+                            "admin": null
+                            }';
         return [
             'id' => $this->id,
             'email' => $this->email,
-            'department' => new DepartmentResource($this->userDepartment),
+            'avatar' => $this->avatar,
+//            'department' => new DepartmentResource($this->userDepartment),
             'user_info' => new ClientResource($this->clientInfo),
-            'user_contact' => new UserContactResource($this->clientContact),
-            'user_career' => CareerResource::collection($this->career),
-            'user_vacation' => VacationResource::collection($this->vacation),
+            'user_detail' => isset($this->details->user_info) ? json_decode($this->details->user_info) : json_decode($temp_details),
         ];
     }
 }

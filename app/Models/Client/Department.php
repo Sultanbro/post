@@ -17,6 +17,8 @@ class Department extends Model
         'is_company',
         'created_by',
         'updated_by',
+        'company_id',
+        'foreign_id',
         'id',
     ];
 
@@ -27,6 +29,6 @@ class Department extends Model
 
     public function users()
     {
-        return $this->hasManyThrough(Client::class, User::class, 'department_id', 'id', 'id');
+        return $this->hasManyThrough(Client::class, User::class, 'department_id', 'id', 'id')->whereIn('type_id', [3,4]);
     }
 }

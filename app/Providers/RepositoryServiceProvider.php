@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 
+use App\Repository\CentcoinApplyRepositoryInterface;
+use App\Repository\CentcoinRepositoryInterface;
 use App\Repository\Booking\BookingRepository;
 use App\Repository\Booking\BookingRepositoryInterface;
 use App\Repository\Booking\BookingUsers\BookingUsersRepository;
@@ -18,6 +20,8 @@ use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\Client\EOrder\EOrderRepository;
 use App\Repository\Client\EOrder\EOrderRepositoryInterface;
 use App\Repository\Eloquent\BaseRepository;
+use App\Repository\Eloquent\CentcoinApplyRepository;
+use App\Repository\Eloquent\CentcoinRepository;
 use App\Repository\Eloquent\EloquentRepositoryInterface;
 use App\Repository\Post\Comment\CommentRepository;
 use App\Repository\Post\Comment\CommentRepositoryInterface;
@@ -41,6 +45,8 @@ use App\Repository\User\Employee\EmployeeRepository;
 use App\Repository\User\Employee\EmployeeRepositoryInterface;
 use App\Repository\User\Staff\StaffUserRepository;
 use App\Repository\User\Staff\StaffUserRepositoryInterface;
+use App\Repository\User\UserDetailsRepository;
+use App\Repository\User\UserDetailsRepositoryInterface;
 use App\Repository\User\UserRepository;
 use App\Repository\User\UserRepositoryInterface;
 use App\Repository\User\UserTokenRepository;
@@ -74,6 +80,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(DutyRepositoryInterface::class, DutyRepository::class);
         $this->app->bind(CareerUserRepositoryInterface::class, CareerUserRepository::class);
         $this->app->bind(StaffUserRepositoryInterface::class, StaffUserRepository::class);
+        $this->app->bind(CentcoinRepositoryInterface::class, CentcoinRepository::class);
+        $this->app->bind(CentcoinApplyRepositoryInterface::class, CentcoinApplyRepository::class);
+        $this->app->bind(UserDetailsRepositoryInterface::class, UserDetailsRepository::class);
         $this->app->bind(BookingRepositoryInterface::class,BookingRepository::class);
         $this->app->bind(RoomRepositoryInterface::class,RoomRepository::class);
         $this->app->bind(BookingUsersRepositoryInterface::class,BookingUsersRepository::class);

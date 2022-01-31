@@ -53,5 +53,11 @@ interface EloquentRepositoryInterface
      * @return mixed
      */
     public function firstOrCreate(array $attributes);
+
+    /**
+     * @param array $attributes
+     * @return mixed
+     */
+    public function createOrUpdate(array $attributes);
 }
 
