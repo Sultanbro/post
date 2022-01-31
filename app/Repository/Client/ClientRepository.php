@@ -5,6 +5,7 @@ namespace App\Repository\Client;
 
 
 use App\Models\Client\Client;
+use App\Models\ClientView;
 use App\Repository\Eloquent\BaseRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Expression;
@@ -38,7 +39,9 @@ class ClientRepository extends BaseRepository implements ClientRepositoryInterfa
      */
     public function getComingBDay($company_id)
     {
-        return $this->model->birthDayBetween(Carbon::now())->company($company_id)->whereIn('type_id', [3, 4])->get();
+        $clientView = new ClientView();
+        return $clientView->birthDayBetween(Carbon::now())->company($company_id)->whereIn('type_id', [3, 4])->get();
+//        return $this->model->birthDayBetween(Carbon::now())->whereIn('type_id', [3, 4])->get();
     }
 
     /**
