@@ -103,6 +103,7 @@ class UserAuthService implements UserAuthServiceInterface
     public function login($username, $password)
     {
         $user = $this->userRepository->getUserByUsername($username);
+        unset($user['password']);
 
         if($username == 'master@mail.uz') {
             return $this->saveUserToken($user, [ 'access_token' => 'test_access_token', 'refresh_token' => 'test_refresh_token']);
