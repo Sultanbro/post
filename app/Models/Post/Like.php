@@ -18,6 +18,6 @@ class Like extends Model
 
     public function likeUser()
     {
-        return $this->hasOneThrough(Client::class, User::class, 'id', 'id', 'user_id', 'client_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

@@ -23,7 +23,7 @@ class Comment extends Model
 
     public function commentUser()
     {
-        return $this->hasOneThrough(Client::class, User::class, 'id', 'id', 'user_id', 'client_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     public function countLike()
