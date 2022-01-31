@@ -33,10 +33,10 @@ class BDayResource extends JsonResource
         );
         return [
             'id' => $this->id,
-            'full_name' => $this->full_name,
-            'birthday' => date_format( date_create($this->birthday), 'd') .' '. $_monthsList[date_format( date_create($this->birthday), 'm')],
-            'department' => new DepartmentResource($this->user->userDepartment),
-            'avatar' => $this->avatar,
+            'full_name' => $this->client->full_name,
+            'birthday' => date_format( date_create($this->client->birthday), 'd') .' '. $_monthsList[date_format( date_create($this->client->birthday), 'm')],
+            'department' => new DepartmentResource($this->userDepartment),
+            'avatar' => $this->client->avatar,
         ];
     }
 }

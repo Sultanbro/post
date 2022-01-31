@@ -31,9 +31,9 @@ class Client extends Model
         'foreign_id',
     ];
 
-    public function user()
+    public function users()
     {
-        return $this->hasOne(User::class,'id', 'id');
+        return $this->hasMany(User::class,'client_id', 'id');
     }
 
     public function avatar()
