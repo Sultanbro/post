@@ -34,8 +34,8 @@ class SendEmail extends Mailable
         $email = $this->from(env('MAIL_FROM'), env('MAIL_FROM_NAME'))
             ->subject('Уведомление с портала mycent.kz')
             ->replyTo(env('MAIL_REPLY_TO'))
-            ->view('email.email', compact('content'))
-            ->attach(public_path() . '/storage/email/Инструкция регистрации-авторизации mycent kz.pdf');
+            ->view('email.email', compact('content'));
+//            ->attach(public_path() . '/storage/email/Инструкция регистрации-авторизации mycent kz.pdf');
 
         return $email;
 

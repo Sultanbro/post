@@ -3,6 +3,7 @@
 namespace App\Models\Post;
 
 use App\Models\Client\Client;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,7 @@ class Post extends Model
 
     public function postsUser()
     {
-        return $this->hasOne(Client::class, 'id', 'user_id');
+        return $this->hasOneThrough(Client::class, User::class);
     }
 
     public function postFiles()

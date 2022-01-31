@@ -17,4 +17,12 @@ class EmailPasswordResetRepository extends BaseRepository implements EmailPasswo
         $this->model = $model;
     }
 
+    /**
+     * @param $user_id
+     * @return mixed
+     */
+    public function firstByUserId($user_id)
+    {
+        return $this->model->firstWhere('user_id', $user_id);
+    }
 }
