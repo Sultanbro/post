@@ -53,7 +53,9 @@ class EmailService implements EmailServiceInterface
     public function sendResetPasswordEmail($params)
     {
         $result = [];
-        if ($params['user'] == 'all') {
+        if ($params['foreign_id']) {
+            $users[] = $this->userRepository->getByForeignIdAndCompany_id($params['foreign_id'], $params['company_id']);
+        }elseif ($params['user'] == 'all') {
             $users = $this->userRepository->all();
         }elseif (is_array($params['user'])) {
             foreach ($params['user'] as $user) {
