@@ -30,7 +30,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        return RoomResource::collection($this->roomRepository->all());
+        return RoomResource::collection($this->roomRepository->all()->where('company_id',Auth::user()->company_id));
     }
 
     /**
@@ -59,7 +59,7 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        if($this->roomRepository->find($id)){
+        if($this->roomRepository->find($id)->company_id === Auth::user()->company_id){
             return response()->json(['success' => true, 'data' => $this->roomRepository->find($id)], 200);
         } else {
             return response()->json(['message' => 'This room not found for show','error' => 'Enter correct id'], 404);
