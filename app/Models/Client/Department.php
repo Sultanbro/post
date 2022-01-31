@@ -29,6 +29,6 @@ class Department extends Model
 
     public function users()
     {
-        return $this->hasManyThrough(Client::class, User::class, 'department_id', 'id', 'id')->whereIn('type_id', [3,4]);
+        return $this->hasManyThrough(Client::class, User::class, 'department_id', 'id','id','client_id')->whereIn('users.type_id', [3,4]);
     }
 }

@@ -36,9 +36,9 @@ class Client extends Model
         return $this->hasOne(User::class,'id', 'id');
     }
 
-    protected function avatar()
+    public function avatar()
     {
-        return $this->hasOne(Avatar::class, 'user_id', 'id');
+        return $this->hasOne(Avatar::class, 'client_id', 'id');
     }
 
     public function scopeBirthDayBetween ($query, Carbon $from)
