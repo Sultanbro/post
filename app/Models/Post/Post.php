@@ -26,7 +26,7 @@ class Post extends Model
 
     public function postsUser()
     {
-        return $this->hasOneThrough(Client::class, User::class);
+        return $this->hasOneThrough(Client::class, User::class, 'id', 'id', 'user_id', 'client_id');
     }
 
     public function postFiles()
