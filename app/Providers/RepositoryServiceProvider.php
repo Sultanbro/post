@@ -23,6 +23,10 @@ use App\Repository\Eloquent\BaseRepository;
 use App\Repository\Eloquent\CentcoinApplyRepository;
 use App\Repository\Eloquent\CentcoinRepository;
 use App\Repository\Eloquent\EloquentRepositoryInterface;
+use App\Repository\Email\EmailDomainRepository;
+use App\Repository\Email\EmailDomainRepositoryInterface;
+use App\Repository\Email\EmailPasswordReset\EmailPasswordResetRepository;
+use App\Repository\Email\EmailPasswordReset\EmailPasswordResetRepositoryInterface;
 use App\Repository\Post\Comment\CommentRepository;
 use App\Repository\Post\Comment\CommentRepositoryInterface;
 use App\Repository\Post\Like\LikeRepository;
@@ -86,6 +90,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BookingRepositoryInterface::class,BookingRepository::class);
         $this->app->bind(RoomRepositoryInterface::class,RoomRepository::class);
         $this->app->bind(BookingUsersRepositoryInterface::class,BookingUsersRepository::class);
+        $this->app->bind(EmailDomainRepositoryInterface::class,EmailDomainRepository::class);
+        $this->app->bind(EmailPasswordResetRepositoryInterface::class,EmailPasswordResetRepository::class);
     }
 
     /**

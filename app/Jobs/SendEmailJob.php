@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\SendEmail;
+use App\Repository\Email\EmailPasswordReset\EmailPasswordResetRepositoryInterface;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -35,5 +36,6 @@ class SendEmailJob implements ShouldQueue
     public function handle()
     {
         Mail::to($this->details['email'])->send(new SendEmail($this->details['email_content']));
+        app(EmailPasswordResetRepositoryInterface::class)->create(['user_id' => $this->details['user_id'], 'status' => 1]);
     }
 }

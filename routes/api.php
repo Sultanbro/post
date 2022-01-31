@@ -75,6 +75,7 @@ Route::get('/birthday/', [UserController::class, 'getBDay']);
 //Email route
 Route::post('send/email/reset/password', [EmailController::class, 'sendResetPasswordEmail']);
 Route::post('email/save/file', [EmailController::class, 'saveFile']);
+Route::post('email/domain/save', [EmailController::class, 'saveEmailDomain']);
 
 //Booking route
 Route::resource('rooms',RoomController::class);

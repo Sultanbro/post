@@ -68,4 +68,9 @@ class User extends Model implements Authenticatable
     {
         return $this->hasOne(UserDetail::class);
     }
+
+    public function company()
+    {
+        return $this->hasOne(Department::class, 'id', 'company_id');
+    }
 }

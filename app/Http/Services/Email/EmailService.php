@@ -6,7 +6,11 @@ namespace App\Http\Services\Email;
 
 use App\Http\Services\Authenticate\UserAuthServiceInterface;
 use App\Jobs\SendEmailJob;
+use App\Repository\Email\EmailDomainRepository;
+use App\Repository\Email\EmailDomainRepositoryInterface;
+use App\Repository\Email\EmailPasswordReset\EmailPasswordResetRepositoryInterface;
 use App\Repository\User\UserRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class EmailService implements EmailServiceInterface
@@ -19,14 +23,29 @@ class EmailService implements EmailServiceInterface
      * @var UserAuthServiceInterface
      */
     private $userAuthService;
+    /**
+     * @var EmailDomainRepository
+     */
+    private $emailDomainRepository;
+    /**
+     * @var EmailPasswordResetRepositoryInterface
+     */
+    private $emailPasswordResetRepository;
 
     /**
      * EmailService constructor.
      * @param UserRepositoryInterface $userRepository
      * @param UserAuthServiceInterface $userAuthService
+     * @param EmailDomainRepositoryInterface $emailDomainRepository
+     * @param EmailPasswordResetRepositoryInterface $emailPasswordResetRepository
      */
-    public function __construct(UserRepositoryInterface $userRepository, UserAuthServiceInterface $userAuthService)
+    public function __construct(UserRepositoryInterface $userRepository,
+                                UserAuthServiceInterface $userAuthService,
+                                EmailDomainRepositoryInterface $emailDomainRepository,
+                                EmailPasswordResetRepositoryInterface $emailPasswordResetRepository)
     {
+        $this->emailPasswordResetRepository = $emailPasswordResetRepository;
+        $this->emailDomainRepository = $emailDomainRepository;
         $this->userRepository = $userRepository;
         $this->userAuthService = $userAuthService;
     }
@@ -49,18 +68,30 @@ class EmailService implements EmailServiceInterface
         if (isset($users)) {
             foreach ($users as $user) {
 
-                $details['email_content']['content'] = "https://mycent.kz/auth/" . $this->userAuthService->tokenResetPassword($user) . "/$user->email";
-                $details['email'] = $user->email;
-                dispatch(new SendEmailJob($details));
+                if ($this->emailDomainRepository->firstByEmail(stristr($user->email, '@', false))) {
+                    $details['user_id'] = $user->id;
+                    $details['email_content']['url'] = "https://mycent.kz/auth/" . $this->userAuthService->tokenResetPassword($user) . "/$user->username";
+                    $details['email_content']['username'] = $user->username;
+                    $details['email_content']['company_name'] = $user->company;
+                    $details['email'] = $user->email;
+                    dispatch(new SendEmailJob($details));
+                }else {
+                    $result[$user->username] = 'this email domain in not found';
+                }
             }
-            return 'ok';
+            if ($result) {
+                return $result;
+            }else {
+                return 'ok';
+            }
         }else{
             return $result;
         }
     }
 
     /**
-     * @inheritDoc
+     * @param $file
+     * @return string[]|void
      */
     public function saveFile($file)
     {

@@ -85,7 +85,7 @@ class UserAuthService implements UserAuthServiceInterface
                 $userKeyCloak = $this->keyCloakService->getUserByEmail($userToken->user->email);
                 if ($this->keyCloakService->setPassword($password, $userKeyCloak[0]['id'])) {
 //                    $this->userRepository->update($userToken->user_id, ['password' => $password]);
-                    return $this->login($userToken->user->email, $password);
+                    return $this->login($userToken->user->username, $password);
                 }else{
                     return response()->json(['message' => 'not in set password'], 404);
                 }
