@@ -3,6 +3,9 @@
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\Booking\BookingController;
+use App\Http\Controllers\Api\Booking\BookingUsersController;
+use App\Http\Controllers\Api\Booking\RoomController;
 use App\Http\Controllers\Api\Email\EmailController;
 use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
@@ -72,4 +75,9 @@ Route::get('/birthday/', [UserController::class, 'getBDay']);
 //Email route
 Route::post('send/email/reset/password', [EmailController::class, 'sendResetPasswordEmail']);
 Route::post('email/save/file', [EmailController::class, 'saveFile']);
+
+//Booking route
+Route::resource('rooms',RoomController::class);
+Route::resource('booking/users', BookingUsersController::class);
+Route::resource('booking',BookingController::class);
 

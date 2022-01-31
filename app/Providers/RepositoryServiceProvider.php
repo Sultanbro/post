@@ -5,6 +5,12 @@ namespace App\Providers;
 
 use App\Repository\CentcoinApplyRepositoryInterface;
 use App\Repository\CentcoinRepositoryInterface;
+use App\Repository\Booking\BookingRepository;
+use App\Repository\Booking\BookingRepositoryInterface;
+use App\Repository\Booking\BookingUsers\BookingUsersRepository;
+use App\Repository\Booking\BookingUsers\BookingUsersRepositoryInterface;
+use App\Repository\Booking\Room\RoomRepository;
+use App\Repository\Booking\Room\RoomRepositoryInterface;
 use App\Repository\Client\ClientContact\ClientContactRepository;
 use App\Repository\Client\ClientContact\ClientContactRepositoryInterface;
 use App\Repository\Client\ClientRepository;
@@ -77,6 +83,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CentcoinRepositoryInterface::class, CentcoinRepository::class);
         $this->app->bind(CentcoinApplyRepositoryInterface::class, CentcoinApplyRepository::class);
         $this->app->bind(UserDetailsRepositoryInterface::class, UserDetailsRepository::class);
+        $this->app->bind(BookingRepositoryInterface::class,BookingRepository::class);
+        $this->app->bind(RoomRepositoryInterface::class,RoomRepository::class);
+        $this->app->bind(BookingUsersRepositoryInterface::class,BookingUsersRepository::class);
     }
 
     /**
