@@ -10,7 +10,7 @@ function run() {
 }
 
 # Херачим миграции
-# run a migrate --force
+run a migrate --force
 
 # Кешируем вьюхи
 # run a view:cache
