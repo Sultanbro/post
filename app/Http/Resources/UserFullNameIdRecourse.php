@@ -16,7 +16,7 @@ class UserFullNameIdRecourse extends JsonResource
     {
         return [
             'id' => $this->id,
-            'full_name' => $this->full_name,
+            'full_name' => $this->clientInfo->fullname,
         ];
     }
 }

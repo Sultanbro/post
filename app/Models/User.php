@@ -26,7 +26,7 @@ class User extends Model implements Authenticatable
 
     public function clientInfo()
     {
-        return $this->hasOne(Client::class, 'id', 'id');
+        return $this->hasOne(Client::class, 'id', 'client_id');
     }
 
     public function userDepartment()

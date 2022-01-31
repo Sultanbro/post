@@ -24,9 +24,14 @@ class Post extends Model
         'created_by'
     ];
 
-    public function postsUser()
+    public function postsClient()
     {
         return $this->hasOneThrough(Client::class, User::class, 'id', 'id', 'user_id', 'client_id');
+    }
+
+    public function postsUser()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     public function postFiles()
