@@ -35,6 +35,7 @@ class BookingController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
+
     public function store(Request $request)
     {
         $user_id = Auth::id();
