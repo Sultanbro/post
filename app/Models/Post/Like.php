@@ -3,6 +3,7 @@
 namespace App\Models\Post;
 
 use App\Models\Client\Client;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,6 @@ class Like extends Model
 
     public function likeUser()
     {
-        return $this->hasOne(Client::class, 'id', 'user_id');
+        return $this->hasOneThrough(Client::class, User::class, 'id', 'id', 'user_id', 'client_id');
     }
 }
