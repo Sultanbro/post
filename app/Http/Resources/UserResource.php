@@ -42,7 +42,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'email' => $this->email,
 //            'department' => new DepartmentResource($this->userDepartment),
-            'user_info' => new ClientResource($this->clientInfo),
+            'user_info' => new ClientResource($this),
             'user_detail' => isset($this->details->user_info) ? json_decode($this->details->user_info) : json_decode($temp_details),
         ];
     }
