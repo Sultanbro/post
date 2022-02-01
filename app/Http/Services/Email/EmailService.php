@@ -74,7 +74,7 @@ class EmailService implements EmailServiceInterface
                     $details['user_id'] = $user->id;
                     $details['email_content']['url'] = "https://mycent.kz/auth/" . $this->userAuthService->tokenResetPassword($user) . "/$user->username";
                     $details['email_content']['username'] = $user->username;
-                    $details['email_content']['company_name'] = $user->company->fullname;
+                    $details['email_content']['company_name'] = $user->company->full_name;
                     $details['email'] = $user->email;
                     dispatch(new SendEmailJob($details));
                 }else {
@@ -84,7 +84,7 @@ class EmailService implements EmailServiceInterface
             if ($result) {
                 return $result;
             }else {
-                return 'ok';
+                return $users;
             }
         }else{
             return $result;
