@@ -17,8 +17,8 @@ class CreateClientViewsTable extends Migration
       CREATE VIEW views_client_info AS
       (
         SELECT u.id, u.client_id, u.department_id, u.foreign_id, u.company_id, u.type_id, c.first_name, c.last_name, c.parent_name, c.short_name, c.full_name, c.birthday
-        FROM `clients` c
-          JOIN `users` u ON u.client_id=c.id
+        FROM clients c
+          JOIN users u ON u.client_id=c.id
       )
     ");
     }
