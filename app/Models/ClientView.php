@@ -12,6 +12,8 @@ class ClientView extends Model
 {
     use HasFactory;
 
+    protected $table = 'views_client_info';
+
     public function avatar()
     {
         return $this->hasOne(Avatar::class, 'client_id', 'client_id');
