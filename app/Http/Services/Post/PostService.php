@@ -45,7 +45,7 @@ class PostService implements PostServiceInterface
      */
     public function store($req, $user_id)
     {
-        $model = $this->postRepository->create(array_merge(['content' => $req['content'], 'company_id' => $req['company_id'], 'group_id' => $req['group_id'], 'user_id' => $user_id, 'created_by' => $user_id, 'updated_by' => $user_id]));
+        $model = $this->postRepository->create(array_merge($req, [ 'user_id' => $user_id, 'created_by' => $user_id, 'updated_by' => $user_id]));
 
         if ($model && isset($req['postFiles'])) {
             $results = $this->saveFiles($req['postFiles'], $model->id);
@@ -54,7 +54,7 @@ class PostService implements PostServiceInterface
                 return response()->json($results, 417);
             }
             foreach ($results as $result) {
-                $this->postFileRepo->create(['post_id' => $model->id, 'link' => $result]);
+                $this->postFileRepo->create(['post_id' => $model->id, 'link' => $result, 'created_by' => $user_id, 'updated_by' => $user_id]);
             }
         }
         return new PostResource($model);

@@ -11,5 +11,7 @@ class PostFile extends Model
     protected $fillable = [
         'post_id',
         'link',
+        'created_by',
+        'updated_by',
     ];
 }
