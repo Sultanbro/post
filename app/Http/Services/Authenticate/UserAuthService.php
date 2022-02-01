@@ -82,7 +82,7 @@ class UserAuthService implements UserAuthServiceInterface
         try {
 
             if ($userToken = $this->userTokenRepository->findFromUserAccessToken($token)) {
-                $userKeyCloak = $this->keyCloakService->getUserByEmail($userToken->user->email);
+                $userKeyCloak = $this->keyCloakService->getUserByUsername($userToken->user->username);
                 if ($this->keyCloakService->setPassword($password, $userKeyCloak[0]['id'])) {
 //                    $this->userRepository->update($userToken->user_id, ['password' => $password]);
                     return $this->login($userToken->user->username, $password);
