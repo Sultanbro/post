@@ -39,6 +39,13 @@ use Illuminate\Support\Facades\Route;
 //});
 
 
+Route::group(['middleware' => 'role:super'], function() {
+    Route::get('/dashboard', function() {
+        return 'Добро пожаловать,' . auth()->user()->roles();
+    });
+});
+
+
 //Auth route
 Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/login', [LoginController::class, 'index'])->withoutMiddleware('auth.bearer');

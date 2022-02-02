@@ -188,7 +188,9 @@ return [
         App\Providers\StaffServiceProvide::class,
         App\Providers\UserServiceProvider::class,
         App\Providers\BookingServiceProvider::class,
-        App\Providers\EmailServiceProvider::class
+        App\Providers\EmailServiceProvider::class,
+        App\Providers\RolesServiceProvider::class,
+        App\Providers\PermissionServiceProvider::class,
     ),
 
     /*
