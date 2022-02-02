@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Email\EmailController;
 use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
 use App\Http\Controllers\Api\Post\PostController;
+use App\Http\Controllers\Api\User\Role\RoleController;
 use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\WriteBase\CareerUserController;
 use App\Http\Controllers\Api\WriteBase\CityController;
@@ -39,11 +40,11 @@ use Illuminate\Support\Facades\Route;
 //});
 
 
-Route::group(['middleware' => 'role:super'], function() {
+
     Route::get('/dashboard', function() {
-        return 'Добро пожаловать,' . auth()->user()->roles();
+
+        return Gate::allows('update_post'); ;
     });
-});
 
 
 //Auth route
@@ -89,4 +90,7 @@ Route::post('email/domain/save', [EmailController::class, 'saveEmailDomain']);
 Route::resource('rooms',RoomController::class);
 Route::resource('booking/users', BookingUsersController::class);
 Route::resource('booking',BookingController::class);
+
+//Role route
+Route::resource('role', RoleController::class);
 
