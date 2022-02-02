@@ -8,6 +8,7 @@ use App\Models\Client\Department;
 use App\Models\Client\Eorder;
 use App\Models\Client\UserStory\CareerUser;
 use App\Models\Client\UserStory\Employee;
+use App\Traits\HasRolesAndPermissions;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +19,7 @@ class User extends Model implements Authenticatable
     protected $guarded = [''];
     use AuthenticatableTrait;
     use HasFactory;
+    use HasRolesAndPermissions;
 
     public function token()
     {

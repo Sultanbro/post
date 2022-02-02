@@ -11,6 +11,7 @@ use App\Repository\Post\PostRepositoryInterface;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Exception;
 
@@ -47,6 +48,7 @@ class PostController extends Controller
 //        if (Auth::user()->token->role_id == 1) {
 //            return PostResource::collection($this->postRepository->getPostsWithData());
 //        }
+        return Gate::allows('update_post');
         return PostResource::collection($this->postRepository->getPostsByCompanyId([Auth::user()->company_id]));
     }
 
