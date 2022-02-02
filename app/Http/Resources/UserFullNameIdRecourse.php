@@ -17,7 +17,7 @@ class UserFullNameIdRecourse extends JsonResource
         return [
             'id' => $this->id,
             'full_name' => $this->clientInfo->full_name,
-            'avatar' => $this->clientInfo->avatar,
+            'avatar' => isset($this->clientInfo->avatar) ? $this->clientInfo->avatar : ['link' => 'storage/default/avatar/' . $this->clientInfo->sex . '/photo.jpg'],
         ];
     }
 }

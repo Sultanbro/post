@@ -78,4 +78,9 @@ class ClientBaseController
             return response()->json($e,404);
         }
     }
+
+    public function saveStorage(Request $request)
+    {
+        return $this->clientBaseService->saveStorage($request->all());
+    }
 }

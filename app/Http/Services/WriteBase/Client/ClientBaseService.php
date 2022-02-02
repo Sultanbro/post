@@ -357,11 +357,11 @@ class ClientBaseService implements ClientBaseServiceInterface
         $result = [];
         foreach ($req as $re) {
 
-            if (!$model = $this->clientRepository->firstWhereForeignId($re['foreign_id'], $re['company_id'])) {
+            if (!$model = $this->userRepository->getByForeignIdAndCompany_id($re['foreign_id'], $re['company_id'])) {
 
                 $result = [$re['foreign_id'] => 'not found foreign_id'];
             } else {
-                $result = $this->saveAvatar($re, $model->id);
+                $result = $this->saveAvatar($re, $model->client_id);
             }
         }
         return $result;
@@ -416,5 +416,16 @@ class ClientBaseService implements ClientBaseServiceInterface
             }
             return $this->userDetailsRepository->create($params);
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function saveStorage($params)
+    {
+        $content = file_get_contents($params['file']->getRealPath());
+        $fileName = $params['file']->getClientOriginalName();
+        Storage::disk('local')->put("public/" . $params['filePath'] . "/$fileName", $content);
+        return ['filePath' => "storage/" . $params['filePath'] . "/$fileName"];
     }
 }

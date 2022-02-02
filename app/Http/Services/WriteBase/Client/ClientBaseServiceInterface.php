@@ -43,4 +43,10 @@ interface ClientBaseServiceInterface
      * @return mixed
      */
     public function createUsername($username, $var = 0);
+
+    /**
+     * @param $params
+     * @return mixed
+     */
+    public function saveStorage($params);
 }

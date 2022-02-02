@@ -36,7 +36,7 @@ class BDayResource extends JsonResource
             'full_name' => $this->full_name,
             'birthday' => date_format( date_create($this->birthday), 'd') .' '. $_monthsList[date_format( date_create($this->birthday), 'm')],
             'department' => new DepartmentResource($this->department),
-            'avatar' => $this->avatar,
+            'avatar' => is_null($this->avatar) ? ['link' => 'storage/default/avatar/' . $this->sex . '/photo.jpg'] : $this->avatar,
         ];
     }
 }
