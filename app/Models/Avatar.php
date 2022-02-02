@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Avatar extends Model
 {
     use HasFactory;
-    protected $guarded = [''];
+    protected $fillable = ['client_id',
+                            'link',];
 }
