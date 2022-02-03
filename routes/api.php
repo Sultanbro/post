@@ -41,12 +41,6 @@ use Illuminate\Support\Facades\Route;
 
 
 
-    Route::get('/dashboard', function() {
-
-        return Gate::allows('update_post'); ;
-    });
-
-
 //Auth route
 Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/login', [LoginController::class, 'index'])->withoutMiddleware('auth.bearer');

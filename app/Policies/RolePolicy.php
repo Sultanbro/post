@@ -5,20 +5,48 @@ namespace App\Policies;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Gate;
 
 class RolePolicy
 {
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can create models.
+     * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
+    public function viewAny(User $user)
+    {
+        if (Gate::allows('all_roles')) {
+                return true;
+        }
+        abort(403);
+    }
+
+    /**
+     * Determine whether the user can view the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Role  $role
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function view(User $user, Role $role)
+    {
+        return true;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function create(User $user)
     {
-        //
+        if (Gate::allows('create_role')) {
+            return true;
+        }
+            abort(403);
     }
 
     /**
@@ -30,7 +58,10 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        //
+        if (Gate::allows('update_role')) {
+            return true;
+        }
+        abort(403);
     }
 
     /**
@@ -42,7 +73,10 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        //
+        if (Gate::allows('delete_role')) {
+            return true;
+        }
+        abort(403);
     }
 
 }

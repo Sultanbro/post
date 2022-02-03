@@ -7,11 +7,15 @@ use App\Http\Requests\Role\RoleStoreRequest;
 use App\Http\Resources\User\Role\RoleResource;
 use App\Models\Role;
 use App\Repository\User\Role\RoleRepositoryInterface;
+use App\Traits\QueryByRoleCompany;
 use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
+    use QueryByRoleCompany;
     /**
      * @var RoleRepositoryInterface
      */
@@ -24,6 +28,7 @@ class RoleController extends Controller
     public function __construct(RoleRepositoryInterface $roleRepository)
     {
         $this->roleRepository = $roleRepository;
+        $this->authorizeResource(Role::class);
     }
 
     /**
@@ -31,7 +36,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return RoleResource::collection($this->roleRepository->all());
+        return RoleResource::collection($this->getByRoleCompany($this->roleRepository->all()));
     }
 
     /**
@@ -49,7 +54,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        return new RoleResource($role);
+        return new RoleResource($this->firstByRoleCompany($role));
     }
 
     /**
