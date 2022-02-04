@@ -3,6 +3,7 @@
 
 namespace App\Repository\Eloquent;
 
+use App\Repository\Client\Department\DepartmentRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;

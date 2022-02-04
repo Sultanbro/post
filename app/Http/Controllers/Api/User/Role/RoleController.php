@@ -7,14 +7,11 @@ use App\Http\Requests\Role\RoleStoreRequest;
 use App\Http\Resources\User\Role\RoleResource;
 use App\Models\Role;
 use App\Models\User;
+use App\Repository\Client\Department\DepartmentRepository;
+use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\User\Role\RoleRepositoryInterface;
 use App\Traits\HasRolesAndPermissions;
 use http\Env\Response;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
-use PhpParser\Builder;
 
 class RoleController extends Controller
 {
@@ -23,13 +20,19 @@ class RoleController extends Controller
      * @var RoleRepositoryInterface
      */
     private $roleRepository;
+    /**
+     * @var DepartmentRepositoryInterface
+     */
+    private $departmentRepository;
 
     /**
      * RoleController constructor.
      * @param RoleRepositoryInterface $roleRepository
+     * @param DepartmentRepositoryInterface $departmentRepository
      */
-    public function __construct(RoleRepositoryInterface $roleRepository)
+    public function __construct(RoleRepositoryInterface $roleRepository, DepartmentRepositoryInterface $departmentRepository)
     {
+        $this->departmentRepository = $departmentRepository;
         $this->roleRepository = $roleRepository;
         $this->authorizeResource(Role::class);
     }
@@ -39,7 +42,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return (RoleResource::collection($this->roleRepository->getByRoleCompany('role_index')))->additional(['role_index' => [1, 2]]);
+        return (RoleResource::collection($this->roleRepository->getByRoleCompany('role_index')))->additional($this->departmentRepository->getAccessCompany('role_index'));
     }
 
     /**

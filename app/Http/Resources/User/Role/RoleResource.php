@@ -22,8 +22,9 @@ class RoleResource extends JsonResource
           'slug' => $this->slug,
           'company_id' => $this->company_id,
             'permissions' => PermissionResource::collection($this->permissions),
-            'permission' => ['update' => $this->when(Gate::allows('update_post'), 'update'),
-                             'crate' => $this->when(Gate::allows('create'), 'create')],
+            'permission' => ['update' => $this->when(Gate::allows('update_role'), 'update'),
+                             'crate' => $this->when(Gate::allows('create_role'), 'create'),
+                             'delete' => $this->when(Gate::allows('delete_role'), 'create'),],
         ];
     }
 }

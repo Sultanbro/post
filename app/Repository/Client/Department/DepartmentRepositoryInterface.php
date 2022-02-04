@@ -36,4 +36,10 @@ interface DepartmentRepositoryInterface extends EloquentRepositoryInterface
      * @return mixed
      */
     public function firstWhereForeignIdCompanyId($foreign_id, $company_id);
+
+    /**
+     * @param $slug
+     * @return mixed
+     */
+    public function getAccessCompany($slug);
 }

@@ -21,7 +21,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        if (Gate::allows('role_index')) {
+        if (Gate::allows('index_role')) {
                 return true;
         }
         abort(403);
@@ -36,7 +36,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        if (Gate::allows('role_show')) {
+        if (Gate::allows('show_role')) {
             return true;
         }
         abort(403);
