@@ -59,5 +59,26 @@ interface EloquentRepositoryInterface
      * @return mixed
      */
     public function createOrUpdate(array $attributes);
+
+    /**
+     * @param $slug
+     * @return mixed
+     */
+    public function getByRoleCompany($slug);
+
+    /**
+     * @param $id
+     * @param $slug
+     * @return mixed
+     */
+    public function firstByRoleCompanyAndModelId($id, $slug);
+
+    /**
+     * @param $model
+     * @param $slug
+     * @return mixed
+     */
+    public function firstByRoleCompany($model, $slug);
+
 }
 

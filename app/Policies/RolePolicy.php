@@ -5,6 +5,8 @@ namespace App\Policies;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class RolePolicy
@@ -19,7 +21,7 @@ class RolePolicy
      */
     public function viewAny(User $user)
     {
-        if (Gate::allows('all_roles')) {
+        if (Gate::allows('role_index')) {
                 return true;
         }
         abort(403);
@@ -34,7 +36,10 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        return true;
+        if (Gate::allows('role_show')) {
+            return true;
+        }
+        abort(403);
     }
 
     /**

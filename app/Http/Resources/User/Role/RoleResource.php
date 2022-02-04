@@ -17,9 +17,10 @@ class RoleResource extends JsonResource
     public function toArray($request)
     {
         return [
+          'id' => $this->id,
           'name' => $this->name,
           'slug' => $this->slug,
-          'id' => $this->id,
+          'company_id' => $this->company_id,
             'permissions' => PermissionResource::collection($this->permissions),
             'permission' => ['update' => $this->when(Gate::allows('update_post'), 'update'),
                              'crate' => $this->when(Gate::allows('create'), 'create')],

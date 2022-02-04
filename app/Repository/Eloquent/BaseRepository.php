@@ -99,4 +99,51 @@ class BaseRepository implements EloquentRepositoryInterface
     {
         return $this->model->updateOrCreate($attributes);
     }
+
+    /**
+     * @param $slug
+     * @return array|\Illuminate\Database\Eloquent\Collection|Model[]|mixed
+     */
+    public function getByRoleCompany($slug)
+    {
+        foreach (request()->user()->roles as $role) {
+            foreach ($role->permissions as $permission) {
+                if ($permission->slug === $slug) $company_id[] = $role->company_id;
+                if ($role->company_id) continue;
+                return $this->model->all();
+            }
+        }
+        if (!isset($company_id[0]))return[];
+
+        return $this->model->whereIn('company_id', $company_id)->get();
+    }
+
+    /**
+     * @param $id
+     * @param $slug
+     * @return mixed|void
+     */
+    public function firstByRoleCompanyAndModelId($id, $slug)
+    {
+        $model = $this->find($id);
+
+        $this->firstByRoleCompany($model, $slug);
+    }
+
+    /**
+     * @param $model
+     * @param $slug
+     * @return mixed
+     */
+    public function firstByRoleCompany($model, $slug)
+    {
+        foreach (request()->user()->roles as $role) {
+                foreach ($role->permissions as $permission) {
+                    if ($model->company_id === $role->company_id or $role->company_id)if ($permission->slug === $slug)return $model;;
+                    continue;
+                }
+        }
+        abort(403);
+    }
+
 }

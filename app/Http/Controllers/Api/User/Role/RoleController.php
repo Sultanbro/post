@@ -6,16 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\RoleStoreRequest;
 use App\Http\Resources\User\Role\RoleResource;
 use App\Models\Role;
+use App\Models\User;
 use App\Repository\User\Role\RoleRepositoryInterface;
-use App\Traits\QueryByRoleCompany;
+use App\Traits\HasRolesAndPermissions;
 use http\Env\Response;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use PhpParser\Builder;
 
 class RoleController extends Controller
 {
-    use QueryByRoleCompany;
+    use HasRolesAndPermissions;
     /**
      * @var RoleRepositoryInterface
      */
@@ -36,7 +39,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return RoleResource::collection($this->getByRoleCompany($this->roleRepository->all()));
+        return (RoleResource::collection($this->roleRepository->getByRoleCompany('role_index')))->additional(['role_index' => [1, 2]]);
     }
 
     /**
@@ -54,7 +57,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        return new RoleResource($this->firstByRoleCompany($role));
+        return new RoleResource($this->roleRepository->firstByRoleCompany($role, 'role_index'));
     }
 
     /**
@@ -75,6 +78,7 @@ class RoleController extends Controller
 
     /**
      * @param Role $role
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Role $role)
     {
