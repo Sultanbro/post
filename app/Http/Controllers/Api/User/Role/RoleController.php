@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\RoleStoreRequest;
 use App\Http\Resources\User\Role\RoleResource;
 use App\Models\Role;
-use App\Models\User;
-use App\Repository\Client\Department\DepartmentRepository;
 use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\User\Role\RoleRepositoryInterface;
 use App\Traits\HasRolesAndPermissions;
@@ -42,7 +40,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return (RoleResource::collection($this->roleRepository->getByRoleCompany('role_index')))->additional($this->departmentRepository->getAccessCompany('role_index'));
+        return (RoleResource::collection($this->roleRepository->getByRoleCompany('index_role')))->additional($this->departmentRepository->getAccessCompany('index_role'));
     }
 
     /**
@@ -60,7 +58,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        return new RoleResource($this->roleRepository->firstByRoleCompany($role, 'role_index'));
+        return new RoleResource($this->roleRepository->firstByRoleCompany($role, 'show_role'));
     }
 
     /**
@@ -85,6 +83,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        $this->roleRepository->firstByRoleCompany($role, 'delete_role');
         return response()->json(['message' => $role->delete()], 200);
     }
 }

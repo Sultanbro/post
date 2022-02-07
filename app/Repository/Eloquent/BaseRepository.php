@@ -140,10 +140,12 @@ class BaseRepository implements EloquentRepositoryInterface
     {
         foreach (request()->user()->roles as $role) {
                 foreach ($role->permissions as $permission) {
-                    if ($model->company_id === $role->company_id or $role->company_id)if ($permission->slug === $slug)return $model;;
-                    continue;
+                    if ($model->company_id === $role->company_id)if ($permission->slug === $slug) return $model;
+                    if ($role->company_id) continue;
+                    return $model;
                 }
         }
+
         abort(403);
     }
 
