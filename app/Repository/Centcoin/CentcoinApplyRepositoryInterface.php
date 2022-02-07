@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Centcoin;
 
 use App\Repository\Eloquent\EloquentRepositoryInterface;
 

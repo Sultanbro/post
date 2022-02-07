@@ -59,5 +59,7 @@ interface EloquentRepositoryInterface
      * @return mixed
      */
     public function createOrUpdate(array $attributes);
+
+    public function where($column, $value,$operator = '=');
 }
 

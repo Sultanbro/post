@@ -188,6 +188,7 @@ return [
         App\Providers\StaffServiceProvide::class,
         App\Providers\UserServiceProvider::class,
         App\Providers\BookingServiceProvider::class,
+        App\Providers\CentcoinServiceProvider::class,
         App\Providers\EmailServiceProvider::class
     ),
 

@@ -99,4 +99,9 @@ class BaseRepository implements EloquentRepositoryInterface
     {
         return $this->model->updateOrCreate($attributes);
     }
+
+    public function where($column, $value,$operator = '=')
+    {
+        return $this->query()->where($column,$operator,$value)->get()->last();
+    }
 }

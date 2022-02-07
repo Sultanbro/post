@@ -21,8 +21,7 @@ class CentcoinResource extends JsonResource
             'type_id'=> $this->type_id,
             'description' => $this->description,
             'quantity' => $this->quantity,
-            'total' => $this->total,
-            'user_info' =>new UserFullNameIdRecourse($this->cointUser),
+            'user_id' => $this->user_id,
             'updated' => $this->updated_at,
             'created' => $this->created_at,
 

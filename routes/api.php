@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Booking\BookingController;
 use App\Http\Controllers\Api\Booking\BookingUsersController;
 use App\Http\Controllers\Api\Booking\RoomController;
+use App\Http\Controllers\Api\Centcoin\CentcoinController;
 use App\Http\Controllers\Api\Email\EmailController;
 use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
@@ -83,3 +84,9 @@ Route::resource('rooms',RoomController::class);
 Route::resource('booking/users', BookingUsersController::class);
 Route::resource('booking',BookingController::class);
 
+//Centcoin
+Route::post('centcoin/apply',[CentcoinController::class,'centcoinApply']);
+//Centcoin Admin
+Route::post('centcoin',[CentcoinController::class,'index']);
+Route::post('centcoin/operation',[CentcoinController::class,'operationCoins']);
+Route::post('centcoin/status',[CentcoinController::class,'statusApply']);

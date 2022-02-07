@@ -3,67 +3,78 @@
 namespace App\Http\Controllers\Api\Centcoin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Middleware\Authenticate;
-use App\Http\Requests\Api\Centcoin\CentcoinStoreRequest;
-use App\Http\Resources\Centcoin\CentcoinResource;
-use App\Models\Centcoin;
-use App\Repository\CentcoinRepositoryInterface;
+use App\Http\Services\Centcoin\CentcoinServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Repository\Eloquent\CentcoinRepository;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class CentcoinController extends Controller
 {
 
-    /**
-     * @var CentcoinRepositoryInterface
-     */
-    private $centcoinRepository;
+// Лишний контроллер
 
     /**
-     * CentcoinController constructor.
-     * @param CentcoinRepositoryInterface $centcoinRepository
+     * @var CentcoinServiceInterface
      */
-    public function __construct(CentcoinRepositoryInterface $centcoinRepository)
+    private $centcoinService;
+
+    /**
+     * @param CentcoinServiceInterface $centcoinService
+     */
+    public function __construct(CentcoinServiceInterface $centcoinService)
     {
-        $this->centcoinRepository = $centcoinRepository;
+        $this->centcoinService = $centcoinService;
     }
 
+    public function show($id)
+    {
+        return $this->centcoinService->show($id);
+    }
+
+    public function centcoinApply(Request $request)
+    {
+        $created_id = Auth::id();
+        return $this->centcoinService->centcoinApply($request->all(),$created_id);
+    }
+
+    // для Админки
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return Response
      */
     public function index()
     {
-        return CentcoinResource::collection($this->centcoinRepository->all());
+        return $this->centcoinService->index();
+    }
+
+    /**
+     * @param $request
+     * @return JsonResponse
+     */
+    public function store(Request $request)
+    {
+        $created_by_id = Auth::id();
+        return $this->centcoinService->store($request->all(),$created_by_id);
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function operationCoins(Request $request)
+    {
+        $created_id = Auth::id();
+        return $this->centcoinService->operationCoins($request->all(),$created_id);
 
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-* //     * @param $user_id
-     * @return CentcoinResource
+     * @param Request $request
+     * @return mixed
      */
-    public function store(CentcoinStoreRequest $request)
+    public function statusApply(Request $request)
     {
-        $user = Auth::id();
-        return new CentcoinResource($this->centcoinRepository->create(array_merge($request->validated(), ['created_by' => $user, 'updated_by' => $user])));
-
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
-
-     * @param  int  $id
-     * @return CentcoinResource
-     */
-    public function show($id)
-    {
-        return new CentcoinResource($this->centcoinRepository->find($id));
+        return $this->centcoinService->statusApply($request->all());
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 
-use App\Repository\CentcoinApplyRepositoryInterface;
-use App\Repository\CentcoinRepositoryInterface;
+use App\Repository\Centcoin\CentcoinApplyRepositoryInterface;
+use App\Repository\Centcoin\CentcoinRepositoryInterface;
+use App\Repository\Centcoin\CentcoinApplyRepository;
+use App\Repository\Centcoin\CentcoinRepository;
 use App\Repository\Booking\BookingRepository;
 use App\Repository\Booking\BookingRepositoryInterface;
 use App\Repository\Booking\BookingUsers\BookingUsersRepository;
@@ -20,8 +22,6 @@ use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\Client\EOrder\EOrderRepository;
 use App\Repository\Client\EOrder\EOrderRepositoryInterface;
 use App\Repository\Eloquent\BaseRepository;
-use App\Repository\Eloquent\CentcoinApplyRepository;
-use App\Repository\Eloquent\CentcoinRepository;
 use App\Repository\Eloquent\EloquentRepositoryInterface;
 use App\Repository\Email\EmailDomainRepository;
 use App\Repository\Email\EmailDomainRepositoryInterface;
