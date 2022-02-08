@@ -118,6 +118,8 @@ services:
     image: rancher/lb-service-haproxy:v0.9.14
     ports:
       - "7311:7311/tcp"
+      - "80:80/tcp"
+
     networks:
       - app_network
 
