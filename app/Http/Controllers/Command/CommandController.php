@@ -12,6 +12,7 @@ class CommandController extends Controller
 {
     public function command(Request $request)
     {
+        dd('22');
         if ($request->get('key') !== config('dev.key')) {
             return abort(403);
         }

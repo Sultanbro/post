@@ -42,4 +42,11 @@ interface DepartmentRepositoryInterface extends EloquentRepositoryInterface
      * @return mixed
      */
     public function getAccessCompany($slug);
+
+    /**
+     * @param $department_id
+     * @return mixed
+     */
+    public function getChildByDepartmentId($department_id);
+
 }

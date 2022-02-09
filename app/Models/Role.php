@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Client\Department;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,11 @@ class Role extends Model
     public function permissions()
     {
         return $this->belongsToMany(Permission::class,'roles_permissions');
+    }
+
+    public function company()
+    {
+        return $this->hasOne(Department::class, 'id','company_id');
     }
 
 }

@@ -9,4 +9,10 @@ interface UserServiceInterface
      * @return mixed
      */
     public function getCareer(array $clientCompanyId);
+
+    /**
+     * @param $params
+     * @return mixed
+     */
+    public function saveRole($params);
 }

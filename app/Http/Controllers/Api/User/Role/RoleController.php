@@ -9,7 +9,7 @@ use App\Models\Role;
 use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\User\Role\RoleRepositoryInterface;
 use App\Traits\HasRolesAndPermissions;
-use http\Env\Response;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -32,7 +32,6 @@ class RoleController extends Controller
     {
         $this->departmentRepository = $departmentRepository;
         $this->roleRepository = $roleRepository;
-        $this->authorizeResource(Role::class);
     }
 
     /**
@@ -40,7 +39,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return (RoleResource::collection($this->roleRepository->getByRoleCompany('index_role')))->additional($this->departmentRepository->getAccessCompany('index_role'));
+        return (RoleResource::collection($this->roleRepository->getByRoleCompany('index_role')))
+            ->additional($this->departmentRepository->getAccessCompany('index_role'));
     }
 
     /**
@@ -49,7 +49,9 @@ class RoleController extends Controller
      */
     public function store(RoleStoreRequest $request)
     {
-        return new RoleResource($this->roleRepository->create($request->validated()));
+        $roleModel = $this->roleRepository->create($request->validated());
+        $roleModel->permissions()->attach($request->permissions);
+        return new RoleResource($roleModel);
     }
 
     /**
@@ -70,6 +72,7 @@ class RoleController extends Controller
     {
         try {
             if ($role->update($request->validated())) {
+                $role->permissions()->sync($request->permissions);
                 return new RoleResource($role);
             }
         }catch (\Exception $e) {

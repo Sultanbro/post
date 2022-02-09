@@ -10,7 +10,9 @@ use App\Http\Controllers\Api\Email\EmailController;
 use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
 use App\Http\Controllers\Api\Post\PostController;
+use App\Http\Controllers\Api\User\Role\PermissionController;
 use App\Http\Controllers\Api\User\Role\RoleController;
+use App\Http\Controllers\Api\User\Role\UserRoleController;
 use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\WriteBase\CareerUserController;
 use App\Http\Controllers\Api\WriteBase\CityController;
@@ -86,5 +88,10 @@ Route::resource('booking/users', BookingUsersController::class);
 Route::resource('booking',BookingController::class);
 
 //Role route
-Route::resource('role', RoleController::class);
+Route::group(['prefix' => 'access'], function () {
+    Route::resource('role', RoleController::class)->middleware('role.controller');
+    Route::resource('permission', PermissionController::class);
+    Route::resource('users_role', UserRoleController::class)->middleware('users_role');
+});
+
 

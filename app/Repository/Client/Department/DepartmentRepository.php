@@ -87,4 +87,13 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
         }
         return ['access' => array_unique($company_id)];
     }
+
+    /**
+     * @param $department_id
+     * @return mixed
+     */
+    public function getChildByDepartmentId($department_id)
+    {
+        return $this->model->where('parent_id', $department_id)->get();
+    }
 }

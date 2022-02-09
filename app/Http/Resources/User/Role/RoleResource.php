@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\User\Role;
 
+use App\Http\Resources\CompanyResource;
 use App\Http\Resources\User\Permission\PermissionResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Gate;
@@ -20,7 +21,7 @@ class RoleResource extends JsonResource
           'id' => $this->id,
           'name' => $this->name,
           'slug' => $this->slug,
-          'company_id' => $this->company_id,
+          'company_info' => new CompanyResource($this->company),
             'permissions' => PermissionResource::collection($this->permissions),
             'permission' => ['update' => $this->when(Gate::allows('update_role'), 'update'),
                              'crate' => $this->when(Gate::allows('create_role'), 'create'),

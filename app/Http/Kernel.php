@@ -67,5 +67,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.bearer' => BearerAuthenticate::class,
         'role' => \App\Http\Middleware\RoleMiddleware::class,
+        'users_role' => \App\Http\Middleware\Permission\UsersRoleMiddleware::class,
+        'role.controller' =>\App\Http\Middleware\Permission\RoleMiddleware::class
     ];
 }

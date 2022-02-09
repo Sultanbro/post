@@ -47,6 +47,8 @@ use App\Repository\User\Career\CareerUserRepository;
 use App\Repository\User\Career\CareerUserRepositoryInterface;
 use App\Repository\User\Employee\EmployeeRepository;
 use App\Repository\User\Employee\EmployeeRepositoryInterface;
+use App\Repository\User\Role\Permission\PermissionRepository;
+use App\Repository\User\Role\Permission\PermissionRepositoryInterface;
 use App\Repository\User\Role\RoleRepository;
 use App\Repository\User\Role\RoleRepositoryInterface;
 use App\Repository\User\Staff\StaffUserRepository;
@@ -95,6 +97,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(EmailDomainRepositoryInterface::class,EmailDomainRepository::class);
         $this->app->bind(EmailPasswordResetRepositoryInterface::class,EmailPasswordResetRepository::class);
         $this->app->bind(RoleRepositoryInterface::class,RoleRepository::class);
+        $this->app->bind(PermissionRepositoryInterface::class,PermissionRepository::class);
     }
 
     /**
