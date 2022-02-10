@@ -17,6 +17,7 @@ class RoleMiddleware
     {
         if ($request->route()->getActionMethod() === 'index')if (!Gate::allows('index_role'))abort(403);
         if ($request->route()->getActionMethod() === 'show')if (!Gate::allows('show_role'))abort(403);
+        if ($request->route()->getActionMethod() === 'update')if (!Gate::allows('update_role'))abort(403);
         if ($request->route()->getActionMethod() === 'store')if (!Gate::allows('create_role'))abort(403);
         if ($request->route()->getActionMethod() === 'destroy')if (!Gate::allows('delete_role'))abort(403);
 

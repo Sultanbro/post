@@ -17,6 +17,7 @@ class BookingMiddleware
     {
         if ($request->route()->getActionMethod() === 'index')if (!Gate::allows('index_booking'))abort(403);
         if ($request->route()->getActionMethod() === 'show')if (!Gate::allows('show_booking'))abort(403);
+        if ($request->route()->getActionMethod() === 'update')if (!Gate::allows('update_booking'))abort(403);
         if ($request->route()->getActionMethod() === 'store')if (!Gate::allows('create_booking'))abort(403);
         if ($request->route()->getActionMethod() === 'destroy')if (!Gate::allows('delete_booking'))abort(403);
 

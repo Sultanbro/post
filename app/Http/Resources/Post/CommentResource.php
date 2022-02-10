@@ -29,9 +29,9 @@ class CommentResource extends JsonResource
           'like_count' => count(data_get($this, 'countLike')),
           'link' => $this->link,
           'child_comments' => CommentResource::collection($this->comment),
-            'permission' => ['update' => $this->when(Gate::allows('update_role'), 'update'),
-                             'crate' => $this->when(Gate::allows('create_role'), 'create'),
-                             'delete' => $this->when(Gate::allows('delete_role'), 'delete'),],
+            'permission' => ['update' => $this->when(Gate::allows('update_comment'), 'update'),
+                             'crate' => $this->when(Gate::allows('create_comment'), 'create'),
+                             'delete' => $this->when(Gate::allows('delete_comment'), 'delete'),],
         ];
     }
 }

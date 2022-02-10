@@ -17,6 +17,7 @@ class RoomMiddleware
     {
         if ($request->route()->getActionMethod() === 'index')if (!Gate::allows('index_room'))abort(403);
         if ($request->route()->getActionMethod() === 'show')if (!Gate::allows('show_room'))abort(403);
+        if ($request->route()->getActionMethod() === 'update')if (!Gate::allows('update_room'))abort(403);
         if ($request->route()->getActionMethod() === 'store')if (!Gate::allows('create_room'))abort(403);
         if ($request->route()->getActionMethod() === 'destroy')if (!Gate::allows('delete_room'))abort(403);
 
