@@ -29,7 +29,6 @@ class PermissionController extends Controller
     {
         $this->departmentRepository = $departmentRepository;
         $this->permissionRepository = $permissionRepository;
-        $this->authorizeResource(Permission::class);
     }
 
     /**

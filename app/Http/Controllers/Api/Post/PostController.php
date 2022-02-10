@@ -7,6 +7,8 @@ use App\Http\Requests\Post\PostStoreRequest;
 use App\Http\Requests\Post\PostUpdateRequest;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Services\Post\PostServiceInterface;
+use App\Models\Post\Post;
+use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\Post\PostRepositoryInterface;
 use http\Env\Response;
 use Illuminate\Http\Request;
@@ -26,14 +28,20 @@ class PostController extends Controller
      * @var PostServiceInterface
      */
     private $postService;
+    /**
+     * @var DepartmentRepositoryInterface
+     */
+    private $departmentRepository;
 
     /**
      * PostController constructor.
      * @param PostRepositoryInterface $postRepository
      * @param PostServiceInterface $postService
+     * @param DepartmentRepositoryInterface $departmentRepository
      */
-    public function __construct(PostRepositoryInterface $postRepository, PostServiceInterface $postService)
+    public function __construct(PostRepositoryInterface $postRepository, PostServiceInterface $postService, DepartmentRepositoryInterface $departmentRepository)
     {
+        $this->departmentRepository =$departmentRepository;
         $this->postRepository = $postRepository;
         $this->postService = $postService;
     }
@@ -45,11 +53,8 @@ class PostController extends Controller
      */
     public function index()
     {
-//        if (Auth::user()->token->role_id == 1) {
-//            return PostResource::collection($this->postRepository->getPostsWithData());
-//        }
-        return Gate::allows('update_post');
-        return PostResource::collection($this->postRepository->getPostsByCompanyId([Auth::user()->company_id]));
+        return PostResource::collection($this->postRepository->getByRoleCompany('index_post'))
+            ->additional($this->departmentRepository->getAccessCompany('index_post'));
     }
 
     /**
@@ -66,12 +71,12 @@ class PostController extends Controller
     }
 
     /**
-     * @param $id
-     * @return mixed
+     * @param Post $post
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        return PostResource::collection($this->postRepository->getByPostId($id));
+        return PostResource::collection($this->postRepository->firstByRoleCompany($post, 'show_post'));
     }
 
     /**

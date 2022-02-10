@@ -4,6 +4,7 @@ namespace App\Http\Resources\Post;
 
 use App\Http\Resources\UserFullNameIdRecourse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 
 class CommentResource extends JsonResource
 {
@@ -28,6 +29,9 @@ class CommentResource extends JsonResource
           'like_count' => count(data_get($this, 'countLike')),
           'link' => $this->link,
           'child_comments' => CommentResource::collection($this->comment),
+            'permission' => ['update' => $this->when(Gate::allows('update_role'), 'update'),
+                             'crate' => $this->when(Gate::allows('create_role'), 'create'),
+                             'delete' => $this->when(Gate::allows('delete_role'), 'delete'),],
         ];
     }
 }
