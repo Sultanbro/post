@@ -43,6 +43,8 @@ use App\Repository\Reference\Duty\DutyRepository;
 use App\Repository\Reference\Duty\DutyRepositoryInterface;
 use App\Repository\Reference\Region\RegionRepository;
 use App\Repository\Reference\Region\RegionRepositoryInterface;
+use App\Repository\User\Avatar\AvatarRepository;
+use App\Repository\User\Avatar\AvatarRepositoryInterface;
 use App\Repository\User\Career\CareerUserRepository;
 use App\Repository\User\Career\CareerUserRepositoryInterface;
 use App\Repository\User\Employee\EmployeeRepository;
@@ -98,6 +100,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(EmailPasswordResetRepositoryInterface::class,EmailPasswordResetRepository::class);
         $this->app->bind(RoleRepositoryInterface::class,RoleRepository::class);
         $this->app->bind(PermissionRepositoryInterface::class,PermissionRepository::class);
+        $this->app->bind(AvatarRepositoryInterface::class,AvatarRepository::class);
     }
 
     /**

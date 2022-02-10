@@ -26,10 +26,10 @@ interface ClientBaseServiceInterface
 
     /**
      * @param $req
-     * @param $user_id
+     * @param $client_id
      * @return mixed
      */
-    public function saveAvatar($req, $user_id);
+    public function saveAvatar($req, $client_id);
 
     /**
      * @param $params
@@ -48,5 +48,19 @@ interface ClientBaseServiceInterface
      * @param $params
      * @return mixed
      */
-    public function saveStorage($params);
+    public function saveFile($params);
+
+    /**
+     * @param $fileName
+     * @param $filePath
+     * @param $content
+     * @return mixed
+     */
+    public function saveStorage($fileName, $filePath, $content);
+
+    /**
+     * @param $model
+     * @return mixed
+     */
+    public function deleteAvatars($model);
 }

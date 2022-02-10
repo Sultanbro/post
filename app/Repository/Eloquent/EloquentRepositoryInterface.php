@@ -55,10 +55,11 @@ interface EloquentRepositoryInterface
     public function firstOrCreate(array $attributes);
 
     /**
-     * @param array $attributes
+     * @param array $attributes1
+     * @param array $attributes2
      * @return mixed
      */
-    public function createOrUpdate(array $attributes);
+    public function createOrUpdate(array $attributes1, array $attributes2);
 
     /**
      * @param $slug

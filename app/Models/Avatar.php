@@ -9,5 +9,8 @@ class Avatar extends Model
 {
     use HasFactory;
     protected $fillable = ['client_id',
-                            'link',];
+                            'link',
+                            'type',
+                            'created_by',
+                            'updated_by',];
 }
