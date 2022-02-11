@@ -150,4 +150,15 @@ class BaseRepository implements EloquentRepositoryInterface
         abort(403);
     }
 
+    /**
+     * @param $column
+     * @param string $operator
+     * @param $value
+     * @return mixed
+     */
+    public function where($column, $operator, $value)
+    {
+        return $this->model->where($column,$operator,$value)->get()->last();
+    }
+
 }

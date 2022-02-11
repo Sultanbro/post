@@ -191,6 +191,8 @@ return [
         App\Providers\EmailServiceProvider::class,
         App\Providers\RolesServiceProvider::class,
         App\Providers\PermissionServiceProvider::class,
+        App\Providers\CentcoinServiceProvider::class,
+        App\Providers\EmailServiceProvider::class
     ),
 
     /*
