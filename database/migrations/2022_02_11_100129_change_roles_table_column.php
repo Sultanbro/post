@@ -15,6 +15,7 @@ class ChangeRolesTableColumn extends Migration
     {
         Schema::table('roles', function (Blueprint $table) {
             $table->integer('company_id')->change();
+            $table->dropForeign(['company_id']);
         });
     }
 
