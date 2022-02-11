@@ -49,7 +49,7 @@ class RoleController extends Controller
      */
     public function store(RoleStoreRequest $request)
     {
-        $roleModel = $this->roleRepository->create($request->validated());
+        $roleModel = $this->roleRepository->create($request->all());
         $roleModel->permissions()->attach($request->permissions);
         return new RoleResource($roleModel);
     }
