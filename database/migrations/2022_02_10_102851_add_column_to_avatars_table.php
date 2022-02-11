@@ -28,7 +28,7 @@ class AddColumnToAvatarsTable extends Migration
     public function down()
     {
         Schema::table('avatars', function (Blueprint $table) {
-            //
+            $table->dropColumn(['type', 'created_by', 'updated_by']);
         });
     }
 }
