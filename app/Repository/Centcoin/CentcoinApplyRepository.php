@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repository\Eloquent;
+namespace App\Repository\Centcoin;
 
-use App\Models\CentcoinApply;
-use App\Repository\CentcoinApplyRepositoryInterface;
+use App\Models\Centcoin\CentcoinApply;
+use App\Repository\Eloquent\BaseRepository;
 
 class CentcoinApplyRepository extends BaseRepository implements CentcoinApplyRepositoryInterface
 {
@@ -16,5 +16,4 @@ class CentcoinApplyRepository extends BaseRepository implements CentcoinApplyRep
         parent::__construct($model);
         $this->model = $model;
     }
-
 }

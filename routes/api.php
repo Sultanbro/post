@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Booking\BookingController;
 use App\Http\Controllers\Api\Booking\BookingUsersController;
 use App\Http\Controllers\Api\Booking\RoomController;
+use App\Http\Controllers\Api\Centcoin\CentcoinApplyController;
+use App\Http\Controllers\Api\Centcoin\CentcoinController;
 use App\Http\Controllers\Api\Email\EmailController;
 use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
@@ -99,4 +101,8 @@ Route::group(['prefix' => 'access'], function () {
 Route::resource('/avatar', AvatarController::class);
 
 
+
+//Centcoin
+Route::resource('centcoin/apply',CentcoinApplyController::class);
+Route::resource('centcoin',CentcoinController::class);
 

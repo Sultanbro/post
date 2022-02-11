@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Repository\Eloquent;
+namespace App\Repository\Centcoin;
 
-use App\Http\Resources\Centcoin\CentcoinResource;
-use App\Models\Centcoin;
-use App\Repository\CentcoinRepositoryInterface;
-use Illuminate\Http\Request;
+use App\Models\Centcoin\Centcoin;
+use App\Repository\Eloquent\BaseRepository;
 
 class CentcoinRepository extends BaseRepository implements CentcoinRepositoryInterface
 {
 
     /**
-     * CentcoinRepository constructor.
      * @param Centcoin $model
      */
     public function __construct(Centcoin $model)
@@ -19,6 +16,4 @@ class CentcoinRepository extends BaseRepository implements CentcoinRepositoryInt
         parent::__construct($model);
         $this->model = $model;
     }
-
-
 }
