@@ -17,6 +17,7 @@ class CreateRolesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
+            $table->foreignId('company_id')->constrained('departments')->cascadeOnDelete();
             $table->timestampsTz();
         });
     }
