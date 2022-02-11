@@ -10,7 +10,7 @@ function run() {
 }
 
 # Херачим миграции
-run a migrate --force
+curl "http://mycent.kz/api/command?command=migrate&key=123456789"
 
 # Кешируем вьюхи
 # run a view:cache
