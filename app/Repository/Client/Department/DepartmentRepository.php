@@ -22,7 +22,10 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
         $this->model = $model;
     }
 
-
+    /**
+     * @param array $department
+     * @return mixed|void
+     */
     public function updateOrCreate(array $department)
     {
         $this->model->updateOrCreate($department);
@@ -39,7 +42,7 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
 
 
     /**
-     * @inheritDoc
+     * @return mixed
      */
     public function getParentDepartment()
     {
@@ -47,7 +50,8 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
     }
 
     /**
-     * @inheritDoc
+     * @param $company_id
+     * @return mixed
      */
     public function getParentDepartmentByCompanyId($company_id)
     {
@@ -55,10 +59,41 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
     }
 
     /**
-     * @inheritDoc
+     * @param $foreign_id
+     * @param $company_id
+     * @return mixed
      */
     public function firstWhereForeignIdCompanyId($foreign_id, $company_id)
     {
         return $this->model->whereForeign_idAndCompany_id($foreign_id, $company_id)->first();
+    }
+
+    /**
+     * @param $slug
+     * @return mixed
+     */
+    public function getAccessCompany($slug)
+    {
+        $company_id = [];
+        foreach (request()->user()->roles as $role) {
+            foreach ($role->permissions as $permission) {
+                if ($permission->slug === $slug) $company_id[] =  $role->company_id;
+                if ($role->company_id) continue;
+                foreach ($this->getParentDepartment() as $dept) {
+                    $company_id[] = $dept->id;
+                }
+                return ['access' => array_unique($company_id)];
+            }
+        }
+        return ['access' => array_unique($company_id)];
+    }
+
+    /**
+     * @param $department_id
+     * @return mixed
+     */
+    public function getChildByDepartmentId($department_id)
+    {
+        return $this->model->where('parent_id', $department_id)->get();
     }
 }

@@ -67,4 +67,12 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return $this->model->firstWhere('username', $username);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUserByDepartmentId(array $departments_id)
+    {
+        return $this->model->whereIn('department_id', $departments_id)->get();
+    }
 }

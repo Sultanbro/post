@@ -66,5 +66,20 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'auth.bearer' => BearerAuthenticate::class,
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
+
+
+
+//        Api controller police
+//        Role Controllers
+        'users_role.police' => \App\Http\Middleware\Permission\UsersRoleMiddleware::class,
+        'role.police' =>\App\Http\Middleware\Permission\RoleMiddleware::class,
+//        Booking Controllers
+        'booking.police' =>\App\Http\Middleware\Booking\BookingMiddleware::class,
+        'booking_user.police' =>\App\Http\Middleware\Booking\BookingUsersMiddleware::class,
+        'room.police' =>\App\Http\Middleware\Booking\RoomMiddleware::class,
+//        Post Controllers
+        'post.police' =>\App\Http\Middleware\Booking\BookingUsersMiddleware::class,
+        'comment.police' =>\App\Http\Middleware\Booking\BookingUsersMiddleware::class,
     ];
 }

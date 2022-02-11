@@ -3,6 +3,7 @@
 
 namespace App\Repository\Eloquent;
 
+use App\Repository\Client\Department\DepartmentRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -92,11 +93,61 @@ class BaseRepository implements EloquentRepositoryInterface
     }
 
     /**
-     * @param array $attributes
+     * @param array $attributes1
+     * @param array $attributes2
      * @return mixed
      */
-    public function createOrUpdate(array $attributes)
+    public function createOrUpdate(array $attributes1, array $attributes2)
     {
-        return $this->model->updateOrCreate($attributes);
+        return $this->model->updateOrCreate($attributes1, $attributes2);
     }
+
+    /**
+     * @param $slug
+     * @return array|\Illuminate\Database\Eloquent\Collection|Model[]|mixed
+     */
+    public function getByRoleCompany($slug)
+    {
+        foreach (request()->user()->roles as $role) {
+            foreach ($role->permissions as $permission) {
+                if ($permission->slug === $slug) $company_id[] = $role->company_id;
+                if ($role->company_id) continue;
+                return $this->model->all();
+            }
+        }
+        if (!isset($company_id[0]))return[];
+
+        return $this->model->whereIn('company_id', $company_id)->get();
+    }
+
+    /**
+     * @param $id
+     * @param $slug
+     * @return mixed|void
+     */
+    public function firstByRoleCompanyAndModelId($id, $slug)
+    {
+        $model = $this->find($id);
+
+        $this->firstByRoleCompany($model, $slug);
+    }
+
+    /**
+     * @param $model
+     * @param $slug
+     * @return mixed
+     */
+    public function firstByRoleCompany($model, $slug)
+    {
+        foreach (request()->user()->roles as $role) {
+                foreach ($role->permissions as $permission) {
+                    if ($model->company_id === $role->company_id)if ($permission->slug === $slug) return $model;
+                    if ($role->company_id) continue;
+                    return $model;
+                }
+        }
+
+        abort(403);
+    }
+
 }

@@ -4,6 +4,8 @@ namespace App\Http\Resources\Post;
 
 use App\Http\Resources\UserFullNameIdRecourse;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class PostResource extends JsonResource
 {
@@ -29,6 +31,9 @@ class PostResource extends JsonResource
             'liked' => $this->liked,
             'comments' => PostCommentResource::collection($this->postComments->take(1)),
             'comments_count' => $this->allComments->count(),
+            'permission' => ['update' => $this->when(Gate::allows('update_post') or Auth::id() === $this->user_id, 'update'),
+                             'crate' => $this->when(Gate::allows('create_post'), 'create'),
+                             'delete' => $this->when(Gate::allows('delete_post') or Auth::id() === $this->user_id, 'delete'),],
         ];
     }
 }

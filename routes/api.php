@@ -10,6 +10,10 @@ use App\Http\Controllers\Api\Email\EmailController;
 use App\Http\Controllers\Api\Post\CommentController;
 use App\Http\Controllers\Api\Post\LikeController;
 use App\Http\Controllers\Api\Post\PostController;
+use App\Http\Controllers\Api\User\Avatar\AvatarController;
+use App\Http\Controllers\Api\User\Role\PermissionController;
+use App\Http\Controllers\Api\User\Role\RoleController;
+use App\Http\Controllers\Api\User\Role\UserRoleController;
 use App\Http\Controllers\Api\User\UserController;
 use App\Http\Controllers\Api\WriteBase\CareerUserController;
 use App\Http\Controllers\Api\WriteBase\CityController;
@@ -39,6 +43,7 @@ use Illuminate\Support\Facades\Route;
 //});
 
 
+
 //Auth route
 Route::post('/register', [RegisterController::class, 'index'])->withoutMiddleware('auth.bearer');
 Route::post('/login', [LoginController::class, 'index'])->withoutMiddleware('auth.bearer');
@@ -54,13 +59,13 @@ Route::post('/regions/info/accept', [RegionController::class, 'saveRegions']);
 Route::post('/duty/info/accept', [DutyController::class, 'saveDuties']);
 Route::post('/staff/info/accept', [StaffController::class, 'saveStaff']);
 Route::post('/career/info/accept', [CareerUserController::class, 'saveCareer']);
-Route::post('/avatar', [ClientBaseController::class, 'acceptAvatar']);
+Route::post('/avatar/accept', [ClientBaseController::class, 'acceptAvatar']);
 Route::post('user/details/accept', [ClientBaseController::class, 'userDetails']);
-Route::post('save/storage', [ClientBaseController::class, 'saveStorage']);
+Route::post('save/file', [ClientBaseController::class, 'saveFile']);
 
 //Post route
-Route::resource('posts', PostController::class);
-Route::resource('comments', CommentController::class);
+Route::resource('posts', PostController::class)->middleware('post.police');
+Route::resource('comments', CommentController::class)->middleware('comment.police');
 Route::resource('likes', LikeController::class);
 Route::get('/filter/posts',[PostController::class, 'getFilter']);
 
@@ -79,7 +84,19 @@ Route::post('email/save/file', [EmailController::class, 'saveFile']);
 Route::post('email/domain/save', [EmailController::class, 'saveEmailDomain']);
 
 //Booking route
-Route::resource('rooms',RoomController::class);
-Route::resource('booking/users', BookingUsersController::class);
-Route::resource('booking',BookingController::class);
+Route::resource('rooms',RoomController::class)->middleware('room.police');
+Route::resource('booking/users', BookingUsersController::class)->middleware('booking_user.police');
+Route::resource('booking',BookingController::class)->middleware('booking.police');
+
+//Role route
+Route::group(['prefix' => 'access'], function () {
+    Route::resource('role', RoleController::class)->middleware('role.police');
+    Route::resource('permission', PermissionController::class);
+    Route::resource('users_role', UserRoleController::class)->middleware('users_role.police');
+});
+
+//Avatar
+Route::resource('/avatar', AvatarController::class);
+
+
 

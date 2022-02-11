@@ -5,6 +5,7 @@ namespace App\Http\Services\Booking;
 
 use App\Http\Resources\Booking\BookingResource;
 use App\Repository\Booking\BookingRepositoryInterface;
+use App\Repository\Client\Department\DepartmentRepositoryInterface;
 
 
 class BookingService implements BookingServiceInterface
@@ -13,18 +14,25 @@ class BookingService implements BookingServiceInterface
      * @var BookingRepositoryInterface
      */
     private $bookingRepository;
+    /**
+     * @var DepartmentRepositoryInterface
+     */
+    private $departmentRepository;
 
     /**
      * @param BookingRepositoryInterface $bookingRepository
+     * @param DepartmentRepositoryInterface $departmentRepository
      */
-    public function __construct(BookingRepositoryInterface $bookingRepository)
+    public function __construct(BookingRepositoryInterface $bookingRepository, DepartmentRepositoryInterface $departmentRepository)
     {
+        $this->departmentRepository = $departmentRepository;
         $this->bookingRepository = $bookingRepository;
     }
 
     public function index()
     {
-        return BookingResource::collection($this->bookingRepository->all());
+        return BookingResource::collection($this->bookingRepository->getByRoleCompany('index_booking'))
+            ->additional($this->departmentRepository->getAccessCompany('index_booking'));
     }
 
     /**
@@ -67,15 +75,11 @@ class BookingService implements BookingServiceInterface
 
     /**
      * @param $id
-     * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Http\JsonResponse|null
+     * @return BookingResource
      */
     public function show($id)
     {
-        if($this->bookingRepository->find($id)){
-            return response()->json(['success' => true,'data' => $this->bookingRepository->find($id)],200);
-        } else {
-            return response()->json(['message' => 'This booking not found for show','error' => 'Enter correct id'],404);
-        }
+        return new BookingResource($this->bookingRepository->firstByRoleCompanyAndModelId($id, 'show_booking'));
     }
 
     /**

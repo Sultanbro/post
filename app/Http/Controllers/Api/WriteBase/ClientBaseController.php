@@ -79,8 +79,8 @@ class ClientBaseController
         }
     }
 
-    public function saveStorage(Request $request)
+    public function saveFile(Request $request)
     {
-        return $this->clientBaseService->saveStorage($request->all());
+        return $this->clientBaseService->saveFile($request->all());
     }
 }

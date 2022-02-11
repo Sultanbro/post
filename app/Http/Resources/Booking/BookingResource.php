@@ -4,6 +4,7 @@
 namespace App\Http\Resources\Booking;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 
 class BookingResource extends JsonResource
 {
@@ -21,7 +22,10 @@ class BookingResource extends JsonResource
             'end' => $this->end,
             'description' => $this->description,
             'created_by' => $this->created_by,
-            'updated_by' => $this->updated_by
+            'updated_by' => $this->updated_by,
+            'permission' => ['update' => $this->when(Gate::allows('update_booking'), 'update'),
+                             'crate' => $this->when(Gate::allows('create_booking'), 'create'),
+                             'delete' => $this->when(Gate::allows('delete_booking'), 'delete'),],
         ];
     }
 }

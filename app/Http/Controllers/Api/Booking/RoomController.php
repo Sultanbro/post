@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api\Booking;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Booking\RoomResource;
 use App\Http\Services\Booking\BookingServiceInterface;
+use App\Models\Booking\Room;
 use App\Repository\Booking\Room\RoomRepositoryInterface;
 use App\Repository\Client\ClientRepositoryInterface;
+use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,9 +21,19 @@ class RoomController extends Controller
      * @var RoomRepositoryInterface
      */
     private $roomRepository;
+    /**
+     * @var DepartmentRepositoryInterface
+     */
+    private $departmentRepository;
 
-    public function __construct(RoomRepositoryInterface $roomRepository)
+    /**
+     * RoomController constructor.
+     * @param RoomRepositoryInterface $roomRepository
+     * @param DepartmentRepositoryInterface $departmentRepository
+     */
+    public function __construct(RoomRepositoryInterface $roomRepository, DepartmentRepositoryInterface $departmentRepository)
     {
+        $this->departmentRepository = $departmentRepository;
         $this->roomRepository = $roomRepository;
     }
 
@@ -30,7 +42,8 @@ class RoomController extends Controller
      */
     public function index()
     {
-        return RoomResource::collection($this->roomRepository->all()->where('company_id',Auth::user()->company_id));
+        return RoomResource::collection($this->roomRepository->getByRoleCompany('index_room'))
+            ->additional($this->departmentRepository->getAccessCompany('index_room'));
     }
 
     /**
@@ -54,16 +67,12 @@ class RoomController extends Controller
     }
 
     /**
-     * @param  $id
-     * @return Model|JsonResponse
+     * @param Room $room
+     * @return RoomResource|JsonResponse
      */
-    public function show($id)
+    public function show(Room $room)
     {
-        if($this->roomRepository->find($id)->company_id === Auth::user()->company_id){
-            return response()->json(['success' => true, 'data' => $this->roomRepository->find($id)], 200);
-        } else {
-            return response()->json(['message' => 'This room not found for show','error' => 'Enter correct id'], 404);
-        }
+        return new RoomResource($this->roomRepository->firstByRoleCompany($room, 'show_room'));
     }
 
     /**

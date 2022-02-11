@@ -55,9 +55,31 @@ interface EloquentRepositoryInterface
     public function firstOrCreate(array $attributes);
 
     /**
-     * @param array $attributes
+     * @param array $attributes1
+     * @param array $attributes2
      * @return mixed
      */
-    public function createOrUpdate(array $attributes);
+    public function createOrUpdate(array $attributes1, array $attributes2);
+
+    /**
+     * @param $slug
+     * @return mixed
+     */
+    public function getByRoleCompany($slug);
+
+    /**
+     * @param $id
+     * @param $slug
+     * @return mixed
+     */
+    public function firstByRoleCompanyAndModelId($id, $slug);
+
+    /**
+     * @param $model
+     * @param $slug
+     * @return mixed
+     */
+    public function firstByRoleCompany($model, $slug);
+
 }
 

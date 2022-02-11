@@ -16,7 +16,7 @@ class CompanyResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            ''
+            'full_name' => $this->full_name,
         ];
     }
 }

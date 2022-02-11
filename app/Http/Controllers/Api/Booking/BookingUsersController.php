@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Booking;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Booking\BookingUsersResource;
+use App\Models\Booking\BookingUsers;
 use App\Repository\Booking\BookingUsers\BookingUsersRepositoryInterface;
+use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -16,9 +18,19 @@ class BookingUsersController extends Controller
      * @var BookingUsersRepositoryInterface
      */
     private $bookingUsersRepository;
+    /**
+     * @var DepartmentRepositoryInterface
+     */
+    private $departmentRepository;
 
-    public function __construct(BookingUsersRepositoryInterface $bookingUsersRepository)
+    /**
+     * BookingUsersController constructor.
+     * @param BookingUsersRepositoryInterface $bookingUsersRepository
+     * @param DepartmentRepositoryInterface $departmentRepository
+     */
+    public function __construct(BookingUsersRepositoryInterface $bookingUsersRepository, DepartmentRepositoryInterface $departmentRepository)
     {
+        $this->departmentRepository = $departmentRepository;
         $this->bookingUsersRepository = $bookingUsersRepository;
     }
 
@@ -27,7 +39,8 @@ class BookingUsersController extends Controller
      */
     public function index()
     {
-        return BookingUsersResource::collection($this->bookingUsersRepository->all());
+        return BookingUsersResource::collection($this->bookingUsersRepository->getByRoleCompany('index_booking_users'))
+            ->additional($this->departmentRepository->getAccessCompany('index_booking_users'));
     }
 
     /**
@@ -44,16 +57,12 @@ class BookingUsersController extends Controller
     }
 
     /**
-     * @param  $id
-     * @return Model|\Illuminate\Http\JsonResponse
+     * @param BookingUsers $bookingUsers
+     * @return BookingUsersResource|\Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(BookingUsers $bookingUsers)
     {
-        if($this->bookingUsersRepository->find($id)) {
-            return response()->json(['success' => true, 'data' => $this->bookingUsersRepository->find($id)],200);
-        } else {
-            return response()->json(['message' => 'This booking not found for show','error' => 'Enter correct id'],404);
-        }
+        return new BookingUsersResource($this->bookingUsersRepository->firstByRoleCompany($bookingUsers, 'index_booking_users'));
     }
 
     /**

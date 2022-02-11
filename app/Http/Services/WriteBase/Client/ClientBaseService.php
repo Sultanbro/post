@@ -13,6 +13,7 @@ use App\Repository\Client\EOrder\EOrderRepositoryInterface;
 use App\Repository\Reference\City\CityRepositoryInterface;
 use App\Repository\Reference\Dicti\DictiRepositoryInterface;
 use App\Repository\Reference\Region\RegionRepositoryInterface;
+use App\Repository\User\Avatar\AvatarRepositoryInterface;
 use App\Repository\User\Employee\EmployeeRepositoryInterface;
 use App\Repository\User\UserDetailsRepository;
 use App\Repository\User\UserRepositoryInterface;
@@ -71,6 +72,10 @@ class ClientBaseService implements ClientBaseServiceInterface
      * @var UserDetailsRepository
      */
     private $userDetailsRepository;
+    /**
+     * @var AvatarRepositoryInterface
+     */
+    private $avatarRepository;
 
     /**
      * @param ClientRepositoryInterface $clientRepository
@@ -84,6 +89,7 @@ class ClientBaseService implements ClientBaseServiceInterface
      * @param EOrderRepositoryInterface $eOrderRepository
      * @param KeyCloakServiceInterface $cloakService
      * @param UserDetailsRepository $userDetailsRepository
+     * @param AvatarRepositoryInterface $avatarRepository
      */
     public function __construct(ClientRepositoryInterface $clientRepository,
                                 DepartmentRepositoryInterface $departmentRepository,
@@ -95,8 +101,10 @@ class ClientBaseService implements ClientBaseServiceInterface
                                 RegionRepositoryInterface $regionRepository,
                                 EOrderRepositoryInterface $eOrderRepository,
                                 KeyCloakServiceInterface $cloakService,
-                                UserDetailsRepository $userDetailsRepository)
+                                UserDetailsRepository $userDetailsRepository,
+                                AvatarRepositoryInterface $avatarRepository)
     {
+        $this->avatarRepository = $avatarRepository;
         $this->userDetailsRepository = $userDetailsRepository;
         $this->cloakService = $cloakService;
         $this->eOrderRepository = $eOrderRepository;
@@ -361,7 +369,7 @@ class ClientBaseService implements ClientBaseServiceInterface
 
                 $result = [$re['foreign_id'] => 'not found foreign_id'];
             } else {
-                $result = $this->saveAvatar($re, $model->client_id);
+                $result = [$re['foreign_id'] => $this->saveAvatar($re, $model->client_id)];
             }
         }
         return $result;
@@ -370,32 +378,37 @@ class ClientBaseService implements ClientBaseServiceInterface
 
     /**
      * @param $req
-     * @param $user_id
-     * @return string[]
+     * @param $client_id
+     * @return array|\Exception|string
      */
-    public function saveAvatar($req, $user_id)
+    public function saveAvatar($req, $client_id)
     {
+        $req['filePath'] = "avatars/$client_id";
         try {
+            if (Storage::disk('local')->exists("public/" .$req['filePath'])) {
+                Storage::disk('local')->deleteDirectory("public/" .$req['filePath']);
+            }
             if (isset($req['url'])) {
+
                 $content = file_get_contents($req['url']);
                 $fileName = basename($req['url']);
-                Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
-                Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
-                return [$req['foreign_id'] => 'ok'];
+                $link = $this->saveStorage($fileName, $req['filePath'], $content);
+
             }elseif (isset($req['file'])) {
-                $content = file_get_contents($req['file']->getRealPath());
-                $fileName = $req['file']->getClientOriginalName();
-                Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
-                Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'client_id' => $user_id]);
-                return [$req['foreign_id'] => 'ok'];
+
+                $link = $this->saveFile($req);
+
             }elseif (isset($req['basefile'])) {
+
                 $content = base64_decode($req['basefile']);
-                $fileName = $req['filename'];
-                Storage::disk('local')->put("public/avatars/$user_id/$fileName", $content);
-                Avatar::firstOrCreate(['link' => "storage/avatars/$user_id/$fileName", 'user_id' => $user_id]);
-                return [$req['foreign_id'] => 'ok'];
+                $link = $this->saveStorage($req['filename'], $req['filePath'], $content);
 
             }
+
+            $type = isset($req['type']) ? $req['type'] : 1;
+
+            if ($this->avatarRepository->createOrUpdate(['client_id' => $client_id,], ['created_by' => Auth::id(), 'updated_by' => Auth::id(), 'type' => $type, 'link' => $link,])) return [$client_id => 'ok', 'link' => $link];
+
             return 'not storage';
         }catch (\Exception $e) {
             return $e;
@@ -421,11 +434,37 @@ class ClientBaseService implements ClientBaseServiceInterface
     /**
      * @inheritDoc
      */
-    public function saveStorage($params)
+    public function saveFile($params)
     {
         $content = file_get_contents($params['file']->getRealPath());
         $fileName = $params['file']->getClientOriginalName();
-        Storage::disk('local')->put("public/" . $params['filePath'] . "/$fileName", $content);
-        return ['filePath' => "storage/" . $params['filePath'] . "/$fileName"];
+        return $this->saveStorage($fileName, $params['filePath'], $content);
+    }
+
+    /**
+     * @param $fileName
+     * @param $filePath
+     * @param $content
+     * @return string
+     */
+    public function saveStorage($fileName, $filePath, $content)
+    {
+        Storage::disk('local')->put("public/" . $filePath . "/$fileName", $content);
+        return "storage/" . $filePath . "/$fileName";
+    }
+
+    /**
+     * @param $model
+     * @return mixed
+     */
+    public function deleteAvatars($model)
+    {
+        $link = explode("/", $model->link);
+        $link[0] = "public";
+        $link = implode("/", $link);
+        if (Storage::disk('local')->exists($link)) {
+            Storage::disk('local')->delete($link);
+        }
+        return $model->delete();
     }
 }
