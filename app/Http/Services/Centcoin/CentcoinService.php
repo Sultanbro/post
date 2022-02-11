@@ -91,7 +91,7 @@ class CentcoinService implements CentcoinServiceInterface
                 $newOperation->created_by = $user;
                 $newOperation->save();
 
-                return response()->json(['message' => 'Status success updated','success' => true],200);
+                return response()->json(['message' => 'Status success updated','success' => $apply->update($request)],200);
             }
         } else {
             return response()->json(['error' => 'This request does not exist'],404);
