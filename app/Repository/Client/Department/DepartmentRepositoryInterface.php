@@ -31,6 +31,12 @@ interface DepartmentRepositoryInterface extends EloquentRepositoryInterface
     public function getParentDepartmentByCompanyId($company_id);
 
     /**
+     * @return mixed
+     */
+    public function getCompanies();
+
+
+    /**
      * @param $foreign_id
      * @param $company_id
      * @return mixed
