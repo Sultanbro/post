@@ -5,7 +5,6 @@ namespace App\Http\Services\Centcoin;
 
 use App\Http\Resources\Centcoin\CentcoinResource;
 use App\Models\Centcoin\Centcoin;
-use App\Models\Centcoin\CentcoinApply;
 use App\Repository\Centcoin\CentcoinApplyRepositoryInterface;
 use App\Repository\Centcoin\CentcoinRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
@@ -18,97 +17,48 @@ class CentcoinService implements CentcoinServiceInterface
      * @var CentcoinRepositoryInterface
      */
     private $centcoinRepository;
-    private $centcoinApply;
+    private $centcoinApplyRepository;
 
     /**
      * @param CentcoinRepositoryInterface $centcoinRepository
-     * @param CentcoinApplyRepositoryInterface $centcoinApply
+     * @param CentcoinApplyRepositoryInterface $centcoinApplyRepository
      */
-    public function __construct(CentcoinRepositoryInterface $centcoinRepository, CentcoinApplyRepositoryInterface $centcoinApply)
+    public function __construct(CentcoinRepositoryInterface $centcoinRepository, CentcoinApplyRepositoryInterface $centcoinApplyRepository)
     {
         $this->centcoinRepository = $centcoinRepository;
-        $this->centcoinApply = $centcoinApply;
-    }
-
-    /**
-     * @param $id
-     * @return \Illuminate\Database\Eloquent\Model|mixed|null
-     */
-    public function show($id)
-    {
-       return $this->centcoinRepository->where('user_id','=',$id);
+        $this->centcoinApplyRepository = $centcoinApplyRepository;
     }
 
     /**
      * @param $request
      * @param $created_id
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return CentcoinResource|\Illuminate\Http\JsonResponse
      */
-    public function centcoinApply($request, $created_id)
+    public function transaction($request, $created_id)
+    {
+            $lastOperation =  $this->centcoinRepository->where('user_id','=', $request['user_id']);
+            $total = $lastOperation ? $lastOperation->total:0;
+                $user = $this->centcoinRepository->create(array_merge($request,[
+                    'total' => (($total + $request['quantity']) > 0) ? ($total + $request['quantity']) : 0,
+                    'updated_by' => $created_id,
+                    'created_by' => $created_id
+                ]));
+                return response()->json(['success' => true,'data' => new CentcoinResource($user)], 200);
+    }
+
+    public function applyOperation($request,$created_id)
     {
         $lastOperation =  $this->centcoinRepository->where('user_id','=', $request['user_id']);
-        if(is_null($lastOperation)){
-            return response()->json(['error' => 'This user not found'], 403);
-        } else if ($lastOperation->total >= $request['total']) {
-            $apply = new CentcoinApply();
-            $apply->type_id = $request['type_id'];
-            $apply->total = $request['total'] * $request['quantity'];
-            $apply->quantity = $request['quantity'];
-            $apply->user_id = $request['user_id'];
-            $apply->updated_by = $created_id;
-            $apply->created_by = $created_id;
-            $apply->save();
+        $total = $lastOperation ? $lastOperation->total:0;
+        if ($total >= $request['total']) {
+            $this->centcoinApplyRepository->create(array_merge($request,[
+                'total' => $request['total'] * $request['quantity'],
+                'updated_by' => $created_id,
+                'created_by' => $created_id
+            ]));
             return response()->json(['message' => 'Application created', 'success' => true], 200);
-        } else if($lastOperation->total <= $request['total']){
+        } else if($total <= $request['total']){
             return response()->json(['error' => 'Not enough centcoins'], 403);
-        }
-    }
-
-    // Для Админки
-
-    public function index()
-    {
-        return CentcoinResource::collection($this->centcoinRepository->all());
-    }
-
-    /**
-     * @param $request
-     * @param $created_id
-     * @return CentcoinResource
-     */
-    public function store($request, $created_id)
-    {
-        $user = $this->centcoinRepository->firstOrCreate(array_merge($request,[
-            'type_id' => 'регистрация',
-            'total' => ($request['quantity'] > 0) ?: 0,
-            'updated_by' => $created_id,
-            'created_by' => $created_id
-        ]));
-
-        return new CentcoinResource($user);
-    }
-
-    /**
-     * @param $request
-     * @param $created_id
-     * @return CentcoinResource|\Illuminate\Http\JsonResponse|mixed
-     */
-    public function operationCoins($request, $created_id)
-    {
-        $lastOperation =  $this->centcoinRepository->where('user_id','=', $request['user_id']);
-        if(is_null($lastOperation)){
-            return $this->store($request,$created_id);
-        }else {
-            $newOperation = new Centcoin();
-            $newOperation->type_id = $request['type_id'];
-            $newOperation->description = $request['description'];
-            $newOperation->quantity = $request['quantity'];
-            $newOperation->total = (($lastOperation->total + $request['quantity']) > 0) ? ($lastOperation->total + $request['quantity']) : 0;
-            $newOperation->user_id = $request['user_id'];
-            $newOperation->updated_by = $created_id;
-            $newOperation->created_by = $created_id;
-            $newOperation->save();
-            return response()->json(['message' => $newOperation->type_id, 'success' => true], 200);
         }
     }
 
@@ -119,10 +69,18 @@ class CentcoinService implements CentcoinServiceInterface
     public function statusApply($request)
     {
         $user = Auth::id();
-        $apply = $this->centcoinApply->find($request['id']);
-        if(!is_null($apply)){
-            if($request['status'] == 'Исполнено' && $apply->update($request)) {
-                $lastOperation =  $this->centcoinRepository->where('user_id','=', $apply->user_id);
+        $apply = $this->centcoinApplyRepository->find($request['id']);
+
+        if(!is_null($apply)) {
+            if (empty($request['status'])) {
+                return response()->json(['message' => 'Apply updated','success' => $apply->update($request)],200);
+
+            } elseif ($request['status'] === 'Отказано') {
+                $apply->update($request);
+                return response()->json(['message' => 'Status denied','success' => $apply->update($request)],200);
+
+            } elseif ($request['status'] === 'Исполнено') {
+                $lastOperation = $this->centcoinRepository->where('user_id', '=', $apply->user_id);
                 $newOperation = new Centcoin();
                 $newOperation->type_id = 'Покупка';
                 $newOperation->description = $apply->type_id;
@@ -133,9 +91,7 @@ class CentcoinService implements CentcoinServiceInterface
                 $newOperation->created_by = $user;
                 $newOperation->save();
 
-                return response()->json(['message' => 'Status updated','success' => true],200);
-            }else {
-                return response()->json(['message' => 'No product','success' => $apply->update($request)],403);
+                return response()->json(['message' => 'Status success updated','success' => true],200);
             }
         } else {
             return response()->json(['error' => 'This request does not exist'],404);

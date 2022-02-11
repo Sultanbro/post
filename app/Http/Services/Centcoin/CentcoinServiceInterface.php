@@ -7,35 +7,19 @@ namespace App\Http\Services\Centcoin;
 interface CentcoinServiceInterface
 {
 
-    public function index();
-
     /**
-     * @param $id
+     * @param $request
+     * @param $created_id
      * @return mixed
      */
-    public function show($id);
+    public function transaction($request, $created_id);
 
     /**
      * @param $request
      * @param $created_id
      * @return mixed
      */
-    public function centcoinApply($request,$created_id);
-
-    /**
-     * @param $request
-     * @param $created_id
-     * @return mixed
-     */
-    public function store($request, $created_id);
-
-    /**
-     * @param $request
-     * @param $created_id
-     * @return mixed
-     */
-
-    public function operationCoins($request,$created_id);
+    public function applyOperation($request,$created_id);
 
     /**
      * @param $request

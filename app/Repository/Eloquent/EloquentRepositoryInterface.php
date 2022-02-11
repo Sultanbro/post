@@ -60,6 +60,12 @@ interface EloquentRepositoryInterface
      */
     public function createOrUpdate(array $attributes);
 
-    public function where($column, $value,$operator = '=');
+    /**
+     * @param $column
+     * @param string $operator
+     * @param $value
+     * @return mixed
+     */
+    public function where($column, $operator, $value);
 }
 

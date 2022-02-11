@@ -3,49 +3,38 @@
 namespace App\Http\Controllers\Api\Centcoin;
 
 use App\Http\Controllers\Controller;
+use App\Repository\Centcoin\CentcoinRepositoryInterface;
 use App\Http\Services\Centcoin\CentcoinServiceInterface;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class CentcoinController extends Controller
 {
-
-// Лишний контроллер
-
     /**
+     * @var CentcoinRepositoryInterface
      * @var CentcoinServiceInterface
      */
+    private $centcoinRepository;
     private $centcoinService;
 
     /**
+     * @param CentcoinRepositoryInterface $centcoinRepository
      * @param CentcoinServiceInterface $centcoinService
      */
-    public function __construct(CentcoinServiceInterface $centcoinService)
+    public function __construct(CentcoinRepositoryInterface $centcoinRepository, CentcoinServiceInterface $centcoinService)
     {
+        $this->centcoinRepository = $centcoinRepository;
         $this->centcoinService = $centcoinService;
     }
 
-    public function show($id)
-    {
-        return $this->centcoinService->show($id);
-    }
-
-    public function centcoinApply(Request $request)
-    {
-        $created_id = Auth::id();
-        return $this->centcoinService->centcoinApply($request->all(),$created_id);
-    }
-
-    // для Админки
-
     /**
-     * @return Response
+     * @return Collection
      */
     public function index()
     {
-        return $this->centcoinService->index();
+        return $this->centcoinRepository->all();
     }
 
     /**
@@ -55,26 +44,46 @@ class CentcoinController extends Controller
     public function store(Request $request)
     {
         $created_by_id = Auth::id();
-        return $this->centcoinService->store($request->all(),$created_by_id);
+        return $this->centcoinService->transaction($request->all(),$created_by_id);
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function show($id)
+    {
+        if($this->centcoinRepository->find($id)){
+            return response()->json(['success' => true, 'data' => $this->centcoinRepository->find($id)], 200);
+        }else {
+            return response()->json(['success' => false, 'message' => 'This user not found'], 404);
+        }
     }
 
     /**
      * @param Request $request
-     * @return mixed
+     * @param $id
+     * @return JsonResponse
      */
-    public function operationCoins(Request $request)
-    {
-        $created_id = Auth::id();
-        return $this->centcoinService->operationCoins($request->all(),$created_id);
-
+    public function update(Request $request, $id){
+        if($this->centcoinRepository->find($id)){
+            $coin = $this->centcoinRepository->find($id);
+            return response()->json(['success' => $coin->update($request->all()),'message' => 'Centcoin of user updated'], 200);
+        }else {
+            return response()->json(['message' => 'This user not found for update','error' => 'Enter correct id'], 404);
+        }
     }
 
     /**
-     * @param Request $request
-     * @return mixed
+     * @param $id
+     * @return JsonResponse
      */
-    public function statusApply(Request $request)
+    public function destroy($id)
     {
-        return $this->centcoinService->statusApply($request->all());
+        if($this->centcoinRepository->find($id)){
+            return response()->json(['message' => 'Centcoin of user delete','success' => $this->centcoinRepository->deleteById($id)],200);
+        } else {
+            return response()->json(['message' => 'This user not found for delete','error' => 'Enter correct id'], 404);
+        }
     }
 }
