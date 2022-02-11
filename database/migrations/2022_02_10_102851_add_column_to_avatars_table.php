@@ -14,9 +14,9 @@ class AddColumnToAvatarsTable extends Migration
     public function up()
     {
         Schema::table('avatars', function (Blueprint $table) {
-//            $table->integer('type')->default(0)->comment(' 0 = в обработке, 1 = на показ');
-//            $table->integer('created_by')->comment('автор создания');
-//            $table->integer('updated_by')->comment('автор изменения');
+            $table->integer('type')->default(0)->comment(' 0 = в обработке, 1 = на показ');
+            $table->integer('created_by')->comment('автор создания');
+            $table->integer('updated_by')->comment('автор изменения');
         });
     }
 
