@@ -50,6 +50,14 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
     }
 
     /**
+     * @return mixed
+     */
+    public function getCompanies()
+    {
+        return $this->model->where('parent_id', 1)->get();
+    }
+
+    /**
      * @param $company_id
      * @return mixed
      */
@@ -79,7 +87,7 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
             foreach ($role->permissions as $permission) {
                 if ($permission->slug === $slug) $company_id[] =  $role->company_id;
                 if ($role->company_id) continue;
-                foreach ($this->getParentDepartment() as $dept) {
+                foreach ($this->getCompanies() as $dept) {
                     $company_id[] = $dept->id;
                 }
                 return ['access' => array_unique($company_id)];
