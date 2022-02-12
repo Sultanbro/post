@@ -79,7 +79,7 @@ class Kernel extends HttpKernel
         'booking_user.police' =>\App\Http\Middleware\Booking\BookingUsersMiddleware::class,
         'room.police' =>\App\Http\Middleware\Booking\RoomMiddleware::class,
 //        Post Controllers
-        'post.police' =>\App\Http\Middleware\Booking\BookingUsersMiddleware::class,
-        'comment.police' =>\App\Http\Middleware\Booking\BookingUsersMiddleware::class,
+        'post.police' =>\App\Http\Middleware\Post\PostMiddleware::class,
+        'comment.police' =>\App\Http\Middleware\Post\CommentMiddleware::class,
     ];
 }
