@@ -90,6 +90,7 @@ services:
         - HEALTHCHECK_PORT=8080
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
+
 ##############################################################################
 
   pgadmin:
@@ -109,6 +110,13 @@ services:
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
 
+##############################################################################
+
+  frontend:
+    image: reg.cic.kz/centras/mycic-new-design:latest
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+      io.rancher.container.pull_image: always
 
 ######################
 #   Балансировщики   #
