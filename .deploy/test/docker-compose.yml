@@ -41,7 +41,7 @@ services:
       POSTGRES_PASSWORD: DVLkjNwEDZ9xMRPjG33b
     stdin_open: true
     volumes:
-      - /share/common/data/mycent/test/pg:/var/lib/postgresql/data
+      - /var/data/mycent/test/pg:/var/lib/postgresql/data
     tty: true
     networks:
       - app_network
@@ -60,7 +60,7 @@ services:
       - "17313:80"
     stdin_open: true
     volumes:
-    - /share/common/data/mycent/test/pg:/var/lib/postgresql/data
+    - /var/data/mycent/test/pg:/var/lib/postgresql/data
     networks:
       - app_network
     labels:
