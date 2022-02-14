@@ -2,7 +2,7 @@ version: '2'
 
 services:
   server:
-    scale: 1
+    scale: 3
     start_on_create: true
 
 ###########################
