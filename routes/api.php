@@ -98,11 +98,11 @@ Route::group(['prefix' => 'access'], function () {
 });
 
 //Avatar
-Route::resource('/avatar', AvatarController::class);
+Route::resource('/avatar', AvatarController::class)->middleware('avatar.police');
 
 
 
 //Centcoin
-Route::resource('centcoin/apply',CentcoinApplyController::class);
-Route::resource('centcoin',CentcoinController::class);
+Route::resource('centcoin/apply',CentcoinApplyController::class)->middleware('centcoin_apply.police');
+Route::resource('centcoin',CentcoinController::class)->middleware('centcoin.police');
 

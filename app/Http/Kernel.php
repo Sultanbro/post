@@ -82,5 +82,10 @@ class Kernel extends HttpKernel
 //        Post Controllers
         'post.police' =>\App\Http\Middleware\Post\PostMiddleware::class,
         'comment.police' =>\App\Http\Middleware\Post\CommentMiddleware::class,
+//          Avatar Controller
+        'avatar.police' => \App\Http\Middleware\Avatar\AvatarMiddleware::class,
+//          Centcoin Controllers
+        'centcoin.police' => \App\Http\Middleware\Centcoin\CentcoinMiddleware::class,
+        'centcoin_apply.police' => \App\Http\Middleware\Centcoin\CentcoinApplyMiddleware::class,
     ];
 }
