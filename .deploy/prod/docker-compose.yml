@@ -3,7 +3,7 @@ version: '2'
 #################################
 
 networks:
-  app_network:
+  mycent_prod_network:
     driver: bridge
 
 services:
@@ -23,8 +23,7 @@ services:
       - /var/data/mycent/prod/application:/app/storage
       - /var/data/mycent/prod/shared:/shared
 
-    networks:
-      - app_network
+    networks: ['mycent_prod_network']
 
     depends_on:
       - db
@@ -58,8 +57,7 @@ services:
       # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
       - /var/data/mycent/prod/pg:/var/lib/postgresql/data
     tty: true
-    networks:
-      - app_network
+    networks: ['mycent_prod_network']
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
 
@@ -88,6 +86,7 @@ services:
       SCHEDULE: '@every 2h30m00s'
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
+    networks: ['mycent_prod_network']
 
 ##############################################################################
 
@@ -103,8 +102,7 @@ services:
     volumes:
       # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
       - /var/data/mycent/prod/pgadmin:/var/lib/pgadmin
-    networks:
-      - app_network
+    networks: ['mycent_prod_network']
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
 
@@ -115,6 +113,7 @@ services:
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
       io.rancher.container.pull_image: always
+    networks: ['mycent_prod_network']
 
 ######################
 #   Балансировщики   #
@@ -126,8 +125,7 @@ services:
       - "7311:7311/tcp"
       - "80:80/tcp"
 
-    networks:
-      - app_network
+    networks: ['mycent_prod_network']
 
     links:
       - server
