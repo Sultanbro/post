@@ -7,8 +7,6 @@ networks:
     driver: bridge
 
 services:
-##############################################################################
-
   server:
     image: reg.cic.kz/centras-projects/mycent:latest
     container_name: php-app
@@ -32,6 +30,20 @@ services:
 
   frontend:
     image: reg.cic.kz/centras/mycic-new-design:latest
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+    networks:
+      - app_network
+
+    depends_on:
+      - db
+
+##############################################################################
+
+  admin-front:
+    image: reg.cic.kz/centras/mycent-admin:latest
     labels:
       io.rancher.container.pull_image: always
       io.rancher.scheduler.affinity:host_label: name=mycic
@@ -105,15 +117,6 @@ services:
     networks: ['mycent_prod_network']
     labels:
       io.rancher.scheduler.affinity:host_label: name=mycic
-
-##############################################################################
-
-  frontend:
-    image: reg.cic.kz/centras/mycic-new-design:latest
-    labels:
-      io.rancher.scheduler.affinity:host_label: name=mycic
-      io.rancher.container.pull_image: always
-    networks: ['mycent_prod_network']
 
 ######################
 #   Балансировщики   #

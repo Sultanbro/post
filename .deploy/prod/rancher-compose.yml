@@ -54,6 +54,12 @@ services:
         service: frontend
         source_port: 7311
         target_port: 80
+      - path: /admin
+        priority: 2
+        protocol: http
+        service: admin-front
+        source_port: 7311
+        target_port: 80
       - path: /api
         priority: 2
         protocol: http

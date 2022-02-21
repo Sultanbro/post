@@ -36,7 +36,7 @@ deploy-app:
   variables:
     ENV: prod
     DESCRIPTION: "MyCent Production Stack"
-    UPGRADE: server frontend
+    UPGRADE: server frontend admin-front
 
 ################# /Production #################
 
