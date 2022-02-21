@@ -6,6 +6,7 @@ namespace App\Http\Services\Booking;
 use App\Http\Resources\Booking\BookingResource;
 use App\Repository\Booking\BookingRepositoryInterface;
 use App\Repository\Client\Department\DepartmentRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 
 class BookingService implements BookingServiceInterface
@@ -28,7 +29,7 @@ class BookingService implements BookingServiceInterface
         $this->departmentRepository = $departmentRepository;
         $this->bookingRepository = $bookingRepository;
     }
-
+    // TODO изменить getAccessCompany или добавить company_id в модель booking
     public function index()
     {
         return BookingResource::collection($this->bookingRepository->getByRoleCompany('index_booking'))
@@ -80,33 +81,5 @@ class BookingService implements BookingServiceInterface
     public function show($id)
     {
         return new BookingResource($this->bookingRepository->firstByRoleCompanyAndModelId($id, 'show_booking'));
-    }
-
-    /**
-     * @param $id
-     * @param $request
-     * @return mixed|void
-     */
-    public function update($id, $request)
-    {
-        $booking = $this->bookingRepository->find($id);
-        if(!is_null($booking)){
-            return response()->json(['message' => 'Booking updated','success' => $booking->update($request)],200);
-        } else {
-            return response()->json(['message' => 'This booking not found for update','error' => 'Enter correct id'],404);
-        }
-    }
-
-    /**
-     * @param $id
-     * @return bool|mixed
-     */
-    public function delete($id)
-    {
-        if($this->bookingRepository->find($id)){
-            return response()->json(['message' => 'Booking deleted','success' => $this->bookingRepository->deleteById($id)],200);
-        }else {
-            return response()->json(['message' => 'This booking not found for delete', 'error' => 'Enter correct id'],404);
-        }
     }
 }
