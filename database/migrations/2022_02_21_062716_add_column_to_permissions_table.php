@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeRolesTableColumn extends Migration
+class AddColumnToPermissionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class ChangeRolesTableColumn extends Migration
      */
     public function up()
     {
-        Schema::table('roles', function (Blueprint $table) {
-            $table->dropForeign(['company_id']);
+        Schema::table('permissions', function (Blueprint $table) {
+            $table->foreignId('group_id')->nullable()->constrained('permission_groups')->nullOnDelete();
         });
     }
 
@@ -25,8 +25,9 @@ class ChangeRolesTableColumn extends Migration
      */
     public function down()
     {
-        Schema::table('roles', function (Blueprint $table) {
-            $table->foreignId('company_id')->change()->constrained('departments')->cascadeOnDelete();
+        Schema::table('permissions', function (Blueprint $table) {
+            $table->dropForeign(['group_id']);
+            $table->dropColumn(['group_id']);
         });
     }
 }
