@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api\Booking;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\Booking\BookingServiceInterface;
-use App\Models\Booking\Booking;
-use App\Models\Booking\BookingUsers;
+use App\Repository\Booking\BookingRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,10 +16,12 @@ class BookingController extends Controller
      * @var BookingServiceInterface
      */
     private $bookingService;
+    private $bookingRepository;
 
-    public function __construct(BookingServiceInterface $bookingService)
+    public function __construct(BookingServiceInterface $bookingService, BookingRepositoryInterface $bookingRepository)
     {
         $this->bookingService = $bookingService;
+        $this->bookingRepository = $bookingRepository;
     }
 
     /**
@@ -40,7 +41,6 @@ class BookingController extends Controller
     {
         $user_id = Auth::id();
         return $this->bookingService->store($request->all(), $user_id);
-
     }
 
     /**
@@ -53,21 +53,30 @@ class BookingController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param  int  $id
-     * @return Response
+     * @param $id
+     * @param $request
+     * @return mixed|void
      */
-    public function update(Request $request, $id)
+    public function update($id, $request)
     {
-        return $this->bookingService->update($id, $request->all());
+        $booking = $this->bookingRepository->find($id);
+        if(!is_null($booking)){
+            return response()->json(['message' => 'Booking updated','success' => $booking->update($request)],200);
+        } else {
+            return response()->json(['message' => 'This booking not found for update','error' => 'Enter correct id'],404);
+        }
     }
 
     /**
-     * @param  int  $id
-     * @return Response
+     * @param  $id
+     * @return JsonResponse|Response
      */
     public function destroy($id)
     {
-        return $this->bookingService->delete($id);
+        if($this->bookingRepository->find($id)){
+            return response()->json(['message' => 'Booking deleted','success' => $this->bookingRepository->deleteById($id)],200);
+        }else {
+            return response()->json(['message' => 'This booking not found for delete', 'error' => 'Enter correct id'],404);
+        }
     }
 }
