@@ -16,7 +16,6 @@ class CommentMiddleware
     public function handle(Request $request, Closure $next)
     {
         if ($request->route()->getActionMethod() === 'store')if (!Gate::allows('create_comment'))abort(403);
-        if ($request->route()->getActionMethod() === 'store')if (!Gate::allows('create_comment'))abort(403);
         if ($request->route()->getActionMethod() === 'update')if (!Gate::allows('update_comment'))abort(403);
         if ($request->route()->getActionMethod() === 'destroy')if (!Gate::allows('delete_comment'))abort(403);
 

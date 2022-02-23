@@ -17,7 +17,7 @@ class AvatarMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->route()->getActionMethod() === 'index')if (!Gate::allows('index_avatar'))abort(403);
+        if ($request->route()->getActionMethod() === 'index')if (!Gate::allows('show_avatar'))abort(403);
         if ($request->route()->getActionMethod() === 'show')if (!Gate::allows('show_avatar'))abort(403);
         if ($request->route()->getActionMethod() === 'update')if (!Gate::allows('update_avatar'))abort(403);
         if ($request->route()->getActionMethod() === 'store')if (!Gate::allows('create_avatar'))abort(403);

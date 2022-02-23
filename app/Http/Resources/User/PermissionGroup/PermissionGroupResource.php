@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources\User\Permission;
+namespace App\Http\Resources\User\PermissionGroup;
 
+use App\Http\Resources\User\Permission\PermissionResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PermissionResource extends JsonResource
+class PermissionGroupResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +17,8 @@ class PermissionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'slug' => $this->slug,
-            'group_id' => $this->group_id,
+            'group_name' => $this->name,
+            'permission' => PermissionResource::collection($this->permissions),
         ];
     }
 }
