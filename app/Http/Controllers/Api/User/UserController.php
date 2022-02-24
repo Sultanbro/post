@@ -62,7 +62,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return new UserResource($this->userRepository->find(Auth::id()));
+        return (new UserResource($this->userRepository->find(Auth::id())))
+            ->additional($this->departmentRepository->getAccessCompany('show_post'));
     }
 
     /**

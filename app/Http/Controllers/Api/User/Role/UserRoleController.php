@@ -47,8 +47,8 @@ class UserRoleController extends Controller
      */
     public function index()
     {
-            return (UserRoleResource::collection($this->userRepository->getByRoleCompany('index_user_role')))
-                ->additional($this->departmentRepository->getAccessCompany('index_user_role'));
+            return (UserRoleResource::collection($this->userRepository->getByRoleCompany('show_user_role')))
+                ->additional($this->departmentRepository->getAccessCompany('show_user_role'));
     }
 
     /**

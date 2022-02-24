@@ -39,8 +39,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return (RoleResource::collection($this->roleRepository->getByRoleCompany('index_role')))
-            ->additional($this->departmentRepository->getAccessCompany('index_role'));
+        return (RoleResource::collection($this->roleRepository->getByRoleCompany('show_role')))
+            ->additional($this->departmentRepository->getAccessCompany('show_role'));
     }
 
     /**

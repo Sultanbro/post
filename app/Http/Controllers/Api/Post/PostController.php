@@ -53,8 +53,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        return PostResource::collection($this->postRepository->getByRoleCompany('index_post'))
-            ->additional($this->departmentRepository->getAccessCompany('index_post'));
+        return PostResource::collection($this->postRepository->getByRoleCompany('show_post'))
+            ->additional($this->departmentRepository->getAccessCompany('show_post'));
     }
 
     /**

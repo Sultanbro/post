@@ -85,15 +85,15 @@ class DepartmentRepository extends BaseRepository implements DepartmentRepositor
         $company_id = [];
         foreach (request()->user()->roles as $role) {
             foreach ($role->permissions as $permission) {
-                if ($permission->slug === $slug) $company_id[] =  $role->company_id;
+                if ($permission->slug === $slug) $company_id['access'][$role->company_id] =  ['name' => $role->company->short_name];
                 if ($role->company_id) continue;
                 foreach ($this->getCompanies() as $dept) {
-                    $company_id[] = $dept->id;
+                    $company_id['access'][$dept->id] = ['name' => $dept->short_name];
                 }
-                return ['access' => array_unique($company_id)];
+                return $company_id;
             }
         }
-        return ['access' => array_unique($company_id)];
+        return $company_id;
     }
 
     /**

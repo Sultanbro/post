@@ -32,8 +32,8 @@ class BookingService implements BookingServiceInterface
     // TODO изменить getAccessCompany или добавить company_id в модель booking
     public function index()
     {
-        return BookingResource::collection($this->bookingRepository->getByRoleCompany('index_booking'))
-            ->additional($this->departmentRepository->getAccessCompany('index_booking'));
+        return BookingResource::collection($this->bookingRepository->getByRoleCompany('show_booking'))
+            ->additional($this->departmentRepository->getAccessCompany('show_booking'));
     }
 
     /**

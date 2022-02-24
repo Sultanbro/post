@@ -42,8 +42,8 @@ class RoomController extends Controller
      */
     public function index()
     {
-        return RoomResource::collection($this->roomRepository->getByRoleCompany('index_room'))
-            ->additional($this->departmentRepository->getAccessCompany('index_room'));
+        return RoomResource::collection($this->roomRepository->getByRoleCompany('show_room'))
+            ->additional($this->departmentRepository->getAccessCompany('show_room'));
     }
 
     /**

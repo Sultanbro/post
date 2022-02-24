@@ -39,8 +39,8 @@ class BookingUsersController extends Controller
      */
     public function index()
     {
-        return BookingUsersResource::collection($this->bookingUsersRepository->getByRoleCompany('index_booking_users'))
-            ->additional($this->departmentRepository->getAccessCompany('index_booking_users'));
+        return BookingUsersResource::collection($this->bookingUsersRepository->getByRoleCompany('show_booking_users'))
+            ->additional($this->departmentRepository->getAccessCompany('show_booking_users'));
     }
 
     /**
@@ -62,7 +62,7 @@ class BookingUsersController extends Controller
      */
     public function show(BookingUsers $bookingUsers)
     {
-        return new BookingUsersResource($this->bookingUsersRepository->firstByRoleCompany($bookingUsers, 'index_booking_users'));
+        return new BookingUsersResource($this->bookingUsersRepository->firstByRoleCompany($bookingUsers, 'show_booking_users'));
     }
 
     /**

@@ -45,8 +45,8 @@ class AvatarController extends Controller
      */
     public function index()
     {
-        return AvatarResource::collection($this->avatarRepository->getByRoleCompany('index_avatar'))
-            ->additional($this->departmentRepository->getAccessCompany('index_avatar'));
+        return AvatarResource::collection($this->avatarRepository->getByRoleCompany('show_avatar'))
+            ->additional($this->departmentRepository->getAccessCompany('show_avatar'));
     }
 
     /**
