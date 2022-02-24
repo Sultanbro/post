@@ -11,6 +11,7 @@ use App\Repository\Email\EmailDomainRepositoryInterface;
 use App\Repository\User\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class EmailController extends Controller
 {
@@ -66,6 +67,12 @@ class EmailController extends Controller
      */
     public function saveFile(Request $request)
     {
+        if (isset($request->getFiles)) {
+            return response()->json(Storage::disk('local')->allFiles("public/email"));
+        }
+        if (isset($request->link)) {
+            return response()->json(Storage::disk('local')->delete($request->link));
+        }
         return $this->emailService->saveFile($request->file());
     }
 
@@ -78,4 +85,5 @@ class EmailController extends Controller
         $make_user = ['created_by' => Auth::id(), 'updated_by' => Auth::id(),];
         return $this->emailDomainRepository->create(array_merge($request->all(), $make_user));
     }
+
 }
