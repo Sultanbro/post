@@ -17,7 +17,7 @@ class CentcoinMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->route()->getActionMethod() === 'index')if (!Gate::allows('index_centcoin'))abort(403);
+        if ($request->route()->getActionMethod() === 'index')if (!Gate::allows('show_centcoin'))abort(403);
         if ($request->route()->getActionMethod() === 'show')if (!Gate::allows('show_centcoin'))abort(403);
         if ($request->route()->getActionMethod() === 'update')if (!Gate::allows('update_centcoin'))abort(403);
         if ($request->route()->getActionMethod() === 'store')if (!Gate::allows('create_centcoin'))abort(403);

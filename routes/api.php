@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\Post\LikeController;
 use App\Http\Controllers\Api\Post\PostController;
 use App\Http\Controllers\Api\User\Avatar\AvatarController;
 use App\Http\Controllers\Api\User\Role\PermissionController;
+use App\Http\Controllers\Api\User\Role\PermissionGroupController;
 use App\Http\Controllers\Api\User\Role\RoleController;
 use App\Http\Controllers\Api\User\Role\UserRoleController;
 use App\Http\Controllers\Api\User\UserController;
@@ -95,6 +96,7 @@ Route::group(['prefix' => 'access'], function () {
     Route::resource('role', RoleController::class)->middleware('role.police');
     Route::resource('permission', PermissionController::class);
     Route::resource('users_role', UserRoleController::class)->middleware('users_role.police');
+    Route::resource('group', PermissionGroupController::class);
 });
 
 //Avatar

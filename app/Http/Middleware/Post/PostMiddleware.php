@@ -15,7 +15,7 @@ class PostMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->route()->getActionMethod() === 'index')if (!Gate::allows('index_post'))abort(403);
+        if ($request->route()->getActionMethod() === 'index')if (!Gate::allows('show_post'))abort(403);
         if ($request->route()->getActionMethod() === 'show')if (!Gate::allows('show_post'))abort(403);
         if ($request->route()->getActionMethod() === 'update')if (!Gate::allows('update_post'))abort(403);
         if ($request->route()->getActionMethod() === 'store')if (!Gate::allows('create_post'))abort(403);

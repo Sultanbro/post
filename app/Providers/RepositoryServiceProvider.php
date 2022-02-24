@@ -51,6 +51,8 @@ use App\Repository\User\Employee\EmployeeRepository;
 use App\Repository\User\Employee\EmployeeRepositoryInterface;
 use App\Repository\User\Role\Permission\PermissionRepository;
 use App\Repository\User\Role\Permission\PermissionRepositoryInterface;
+use App\Repository\User\Role\PermissionGroup\PermissionGroupRepository;
+use App\Repository\User\Role\PermissionGroup\PermissionGroupRepositoryInterface;
 use App\Repository\User\Role\RoleRepository;
 use App\Repository\User\Role\RoleRepositoryInterface;
 use App\Repository\User\Staff\StaffUserRepository;
@@ -101,6 +103,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(RoleRepositoryInterface::class,RoleRepository::class);
         $this->app->bind(PermissionRepositoryInterface::class,PermissionRepository::class);
         $this->app->bind(AvatarRepositoryInterface::class,AvatarRepository::class);
+        $this->app->bind(PermissionGroupRepositoryInterface::class,PermissionGroupRepository::class);
     }
 
     /**
