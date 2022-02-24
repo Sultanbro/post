@@ -57,7 +57,8 @@ class AvatarController extends Controller
      */
     public function store(Request $request)
     {
-        $client_id = isset($request->client_id) ? $request->client_id : Auth::user()->client_id;
+        $client_id = $request->client_id ?? Auth::user()->client_id;
+        if ($avatar = $this->avatarRepository->firstById($client_id)) $this->clientBaseService->deleteAvatars($avatar);
         return $this->clientBaseService->saveAvatar($request->all(), $client_id);
     }
 

@@ -18,4 +18,13 @@ class AvatarRepository extends BaseRepository implements AvatarRepositoryInterfa
         parent::__construct($model);
         $this->model = $model;
     }
+
+    /**
+     * @param $client_id
+     * @return mixed
+     */
+    public function firstById($client_id)
+    {
+        return $this->model->firstWhere('client_id', $client_id);
+    }
 }
