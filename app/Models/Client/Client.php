@@ -38,7 +38,7 @@ class Client extends Model
 
     public function avatar()
     {
-        return $this->hasOne(Avatar::class, 'client_id', 'id');
+        return $this->hasOne(Avatar::class, 'client_id', 'id')->where('type',2);
     }
 
 
