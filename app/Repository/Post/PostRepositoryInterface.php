@@ -24,6 +24,14 @@ interface PostRepositoryInterface extends EloquentRepositoryInterface
     public function getByPostId($id);
 
     /**
+     * @param $id
+     * @return mixed
+     */
+    public function firstById($id);
+
+
+
+    /**
      * @param $params
      * @return mixed
      */

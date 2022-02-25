@@ -63,6 +63,15 @@ class PostRepository extends BaseRepository implements PostRepositoryInterface
     }
 
     /**
+     * @param $id
+     * @return mixed
+     */
+    public function firstById($id)
+    {
+        return $this->model->firstWhere('id', $id);
+    }
+
+    /**
      * @param $params
      * @return mixed
      */

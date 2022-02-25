@@ -110,7 +110,6 @@ class PostService implements PostServiceInterface
     public function deleteComment($id)
     {
         if ($model = $this->commentRepository->getById($id)) {
-            if (Auth::id() === $model->user_id) {
                 $child_comments = $this->commentRepository->getChildCommentById($id);
                 if (count($child_comments) >= 1) {
                     foreach ($child_comments as $child_comment) {
@@ -124,9 +123,8 @@ class PostService implements PostServiceInterface
                     }
                 }
                 return response()->json(['message' => 'Not Found'], 404);
-            }
         }
-        return response()->json(['message' => 'Forbidden '], 403);
+        return response()->json(['message' => 'Not Found'], 404);
     }
 
     /**

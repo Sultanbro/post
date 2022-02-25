@@ -90,13 +90,13 @@ class CommentController extends Controller
      */
     public function update(CommentUpdateRequest $request, $id)
     {
-        if (Auth::id() === $this->commentRepository->find($id)->user_id) {
+        if ($this->commentRepository->getById($id)) {
             if ($this->commentRepository->update($id,  $request->all())) {
                 return new CommentResource($this->commentRepository->find($id));
             }
             return response()->json(['message' => 'not save'], 304);
         }
-        return response()->json(['message' => 'Forbidden '], 403);
+        return response()->json(['message' => 'Not Found '], 404);
     }
 
     /**

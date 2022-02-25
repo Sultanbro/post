@@ -72,11 +72,11 @@ class PostController extends Controller
 
     /**
      * @param Post $post
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return PostResource
      */
     public function show(Post $post)
     {
-        return PostResource::collection($this->postRepository->firstByRoleCompany($post, 'show_post'));
+        return new PostResource($this->postRepository->firstByRoleCompany($post, 'show_post'));
     }
 
     /**
@@ -88,14 +88,13 @@ class PostController extends Controller
      */
     public function update(PostUpdateRequest $request, $id)
     {
-        $post = $this->postRepository->find($id);
-        if ($post->user_id == Auth::id() or Auth::user()->token->role_id == 1) {
+        if ($this->postRepository->firstById($id)) {
             if ($this->postRepository->update($id, array_merge($request->all(), ['updated_by' => Auth::id(),]))) {
                 return response()->json(['message' => 'ok'], 200);
             }
             return response()->json(['message' => 'not save'], 304);
         }
-        return response()->json(['message' => 'Forbidden'], 403);
+        return response()->json(['message' => 'Not Found'], 404);
     }
 
 
@@ -108,8 +107,7 @@ class PostController extends Controller
     public function destroy($id)
     {
 
-        $post = $this->postRepository->find($id);
-        if ($post->user_id == Auth::id() or Auth::user()->token->role_id == 1) {
+        if ($this->postRepository->firstById($id)) {
             if (Storage::disk('local')->exists('public/post_files/' . $id)) {
                 Storage::disk('local')->deleteDirectory('public/post_files/' . $id);
             }
@@ -118,7 +116,7 @@ class PostController extends Controller
             }
             return response()->json(['message' => 'Not Found'], 404);
         }
-        return response()->json(['message' => 'Forbidden'], 403);
+        return response()->json(['message' => 'Not Found'], 404);
 
     }
 
