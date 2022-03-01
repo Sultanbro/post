@@ -38,7 +38,8 @@ class SendEmailJob implements ShouldQueue
         Mail::to($this->details['email'])->send(new SendEmail($this->details['email_content']));
         if ($emailReset = app(EmailPasswordResetRepositoryInterface::class)->firstByUserId($this->details['user_id'])) {
             app(EmailPasswordResetRepositoryInterface::class)->update($emailReset->id, ['status' => 1]);
+        } else {
+            app(EmailPasswordResetRepositoryInterface::class)->create(['user_id' => $this->details['user_id'], 'status' => 1]);
         }
-        app(EmailPasswordResetRepositoryInterface::class)->create(['user_id' => $this->details['user_id'], 'status' => 1]);
     }
 }
