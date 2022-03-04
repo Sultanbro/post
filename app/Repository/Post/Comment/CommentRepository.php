@@ -27,7 +27,7 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
      */
     public function getCommentsByPostId($postId)
     {
-        return $this->model->where('post_id', $postId)->whereNull('parent_id')->get();
+        return $this->model->where('post_id', $postId)->whereNull('parent_id')->orderBy('id', 'asc')->get();
     }
 
 

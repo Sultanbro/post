@@ -2,9 +2,11 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CheckAndSendEmailPasswordCommand;
 use App\Console\Commands\SandboxCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -14,7 +16,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        SandboxCommand::class
+//        SandboxCommand::class,
+        CheckAndSendEmailPasswordCommand::class,
     ];
 
     /**
@@ -25,7 +28,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        try {
+            $schedule->command('checkUserTokenAndSend')
+                ->dailyAt('07:00')
+                ->timezone('Asia/Almaty');
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+        }
     }
 
     /**
