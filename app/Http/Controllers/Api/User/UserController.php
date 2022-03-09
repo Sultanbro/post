@@ -14,7 +14,7 @@ use App\Repository\Client\ClientRepositoryInterface;
 use App\Repository\Client\Department\DepartmentRepositoryInterface;
 use App\Repository\Client\EOrder\EOrderRepositoryInterface;
 use App\Repository\User\UserRepositoryInterface;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -46,7 +46,11 @@ class UserController extends Controller
      * @param ClientRepositoryInterface $clientRepository
      * @param DepartmentRepositoryInterface $departmentRepository
      */
-    public function __construct(UserRepositoryInterface $userRepository, EOrderRepositoryInterface $EOrderRepository, UserServiceInterface $userService, ClientRepositoryInterface $clientRepository, DepartmentRepositoryInterface $departmentRepository)
+    public function __construct(UserRepositoryInterface $userRepository,
+                                EOrderRepositoryInterface $EOrderRepository,
+                                UserServiceInterface $userService,
+                                ClientRepositoryInterface $clientRepository,
+                                DepartmentRepositoryInterface $departmentRepository)
     {
         $this->departmentRepository = $departmentRepository;
         $this->clientRepository = $clientRepository;
@@ -116,10 +120,9 @@ class UserController extends Controller
      */
     public function clientTree()
     {
-        if (Auth::user()->token->role_id == 1) {
-            return TreeResource::collection($this->departmentRepository->getParentDepartment());
-        }
-        return TreeResource::collection($this->departmentRepository->getParentDepartmentByCompanyId(Auth::user()->company_id));
+            return response()->json(['data' => json_decode(Storage::get('/clientTree/clientTree.json'))]);
+//            return TreeResource::collection($this->departmentRepository->getParentDepartment());
+//        return TreeResource::collection($this->departmentRepository->getParentDepartmentByCompanyId(Auth::user()->company_id));
 
     }
 
