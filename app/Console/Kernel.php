@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CheckAndSendEmailPasswordCommand;
 use App\Console\Commands\SandboxCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -26,8 +27,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('clientTreeSave')->hourly();
         try {
+            $schedule->command('clientTreeSave')->hourly();
             $schedule->command('checkUserTokenAndSend')
                 ->dailyAt('07:00')
                 ->timezone('Asia/Almaty');
