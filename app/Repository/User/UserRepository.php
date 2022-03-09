@@ -75,4 +75,12 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         return $this->model->whereIn('department_id', $departments_id)->get();
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUsersNoToken()
+    {
+        return $this->model->doesntHave('token')->select('id')->get();
+    }
 }

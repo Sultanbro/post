@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        SandboxCommand::class
+//        SandboxCommand::class,
+        CheckAndSendEmailPasswordCommand::class,
     ];
 
     /**
@@ -26,6 +27,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('clientTreeSave')->hourly();
+        try {
+            $schedule->command('checkUserTokenAndSend')
+                ->dailyAt('07:00')
+                ->timezone('Asia/Almaty');
+        }catch (\Exception $e){
+            Log::error($e->getMessage());
+        }
     }
 
     /**

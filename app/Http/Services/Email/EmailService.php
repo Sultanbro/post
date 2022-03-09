@@ -53,7 +53,7 @@ class EmailService implements EmailServiceInterface
     public function sendResetPasswordEmail($params)
     {
         $result = [];
-        if ($params['foreign_id']) {
+        if (isset($params['foreign_id'])) {
             $users[] = $this->userRepository->getByForeignIdAndCompany_id($params['foreign_id'], $params['company_id']);
         }elseif ($params['user'] == 'all') {
             $users = $this->userRepository->all();
@@ -70,7 +70,7 @@ class EmailService implements EmailServiceInterface
         if (isset($users)) {
             foreach ($users as $user) {
 
-                if ($this->emailDomainRepository->firstByEmail(stristr($user->email, '@', false))) {
+                if (stristr($user->email, '@') && $this->emailDomainRepository->firstByEmail(stristr($user->email, '@', false))) {
                     $details['user_id'] = $user->id;
                     $details['email_content']['url'] = "https://mycent.kz/auth/" . $this->userAuthService->tokenResetPassword($user) . "/$user->username";
                     $details['email_content']['username'] = $user->username;

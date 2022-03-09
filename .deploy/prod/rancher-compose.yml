@@ -77,6 +77,12 @@ services:
         selector: foo=bar
         source_port: 80
         target_port: 80
+      - path: /release.html
+        priority: 5
+        protocol: http
+        service: server
+        source_port: 7311
+        target_port: 80
 
     health_check:
       response_timeout: 2000

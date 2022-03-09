@@ -38,7 +38,7 @@ class Comment extends Model
 
     public function comment()
     {
-        return $this->hasMany(Comment::class, 'parent_id', 'id');
+        return $this->hasMany(Comment::class, 'parent_id', 'id')->orderBy('id', 'asc');
     }
 
     public function oneComment()

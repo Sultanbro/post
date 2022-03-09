@@ -44,6 +44,11 @@ interface UserRepositoryInterface extends EloquentRepositoryInterface
      */
     public function getUserByDepartmentId(array $departments_id);
 
+    /**
+     * @return mixed
+     */
+    public function getUsersNoToken();
+
 
 
 }

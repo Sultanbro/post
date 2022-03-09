@@ -151,7 +151,15 @@ class ClientBaseService implements ClientBaseServiceInterface
                         } else {
                             $client['address'] = isset($client['address']) ? json_encode($client['address']) : null;
                             if ($clientModel = $this->clientRepository->create(array_merge($client, $user_make))) {
-                                $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                                if ($user = $this->userRepository->userFromEmail($client['email'])) {
+                                    if ($user->client_id != $clientModel->id) {
+                                        continue;
+                                    } else {
+                                        $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                                    }
+                                }else{
+                                    $result[$client['foreign_id']] = $this->saveUsers($client_info, $parent_foreign->id, $clientModel->id, $user_make);
+                                }
                             }
                         }
                     }
