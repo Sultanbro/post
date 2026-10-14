@@ -1,0 +1,51 @@
+{
+  "realm": "post-demo",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "clients": [
+    {
+      "clientId": "post-demo",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "defaultClientScopes": [
+        "profile",
+        "email"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "editor",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Editor",
+      "lastName": "Demo",
+      "email": "editor@example.invalid",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "local-demo-only",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "reader",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Reader",
+      "lastName": "Demo",
+      "email": "reader@example.invalid",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "local-demo-only",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

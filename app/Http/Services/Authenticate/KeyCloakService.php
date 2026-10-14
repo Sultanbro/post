@@ -5,6 +5,7 @@ namespace App\Http\Services\Authenticate;
 use App\Models\UserToken;
 use App\Repository\User\UserTokenRepositoryInterface;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
 use PhpParser\Node\Stmt\DeclareDeclare;
 
 class KeyCloakService implements KeyCloakServiceInterface
@@ -52,8 +53,13 @@ class KeyCloakService implements KeyCloakServiceInterface
             'Accept' => 'application/json',
             'Authorization' => 'Bearer '. $token,
         ];
-        $response = Http::asForm()->withHeaders($headers)->post($this->urlInfo);
-        if (isset($response['error'])){
+        try {
+            $response = Http::asForm()->timeout(10)->withHeaders($headers)->post($this->urlInfo);
+        } catch (ConnectionException $exception) {
+            return false;
+        }
+        $subject = $response->json('sub');
+        if (!$response->successful() || isset($response['error']) || !is_string($subject) || $subject === '') {
             return false;
         }
         return $response;
@@ -70,12 +76,13 @@ class KeyCloakService implements KeyCloakServiceInterface
         $params = ['username' => $username,
             'password' => $password,
             'grant_type' => 'password',
+            'scope' => 'openid',
             'client_id' => config('keycloak.client_id'),
             'client_secret' => config('keycloak.client_secret'),];
 
         $response=Http::asForm()->withHeaders($this->headers)->post($this->urlAuth, $params);
 
-        if (isset($response['error'])){
+        if (!$response->successful() || isset($response['error']) || empty($response['access_token']) || empty($response['refresh_token'])) {
             return false;
         }
         return $response;

@@ -1,5 +1,7 @@
 # Post & Booking API
 
+[![API checks](https://github.com/Sultanbro/post/actions/workflows/tests.yml/badge.svg)](https://github.com/Sultanbro/post/actions/workflows/tests.yml)
+
 Backend корпоративного приложения на **PHP / Laravel**: публикации и обсуждения, бронирование помещений, пользователи и права доступа. API объединяет эти модули и взаимодействует с Keycloak для авторизации.
 
 ## Мой вклад
@@ -77,58 +79,79 @@ routes/api.php
 
 Защищённые запросы передают `Authorization: Bearer <access_token>` и `Accept: application/json`. Вход требует настроенного Keycloak и соответствующей записи пользователя в локальной базе; доступ к операциям зависит от назначенных разрешений.
 
-## Подготовка локального окружения
+## Запуск демо
 
-Понадобятся Composer, PHP с расширениями для Laravel и выбранной базы, PostgreSQL и отдельный экземпляр Keycloak. `composer.json` задаёт диапазон PHP `^7.3|^8.0`; совместимость конкретного окружения следует проверить по зафиксированным зависимостям. PHP 8.0 используется в существующем Dockerfile.
+Понадобится Docker с Compose v2. PHP и Composer на компьютере устанавливать не нужно.
 
 ```sh
 git clone https://github.com/Sultanbro/post.git
 cd post
-cp .env.example .env
-composer install
-composer check-platform-reqs
-php artisan key:generate
+docker compose -f compose.local.yml up -d --build --wait --wait-timeout 240
 ```
 
-Создайте отдельную локальную базу и заполните `.env`:
+Первый запуск скачивает образы, устанавливает зависимости из `composer.lock`, применяет миграции и создаёт демонстрационные данные. API доступно по `http://localhost:8088/api`; отдельного веб-интерфейса нет. Если порт занят, перед командой задайте `POST_DEMO_PORT=8089`.
 
-| Параметры | Что указать |
-| --- | --- |
-| `APP_URL` | `http://127.0.0.1:8000` |
-| `DB_CONNECTION` | `pgsql` для PostgreSQL; в `.env.example` исходно указан `mysql` |
-| `DB_HOST`, `DB_PORT` | Адрес локальной базы и её порт, например `127.0.0.1` и `5432` |
-| `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Созданная база и локальная учётная запись |
-| `KEYCLOAK_TOKEN_URL`, `KEYCLOAK_USERINFO_URL`, `KEYCLOAK_USERS_URL` | Полные URL token, userinfo и admin users API вашего realm |
-| `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET` | Клиент Keycloak; текущая реализация входа использует password grant |
-| `KEYCLOAK_ADMIN_USERNAME`, `KEYCLOAK_ADMIN_PASSWORD` | Учётная запись для операций управления пользователями |
-| `MAIL_*` | Настройки тестового почтового сервиса, если проверяете отправку писем |
+Среда содержит PHP 8.1, PostgreSQL 15 и Keycloak 26.7.5. PHP 8.1 выбран для воспроизведения существующего `composer.lock`; переход на поддерживаемые версии PHP и Laravel — отдельная задача перед производственным развёртыванием. Настройки находятся в [compose.local.yml](compose.local.yml), локальный `.env` не нужен.
 
-После настройки базы:
+| Пользователь | Пароль для локального демо | Права на публикации |
+| --- | --- | --- |
+| `editor` | `local-demo-only` | Просмотр, создание, изменение и удаление |
+| `reader` | `local-demo-only` | Только просмотр |
+
+Вход проходит через настоящий Keycloak. В демонстрационных данных — вымышленные компания, сотрудники и публикация. Учётные записи и разрешения создаёт [DemoSeeder](database/seeders/DemoSeeder.php), повторный запуск не дублирует эти записи. Seeder разрешён только в окружениях `local` и `testing`.
+
+Пример входа:
 
 ```sh
-php artisan config:clear
-php artisan migrate
-php artisan storage:link
-php artisan route:list
-php artisan serve --host=127.0.0.1 --port=8000
+curl -s http://localhost:8088/api/login \
+  -H 'Accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"editor","password":"local-demo-only"}'
 ```
 
-`DatabaseSeeder` не создаёт демонстрационные данные. Для прикладных сценариев нужно отдельно подготовить пользователей, структуру компаний и разрешения. Сквозной запуск с новой базой и Keycloak пока не проверен; приведены шаги подготовки по текущей структуре проекта.
+Подставьте `access_token` из ответа:
 
-В `.env.example` стоит `QUEUE_CONNECTION=sync`: задачи выполняются сразу. Для фоновой обработки можно настроить `QUEUE_CONNECTION=database` и запустить `php artisan queue:work` в отдельном терминале.
+```sh
+curl -s http://localhost:8088/api/posts \
+  -H 'Accept: application/json' \
+  -H 'Authorization: Bearer <access_token>'
+```
 
-Существующие `Dockerfile` и файлы в `.deploy/` зависят от частного реестра образов и внешней инфраструктуры. Они описывают развёртывание проекта, но не являются самостоятельной локальной демосредой.
+При истечении токена нужен повторный вход: защищённый запрос с недействительным токеном получает `401`, без неявного обновления сессии. После выхода локальная сессия удаляется.
+
+Демо проверяет сценарий публикаций и разграничение прав. Для регистрации пользователей через admin API Keycloak, бронирований, почты и остальных модулей потребуется дополнительная настройка и данные. Порт API привязан к `127.0.0.1`; PostgreSQL и Keycloak доступны только внутри сети контейнеров. Открытые демонстрационные пароли и режим Keycloak `start-dev` предназначены для локального запуска.
+
+Остановка с сохранением демонстрационной базы:
+
+```sh
+docker compose -f compose.local.yml down
+```
 
 ## Проверки
 
-После установки зависимостей:
+После запуска среды:
 
 ```sh
-php artisan route:list
-php artisan test
+# Проверки Laravel API на отдельной базе post_test
+docker compose -f compose.local.yml run --rm --no-deps app php vendor/bin/phpunit
+
+# Сквозной сценарий через работающие API и Keycloak
+docker compose -f compose.local.yml exec -T app php docker/local/smoke.php
 ```
 
-В `tests/` пока находятся базовые примеры PHPUnit. Feature-пример ожидает ответ `200` на `/`, хотя в `routes/web.php` маршрут `/` не определён; этот пример требует обновления. Тесты бизнес-сценариев публикаций, бронирований и прав доступа ещё нужно добавить.
+[PostApiTest](tests/Feature/PostApiTest.php) проверяет вход, выход, работу с публикациями, обязательные поля, роли редактора и читателя, неизвестные и истёкшие токены, ошибки и недоступность сервиса авторизации. Запросы проходят через Laravel, middleware, проверки разрешений и PostgreSQL; в этих тестах подменяются только HTTP-ответы Keycloak. Тесты пересоздают таблицы исключительно в `post_test` и отказываются работать с другим именем базы или вне окружения `testing`.
+
+[Сквозная проверка](docker/local/smoke.php) использует реальный Keycloak: вход двух пользователей, чтение, создание, изменение, удаление, запрет записи читателю и отклонение токена после выхода. Токены не выводятся в журнал. Эти проверки запускаются в [GitHub Actions](.github/workflows/tests.yml) при push и pull request. Бронирования и остальные модули пока не покрыты этими тестами.
+
+## Настройка собственного окружения
+
+Для собственного окружения скопируйте `.env.example` в `.env`, установите зависимости совместимым PHP и Composer и создайте ключ через `php artisan key:generate`. Укажите PostgreSQL в `DB_CONNECTION=pgsql` и заполните `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`.
+
+Для входа нужны `KEYCLOAK_TOKEN_URL`, `KEYCLOAK_USERINFO_URL`, `KEYCLOAK_CLIENT_ID` и, для конфиденциального клиента, `KEYCLOAK_CLIENT_SECRET`. Текущий вход использует password grant и scope `openid`. Пользователь должен существовать в Keycloak и локальной базе. Управление пользователями дополнительно требует `KEYCLOAK_USERS_URL`, `KEYCLOAK_ADMIN_USERNAME`, `KEYCLOAK_ADMIN_PASSWORD` с соответствующими правами.
+
+После настройки выполните `php artisan config:clear`, `php artisan migrate` и `php artisan storage:link`. `DatabaseSeeder` не создаёт демонстрационные данные автоматически. Настройки `MAIL_*` задают почтовый сервис; `QUEUE_CONNECTION=sync` выполняет задачи сразу, а для фоновой обработки можно выбрать `database` и запустить `php artisan queue:work`.
+
+Существующие корневой `Dockerfile` и `.deploy/` описывают другое развёртывание с частным реестром и внешней инфраструктурой. Самостоятельная локальная среда использует отдельные файлы `compose.local.yml` и `docker/local/`.
 
 ## Зависимости и лицензии
 
