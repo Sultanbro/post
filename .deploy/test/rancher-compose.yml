@@ -1,0 +1,60 @@
+version: '2'
+
+services:
+  server:
+    scale: 1
+    start_on_create: true
+
+###########################
+
+  pg:
+    scale: 1
+    start_on_create: true
+
+###########################
+
+  pgadmin:
+    scale: 1
+    start_on_create: true
+
+###########################
+
+  lb:
+    scale: 1
+    start_on_create: true
+    lb_config:
+      certs: []
+      config: |-
+        frontend http-redirect
+            bind *:80
+            mode http
+            redirect scheme https code 301 if !{ ssl_fc }
+      port_rules:
+      - priority: 1
+        protocol: http
+        service: frontend
+        source_port: 17311
+        target_port: 80
+      - path: /api
+        priority: 2
+        protocol: http
+        service: server
+        source_port: 17311
+        target_port: 80
+      - path: /storage
+        priority: 3
+        protocol: http
+        service: server
+        source_port: 17311
+        target_port: 80
+      - path: /telescope
+        priority: 4
+        protocol: http
+        service: server
+        source_port: 17311
+        target_port: 80
+      - priority: 3
+        protocol: http
+        selector: foo=bar
+        source_port: 80
+        target_port: 80

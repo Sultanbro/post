@@ -1,0 +1,125 @@
+stages:
+  - build
+  - deploy
+  - linting
+
+
+include:
+  - project: 'devops/ci-templates'
+    file: '/php-nginx/gitlab-ci.yml'
+
+variables:
+  PROJECT_NAME: MyCent
+
+################# Production #################
+
+build-docker:
+  extends: .build
+  stage: build
+
+  only:
+    - master
+
+  variables:
+    ENV: prod
+    TAG: latest
+
+deploy-app:
+  extends: .deploy
+  stage: deploy
+  only:
+    - master
+
+  needs:
+    - build-docker
+
+  variables:
+    ENV: prod
+    DESCRIPTION: "MyCent Production Stack"
+    UPGRADE: server frontend admin-front lb
+
+################# /Production #################
+
+################# Test #################
+
+build-docker-test:
+  extends: .build
+  when: manual
+  stage: build
+
+  except:
+    - master
+
+  variables:
+    ENV: test
+    TAG: testing
+
+deploy-test-app:
+  extends: .deploy
+  stage: deploy
+
+  except:
+    - master
+
+  needs:
+    - build-docker-test
+
+  variables:
+    ENV: test
+    DESCRIPTION: "MyCent Test <$CI_COMMIT_REF_NAME>"
+    UPGRADE: server
+
+################# /Test #################
+
+################# Lint #################
+
+php-linter:
+  stage: linting
+  when: manual
+  image: registry.gitlab.com/pipeline-components/php-linter:latest
+  allow_failure: true
+  tags:
+    - docker
+  script:
+    - parallel-lint --colors .
+
+php-security-checker:
+  stage: linting
+  when: manual
+  image: pipelinecomponents/php-security-checker:latest
+  allow_failure: true
+  tags:
+    - docker
+  script:
+    cd ${COMPOSER_LOCATION:-.} && security-checker security:check composer.lock
+  except:
+    variables:
+      - $DISABLE_PHP_SECURITYCHECKER
+
+phpcs-PSR2:
+  stage: linting
+  when: manual
+  image: pipelinecomponents/php-codesniffer:latest
+  allow_failure: true
+  tags:
+    - docker
+  script:
+    - phpcs -s -p --colors --extensions=php --standard=PSR2 .
+  except:
+    variables:
+      - $DISABLE_PHP_PSR2
+
+phpcs PSR12:
+  stage: linting
+  when: manual
+  image: pipelinecomponents/php-codesniffer:latest
+  allow_failure: true
+  tags:
+    - docker
+  script:
+    - phpcs -s -p --colors --extensions=php --standard=PSR12 .
+  except:
+    variables:
+      - $DISABLE_PHP_PSR12
+
+################# /Lint #################

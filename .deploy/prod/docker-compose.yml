@@ -1,0 +1,143 @@
+version: '2'
+
+#################################
+
+networks:
+  mycent_prod_network:
+    driver: bridge
+
+services:
+  server:
+    image: reg.cic.kz/centras-projects/mycent:latest
+    container_name: php-app
+    hostname: php-app
+
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+      io.rancher.container.pull_image: always
+      io.rancher.container.hostname_override: container_name
+
+    volumes:
+      - /var/data/mycent/prod/application:/app/storage
+      - /var/data/mycent/prod/shared:/shared
+
+    networks: ['mycent_prod_network']
+
+    depends_on:
+      - db
+
+##############################################################################
+
+  frontend:
+    image: reg.cic.kz/centras/mycic-new-design:latest
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+    networks:
+      - app_network
+
+    depends_on:
+      - db
+
+##############################################################################
+
+  admin-front:
+    image: reg.cic.kz/centras/mycent-admin:latest
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+    ports:
+      - "3325:80"
+
+    networks:
+      - app_network
+
+    depends_on:
+      - db
+
+
+##############################################################################
+
+  pg:
+    image: postgres:12
+    hostname: pg
+    # ports:
+    #   - "17314:5432"
+    environment:
+      POSTGRES_PASSWORD: "${DB_PASSWORD:?Set DB_PASSWORD in the deployment environment}"
+    stdin_open: true
+    volumes:
+      # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
+      - /var/data/mycent/prod/pg:/var/lib/postgresql/data
+    tty: true
+    networks: ['mycent_prod_network']
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+  pg-backup:
+    # https://stackoverflow.com/questions/24718706/backup-restore-a-dockerized-postgresql-database
+    # https://github.com/prodrigestivill/docker-postgres-backup-local
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    user: postgres:postgres # Optional: see below
+    volumes:
+        - /var/data/mycent/prod/backups:/backups
+    links:
+        - pg
+    depends_on:
+        - pg
+    environment:
+      BACKUP_KEEP_DAYS: '7'
+      BACKUP_KEEP_MONTHS: '6'
+      BACKUP_KEEP_WEEKS: '4'
+      HEALTHCHECK_PORT: '8080'
+      POSTGRES_DB: mycent_prod
+      POSTGRES_EXTRA_OPTS: -Z6 --schema=public --blobs
+      POSTGRES_HOST: pg
+      POSTGRES_PASSWORD: "${DB_PASSWORD:?Set DB_PASSWORD in the deployment environment}"
+      POSTGRES_USER: postgres
+      SCHEDULE: '@every 2h30m00s'
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+    networks: ['mycent_prod_network']
+
+##############################################################################
+
+  pgadmin:
+    image: dpage/pgadmin4
+    hostname: pg
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mycent.kz
+      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD:?Set PGADMIN_DEFAULT_PASSWORD in the deployment environment}"
+    ports:
+      - "7313:80"
+    stdin_open: true
+    volumes:
+      # - /share/common/data/mycent/prod/pg:/var/lib/postgresql/data
+      - /var/data/mycent/prod/pgadmin:/var/lib/pgadmin
+    networks: ['mycent_prod_network']
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic
+
+######################
+#   Балансировщики   #
+######################
+
+  lb:
+    image: rancher/lb-service-haproxy:v0.9.14
+    ports:
+      - "7311:7311/tcp"
+      - "80:80/tcp"
+
+    networks: ['mycent_prod_network']
+
+    links:
+      - server
+
+    depends_on:
+      - server
+
+    labels:
+      io.rancher.scheduler.affinity:host_label: name=mycic

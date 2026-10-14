@@ -1,0 +1,17 @@
+version: '2'
+services:
+  grafana:
+    scale: 1
+    start_on_create: true
+  redis:
+    scale: 1
+    start_on_create: true
+  server:
+    scale: 1
+    start_on_create: true
+  pg:
+    scale: 1
+    start_on_create: true
+  pgadmin:
+    scale: 1
+    start_on_create: true
