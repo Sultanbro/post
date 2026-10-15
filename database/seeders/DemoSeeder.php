@@ -6,6 +6,7 @@ use App\Models\Client\Client;
 use App\Models\Client\Department;
 use App\Models\Permission;
 use App\Models\Post\Post;
+use App\Models\Booking\Room;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -47,8 +48,8 @@ class DemoSeeder extends Seeder
                     'name' => 'Demo ' . $username, 'company_id' => $company->id,
                 ]);
                 $slugs = $username === 'editor'
-                    ? ['show_post', 'create_post', 'update_post', 'delete_post']
-                    : ['show_post'];
+                    ? ['show_post', 'create_post', 'update_post', 'delete_post', 'show_booking', 'create_booking', 'update_booking', 'delete_booking', 'show_room']
+                    : ['show_post', 'show_booking', 'show_room'];
                 foreach ($slugs as $slug) {
                     $permission = Permission::firstOrCreate(['slug' => $slug], ['name' => $slug]);
                     $role->permissions()->syncWithoutDetaching([$permission->id]);
@@ -57,6 +58,9 @@ class DemoSeeder extends Seeder
             }
 
             $editor = User::where('username', 'editor')->firstOrFail();
+            Room::firstOrCreate(['name' => 'Demo meeting room', 'company_id' => $company->id], [
+                'capacity' => 8, 'address' => 'Demo office', 'created_by' => $editor->id, 'updated_by' => $editor->id,
+            ]);
             Post::firstOrCreate(['content' => 'Welcome to the local demo.'], [
                 'user_id' => $editor->id, 'company_id' => $company->id, 'group_id' => 1,
                 'created_by' => $editor->id, 'updated_by' => $editor->id,
