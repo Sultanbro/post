@@ -23,4 +23,6 @@ interface BookingServiceInterface
      * @return mixed
      */
     public function show($id);
+    public function update($id, array $request, $user_id);
+    public function destroy($id);
 }

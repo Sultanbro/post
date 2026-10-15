@@ -35,5 +35,16 @@ expectStatus(requestApi('DELETE', '/posts/' . $id, null, $token), 200, 'Delete p
 $reader = requestApi('POST', '/login', ['username' => 'reader', 'password' => 'local-demo-only']);
 expectStatus($reader, 200, 'Reader login through Keycloak');
 expectStatus(requestApi('POST', '/posts', ['content' => 'Denied', 'company_id' => 1, 'group_id' => 1], $reader[1]['access_token']), 403, 'Reader write denied');
+$rooms = requestApi('GET', '/rooms', null, $token);
+expectStatus($rooms, 200, 'Read rooms');
+$bookingData = ['room_id' => $rooms[1]['data'][0]['id'], 'begin' => '2030-01-15 10:00:00', 'end' => '2030-01-15 11:00:00'];
+$booking = requestApi('POST', '/booking', $bookingData, $token);
+expectStatus($booking, 200, 'Create booking');
+$bookingId = $booking[1]['data']['id'];
+expectStatus(requestApi('GET', '/booking', null, $token), 200, 'Read bookings');
+expectStatus(requestApi('POST', '/booking', $bookingData, $token), 409, 'Overlapping booking denied');
+expectStatus(requestApi('POST', '/booking', $bookingData, $reader[1]['access_token']), 403, 'Reader booking denied');
+expectStatus(requestApi('PATCH', '/booking/' . $bookingId, ['description' => 'Updated demo meeting'], $token), 200, 'Update booking');
+expectStatus(requestApi('DELETE', '/booking/' . $bookingId, null, $token), 200, 'Delete booking');
 expectStatus(requestApi('POST', '/logout', null, $token), 200, 'Logout');
 expectStatus(requestApi('GET', '/posts', null, $token), 401, 'Logged-out token denied');

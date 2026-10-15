@@ -17,6 +17,7 @@ class BookingResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'room_id' => $this->room_id,
             'begin' => $this->begin,
             'end' => $this->end,
